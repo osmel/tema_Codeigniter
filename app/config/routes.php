@@ -52,3 +52,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'nucleo';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['login']							= 'nucleo/login';
+$route['validar_login']					= 'nucleo/validar_login';
+
+$route['forgot']						= 'nucleo/forgot';
+$route['session']						= 'nucleo/session';
+
+$route['usuarios']						= 'nucleo/listado_usuarios';
+$route['nuevo_usuario']                 = 'nucleo/nuevo_usuario';
+$route['validar_nuevo_usuario']         = 'nucleo/validar_nuevo_usuario';
+$route['eliminar_usuario/(:any)/(:any)']		= 'nucleo/eliminar_usuario/$1/$2';
+$route['validando_eliminar_usuario']    = 'nucleo/validar_eliminar_usuario';
+$route['actualizar_perfil']		         = 'nucleo/actualizar_perfil';
+$route['editar_usuario/(:any)']			= 'nucleo/actualizar_perfil/$1';
+$route['validacion_edicion_usuario']    = 'nucleo/validacion_edicion_usuario';
+$route['salir']							= 'nucleo/logout';
+
+$route['validar_recuperar_password']	= 'nucleo/validar_recuperar_password';
+
+// $route['historicoaccesos']                 = 'nucleo/historicoaccesos';  //falta por actualizar 
+/*
+$route['establecer_modulo']				= 'nucleo/establecer_modulo';
+
+/////////////////////////////////////////HOME///////////////////
+$route['procesando_home']    		= 'nucleo/procesando_home';
+$route['procesando_inicio']    		= 'nucleo/procesando_inicio';
+$route['detalles_grupo/(:any)/(:any)']   = 'nucleo/detalles_grupo/$1/$2';
+$route['marcando_apartado']    		= 'nucleo/marcando_apartado';
+$route['procesar_apartados']    		    = 'nucleo/procesar_apartados';
+$route['tabla_apartado_vendedores']    		= 'nucleo/tabla_apartado_vendedores';
+$route['eliminar_apartado_vendedores/(:any)/(:any)'] = 'nucleo/eliminar_apartado_vendedores/$1/$2';
+$route['validar_eliminar_apartado_vendedores']    			= 'nucleo/validar_eliminar_apartado_vendedores';
+$route['apartado_definitivo']    		= 'nucleo/apartado_definitivo';
+$route['procesando_producto_color']    		= 'nucleo/procesando_producto_color';
+$route['procesando_producto_color2']    		= 'nucleo/procesando_producto_color2';
+$route['imprimir_reportes_apartado']    		= 'nucleo/imprimir_reportes_apartado';
+$route['detalles_imagen/(:any)/(:any)']    		= 'nucleo/detalles_imagen/$1/$2';
+
+*/

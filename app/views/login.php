@@ -11,28 +11,61 @@
         <!-- BEGIN LOGIN -->
         <div class="content">
            
+                
+                    
+                       
+                       
+                
+
             <!-- BEGIN LOGIN FORM -->
-            <form class="login-form" action="index.php" method="post">
+            <?php
+                     $attr = array( 'id' => 'form_login','name'=>'form_login', 'class' => 'form-horizontal', 'method' => 'POST', 'autocomplete' => 'off', 'role' => 'form' );
+                     echo form_open('validar_login', $attr);
+                    ?>
                 <h3 class="form-title font-green">Login</h3>
+                
                 <div class="alert alert-danger display-hide">
                     <button class="close" data-close="alert"></button>
                     <span> Entra algun usuario y contraseña. </span>
                 </div>
+                
                 <div class="form-group">
-                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                     <label class="control-label visible-ie8 visible-ie9">Usuario</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" /> </div>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Correo" name="email" /> 
+                </div>
+
                 <div class="form-group">
                     <label class="control-label visible-ie8 visible-ie9">Contraseña</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" /> </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn green uppercase">Entrar</button>
-                    <label class="rememberme check mt-checkbox mt-checkbox-outline">
-                        <input type="checkbox" name="remember" value="1" />Recordar
-                        <span></span>
-                    </label>
-                    <a href="javascript:;" id="forget-password" class="forget-password">Recuperar Contraseña?</a>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Contraseña" name="contrasena" />
                 </div>
+
+
+                <div class="form-actions">
+                    
+
+                    <div class="page-header-inner ">
+                        <button type="submit" class="btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
+                              <span class="ladda-label">Ingresar</span>
+                        </button>
+                        <label class="rememberme check mt-checkbox mt-checkbox-outline">
+                            <input type="checkbox" name="remember" value="1" />Recordar
+                            <span></span>
+                        </label>
+                    </div>                    
+                    
+ <div class="form-group margin-top-30">
+                                            <label class="col-md-3 control-label" for="title"></label>
+                                            <div class="col-md-5">
+                                                <a href="javascript:;" class="btn green btn-outline sbold uppercase btn-lg" id="alert_show"> Show Alert! </a>
+                                            </div>
+                                        </div>
+                    
+                    <a href="javascript:;" id="forget-password" class="forget-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                         
+                
+                <!-- Logotipo de redes sociales
                 <div class="login-options">
                     <h4>O login con</h4>
                     <ul class="social-icons">
@@ -50,12 +83,15 @@
                         </li>
                     </ul>
                 </div>
-                <div class="create-account">
+
+                -->
+                <!-- para crear una nueva cuenta
+                    <div class="create-account">
                     <p>
                         <a href="javascript:;" id="register-btn" class="uppercase">Crea una nueva cuenta</a>
                     </p>
-                </div>
-            </form>
+                </div> -->
+            <?php echo form_close(); ?>
             <!-- END LOGIN FORM -->
             
             <!-- BEGIN FORGOT PASSWORD FORM -->
@@ -71,7 +107,7 @@
             </form>
             <!-- END FORGOT PASSWORD FORM -->
 
-            <!-- BEGIN REGISTRATION FORM -->
+            <!-- comienzo para formulario de  registrarse y crear una nueva cuenta
             <form class="register-form" action="index.html" method="post">
                 <h3 class="font-green">Sign Up</h3>
                 <p class="hint"> Enter your personal details below: </p>
@@ -79,7 +115,7 @@
                     <label class="control-label visible-ie8 visible-ie9">Full Name</label>
                     <input class="form-control placeholder-no-fix" type="text" placeholder="Full Name" name="fullname" /> </div>
                 <div class="form-group">
-                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                    
                     <label class="control-label visible-ie8 visible-ie9">Email</label>
                     <input class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email" /> </div>
                 <div class="form-group">
@@ -121,7 +157,8 @@
                     <button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right">Enviar</button>
                 </div>
             </form>
-            <!-- END REGISTRATION FORM -->
+
+            END REGISTRATION FORM -->
         </div>     <!-- Fin del  content -->
 
 

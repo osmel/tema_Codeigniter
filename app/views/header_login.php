@@ -38,6 +38,8 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <link href="<?php echo base_url(); ?>js/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url(); ?>js/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+             <!-- spinner-->   
+            <link href="<?php echo base_url(); ?>js/assets/global/plugins/ladda/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="<?php echo base_url(); ?>js/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
