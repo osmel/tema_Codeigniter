@@ -56,7 +56,7 @@ class Nucleo extends CI_Controller {
 							}
 
 							$data['id_almacen'] = $this->session->userdata('id_almacen') ;
-			              	$status_almacen  = $this->modelo->status_almacen($data);       
+			              	//$status_almacen  = $this->modelo->status_almacen($data);       
 			              	
 			            
 			              		echo TRUE;	
@@ -208,6 +208,7 @@ class Nucleo extends CI_Controller {
 	}
 
 	function dashboard() { 
+		$this->load->view( 'principal/dashboard' );
 		/*
 	    if($this->session->userdata('session') === TRUE ){
 	          $id_perfil=$this->session->userdata('id_perfil');
