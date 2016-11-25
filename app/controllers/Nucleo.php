@@ -3,6 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Nucleo extends CI_Controller {
 
+    public function __construct(){ 
+		parent::__construct();
+		$this->load->model('Modelo_nucleo', 'modelo'); 
+	}
 
 	public function index(){
 		if ( $this->session->userdata( 'session' ) !== TRUE ){
@@ -16,11 +20,65 @@ class Nucleo extends CI_Controller {
 		$this->load->view( 'login' );
 	}
 
-	function validar_login(){
-			$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
-			$this->form_validation->set_rules( 'contrasena', 'Contraseña', 'required|trim|min_length[8]|xss_clean');
 
-			echo true;
+	function validar_login(){
+	 	$params = array();
+	    parse_str($_POST['formulario'], $params);
+	    
+					$data['email']			=	$params['correo'];
+					$data['contrasena']		=	$params['contrasena'];
+					$data 				= 	$this->security->xss_clean($data);  
+
+					$login_check = $this->modelo->check_login($data);
+					
+					if ( $login_check != FALSE ){
+
+						//$usuario_historico = $this->modelo->anadir_historico_acceso($login_check[0]);
+
+						$this->session->set_userdata('session', TRUE);
+						$this->session->set_userdata('email', $data['email']);
+						
+						if (is_array($login_check))
+							foreach ($login_check as $login_element) {
+								$this->session->set_userdata('id', $login_element->id);
+								$this->session->set_userdata('id_cliente_asociado', $login_element->id_cliente);
+								$this->session->set_userdata('id_perfil', $login_element->id_perfil);
+								$this->session->set_userdata('perfil', $login_element->perfil);
+								$this->session->set_userdata('operacion', $login_element->operacion);
+								//$this->session->set_userdata('sala', $login_element->sala);
+								$this->session->set_userdata('sala', $login_element->sala+$login_element->id_almacen);
+								$this->session->set_userdata('id_almacen', $login_element->id_almacen);
+								$this->session->set_userdata('coleccion_id_operaciones', $login_element->coleccion_id_operaciones);
+								$this->session->set_userdata('nombre_completo', $login_element->nombre.' '.$login_element->apellidos);
+								$this->session->set_userdata('modulo', 'home');				
+								$this->session->set_userdata('especial', $login_element->especial);	
+								$this->session->set_userdata('id_almacen_ajuste', 1);		
+							}
+
+							$data['id_almacen'] = $this->session->userdata('id_almacen') ;
+			              	$status_almacen  = $this->modelo->status_almacen($data);       
+			              	
+			            
+			              		echo TRUE;	
+			            
+
+						
+					} else {
+						  		echo false;	
+					}
+
+	}
+
+	function validar_login1(){
+			//$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
+			//$this->form_validation->set_rules( 'contrasena', 'Contraseña', 'required|trim|min_length[8]|xss_clean');
+
+	
+ 	$params = array();
+    parse_str($_POST['formulario'], $params);
+    print_r($params);
+
+
 /*
 			if ( $this->form_validation->run() == FALSE ){
 					echo validation_errors('<span class="error">','</span>');

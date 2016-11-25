@@ -14,8 +14,9 @@
         <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-        <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+            <!-- validaciones--> 
+            <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+            <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
 
             <!-- spinner-->
@@ -30,6 +31,8 @@
             <script src="<?php echo base_url(); ?>js/assets/pages/scripts/login.min.js" type="text/javascript"></script>
             <!--spinner -->
             <script src="<?php echo base_url(); ?>js/assets/pages/scripts/ui-buttons.min.js" type="text/javascript"></script>
+            <!--validacion -->
+            <script src="<?php echo base_url(); ?>js/assets/pages/scripts/form-validation.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <!-- END THEME LAYOUT SCRIPTS -->

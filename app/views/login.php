@@ -1,6 +1,19 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php $this->load->view( 'header_login' ); ?>
 
+<style>
+ .has-error .form-control{
+    border-color: #e73d4a !important;
+ }
+.has-success .form-control {
+    border-color: #27a4b0 !important;
+}     
+
+span.osmel {
+    color: red;
+}
+
+</style>
     <body class=" login">
         <!-- BEGIN LOGO -->
         <div class="logo">
@@ -22,48 +35,59 @@
                      $attr = array( 'id' => 'form_login','name'=>'form_login', 'class' => 'form-horizontal', 'method' => 'POST', 'autocomplete' => 'off', 'role' => 'form' );
                      echo form_open('validar_login', $attr);
                     ?>
-                <h3 class="form-title font-green">Login</h3>
-                
-                <div class="alert alert-danger display-hide">
-                    <button class="close" data-close="alert"></button>
-                    <span> Entra algun usuario y contraseña. </span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">Usuario</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Correo" name="email" /> 
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label visible-ie8 visible-ie9">Contraseña</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Contraseña" name="contrasena" />
-                </div>
+                    <div class="form-body">
+                        <h3 class="form-title font-green">Login</h3>
+                        
+                        <div class="alert alert-danger display-hide">
+                            <button class="close" data-close="alert"></button>
+                            <span> Entra algun usuario y contraseña. </span>
+                        </div>
+                        
+                        <div class="alert alert-success display-hide">
+                                <button class="close" data-close="alert"></button> 
+                                  Tu validacion es OK! 
+                        </div>                
+                        
+                     
+
+                                <div class="form-group margin-top-20">
+                                                <div class="input-icon right">
+                                                    <i class="fa"></i>
+                                                    <input type="text" class="form-control form-control-solid placeholder-no-fix"  autocomplete="off" placeholder="Correo" name="correo"/> 
+                                                </div>
+                                </div>                
+
+                                            
+                                <div class="form-group margin-top-20">
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Contraseña" name="contrasena" />
+                                    </div>    
+                                </div>        
 
 
-                <div class="form-actions">
-                    
 
-                    <div class="page-header-inner ">
-                        <button type="submit" class="btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
-                              <span class="ladda-label">Ingresar</span>
-                        </button>
-                        <label class="rememberme check mt-checkbox mt-checkbox-outline">
-                            <input type="checkbox" name="remember" value="1" />Recordar
-                            <span></span>
-                        </label>
-                    </div>                    
-                    
- <div class="form-group margin-top-30">
-                                            <label class="col-md-3 control-label" for="title"></label>
-                                            <div class="col-md-5">
-                                                <a href="javascript:;" class="btn green btn-outline sbold uppercase btn-lg" id="alert_show"> Show Alert! </a>
-                                            </div>
-                                        </div>
-                    
-                    <a href="javascript:;" id="forget-password" class="forget-password">¿Olvidaste tu contraseña?</a>
-                </div>
 
-                         
+                        <div class="form-actions">
+                            
+
+                            <div class="page-header-inner ">
+                                <button type="submit" class="btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
+                                      <span class="ladda-label">Ingresar</span>
+                                </button>
+                                <label class="rememberme check mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="remember" value="1" />Recordar
+                                    <span></span>
+                                </label>
+                            </div>                    
+                            
+                                             
+
+                            <a href="javascript:;" id="forget-password" class="forget-password">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                    </div>     
                 
                 <!-- Logotipo de redes sociales
                 <div class="login-options">
