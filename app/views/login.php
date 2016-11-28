@@ -13,6 +13,34 @@ span.osmel {
     color: red;
 }
 
+
+.btn22 {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+ }
+ .btn22 .ladda-spinner,
+ .btn22 .ladda-progress,
+ .btn22 .ladda-spinner img {
+    box-shadow: none !important;
+    border: none !important;
+ }
+
 </style>
     <body class=" login">
         <!-- BEGIN LOGO -->
@@ -39,7 +67,7 @@ span.osmel {
                     <div class="form-body">
                         <h3 class="form-title font-green">Login</h3>
                         
-                        <div class="alert alert-danger display-hide">
+                        <div class="alert alert-danger cliente display-hide">
                             <button class="close" data-close="alert"></button>
                             <span> Entra algun usuario y contraseña. </span>
                         </div>
@@ -48,6 +76,11 @@ span.osmel {
                                 <button class="close" data-close="alert"></button> 
                                   Tu validacion es OK! 
                         </div>                
+
+                        <div class="alert alert-danger server display-hide ">
+                            <button class="close" data-close="alert"></button>
+                            <span> Error de usuario y contraseña. </span>
+                        </div>
                         
                      
 
@@ -73,7 +106,7 @@ span.osmel {
                             
 
                             <div class="page-header-inner ">
-                                <button type="submit" class="btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
+                                <button type="submit" class="btn22 btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
                                       <span class="ladda-label">Ingresar</span>
                                 </button>
                                 <label class="rememberme check mt-checkbox mt-checkbox-outline">

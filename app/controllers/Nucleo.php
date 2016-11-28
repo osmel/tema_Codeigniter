@@ -69,80 +69,99 @@ class Nucleo extends CI_Controller {
 
 	}
 
-	function validar_login1(){
-			//$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
-			//$this->form_validation->set_rules( 'contrasena', 'Contraseña', 'required|trim|min_length[8]|xss_clean');
-
-	
- 	$params = array();
-    parse_str($_POST['formulario'], $params);
-    print_r($params);
-
-
-/*
-			if ( $this->form_validation->run() == FALSE ){
-					echo validation_errors('<span class="error">','</span>');
-				} else {
-					$data['email']		=	$this->input->post('email');
-					$data['contrasena']		=	$this->input->post('contrasena');
-					$data 				= 	$this->security->xss_clean($data);  
-
-					$login_check = $this->modelo->check_login($data);
-					
-					if ( $login_check != FALSE ){
-
-						$usuario_historico = $this->modelo->anadir_historico_acceso($login_check[0]);
-
-						$this->session->set_userdata('session', TRUE);
-						$this->session->set_userdata('email', $data['email']);
-						
-						if (is_array($login_check))
-							foreach ($login_check as $login_element) {
-								$this->session->set_userdata('id', $login_element->id);
-								$this->session->set_userdata('id_cliente_asociado', $login_element->id_cliente);
-								$this->session->set_userdata('id_perfil', $login_element->id_perfil);
-								$this->session->set_userdata('perfil', $login_element->perfil);
-								$this->session->set_userdata('operacion', $login_element->operacion);
-								//$this->session->set_userdata('sala', $login_element->sala);
-								$this->session->set_userdata('sala', $login_element->sala+$login_element->id_almacen);
-								$this->session->set_userdata('id_almacen', $login_element->id_almacen);
-								$this->session->set_userdata('coleccion_id_operaciones', $login_element->coleccion_id_operaciones);
-								$this->session->set_userdata('nombre_completo', $login_element->nombre.' '.$login_element->apellidos);
-								$this->session->set_userdata('modulo', 'home');				
-								$this->session->set_userdata('especial', $login_element->especial);	
-								$this->session->set_userdata('id_almacen_ajuste', 1);		
-							}
-
-							$data['id_almacen'] = $this->session->userdata('id_almacen') ;
-			              	$status_almacen  = $this->modelo->status_almacen($data);       
-			              	
-			              	if ($data['id_almacen']!=0) {	
-			              		if   ($status_almacen->activo==0) {
-			              				$this->session->sess_destroy();		              		
-			            			echo '<span class="error"><b>Actualmente el sistema se encuentra desactivado. Se esta realizando un conteo físico del inventario. Contacte al Administrador.</b> </span>';  		
-			              		} else {
-			              			echo TRUE;		
-			              		}
-
-			              	} else {
-			              		echo TRUE;	
-			              	}
-
-
-						
-					} else {
-						echo '<span class="error">¡Ups! tus datos no son correctos, verificalos e intenta nuevamente por favor.</span>';
-					}
-				}
-
-*/				
-	}	
 
 
 	//recuperar constraseña
 	function forgot(){
 	    $this->load->view('recuperar_password');
 	}
+
+function dashboard() { 
+		
+		$id_perfil=$this->session->userdata('id_perfil');
+
+	    if($this->session->userdata('session') === TRUE ){
+	          
+
+	    	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
+
+			    	$id_perfil = $this->session->userdata('id_perfil');
+			          switch ($id_perfil) {    
+			            case 1:		            
+			                $this->load->view( 'principal/dashboard',$data);
+			              break;
+			            
+			            case 2: //
+			            case 3: //
+			            case 4: //
+
+			                $this->load->view( 'principal/dashboard',$data);
+			              break;
+			          
+			            default:  
+			              redirect('');
+			              break;
+			          }
+
+	        }
+	        else{ 
+	          redirect('');
+	        }	
+	        
+	}
+
+
+  function editar_usuario( $uid = '' ){
+  	 	$data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
+  	 	
+  	 	$data['dat_usuario']['usuario'] =  $this->modelo->datos_usuario( $uid );
+  		$this->load->view('usuarios/editar_usuario',$data);
+  }
+  	
+
+  function editar_usuario1( $uid = '' ){
+
+      $id=$this->session->userdata('id');
+
+	  if ($uid=='') {
+			$uid= $id;
+			$data['retorno']='';
+	  }
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+      }   
+
+
+	  $id_perfil=$this->session->userdata('id_perfil');
+		
+    //Administrador con permiso a todo ($id_perfil==1)
+    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
+    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
+		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
+			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
+			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
+			$data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
+			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
+
+			
+			$data['operaciones'] = $this->modelo->listado_operaciones();
+
+
+
+	        $data['id']  = $uid;
+			if ( $data['usuario'] !== FALSE ){
+					$this->load->view('usuarios/editar_usuario',$data);
+			} else {
+						redirect('');
+			}
+		} else
+		{
+			 redirect('');
+		}	
+	}
+
 
 	//recuperar constraseña
 	function session(){
@@ -207,47 +226,7 @@ class Nucleo extends CI_Controller {
         }
 	}
 
-	function dashboard() { 
-		$this->load->view( 'principal/dashboard' );
-		/*
-	    if($this->session->userdata('session') === TRUE ){
-	          $id_perfil=$this->session->userdata('id_perfil');
-
-	          $data['nodefinido_todavia']        = '';
-	          $data['estatuss']  = $this->catalogo->listado_estatus(-1,-1,-1);
-	          $data['productos'] = $this->catalogo->listado_productos_unico();
-	          $data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
-	          $data['facturas']   = $this->catalogo->listado_tipos_facturas(-1,-1,'1');
-	          
-			  $dato['id'] = 7;
-			  $data['configuracion'] = $this->catalogo->coger_configuracion($dato); 
-
-			    	$id_perfil = $this->session->userdata('id_perfil');
-			          switch ($id_perfil) {    
-			            case 1:		            
-			            case 2:
-			            case 4:
-			                $this->load->view( 'principal/dashboard',$data );
-			              break;
-			            
-			            case 3: //vendedor
-			                $data['colores'] =  $this->catalogo->listado_colores(  );
-			            	$data['estatuss']  = $this->catalogo->listado_estatus(-1,-1,'1');
-			                $this->load->view( 'principal/inicio',$data );
-			              break;
-			          
-			            default:  
-			              redirect('');
-			              break;
-			          }
-
-	        }
-	        else{ 
-	          redirect('');
-	        }	
-	        */
-	}
-
+	
  // Creación de especialista o Administrador (Nuevo Colaborador)
 	function nuevo_usuario(){
     if($this->session->userdata('session') === TRUE ){

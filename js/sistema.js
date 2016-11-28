@@ -6,8 +6,10 @@ var FormValidation = function () {
     var handleValidation2 = function() {
             // http://docs.jquery.com/Plugins/Validation
             var form2 = $('#form_login');
-            var error2 = $('.alert-danger', form2);
+            var error2 = $('.alert-danger.cliente', form2);
             var success2 = $('.alert-success', form2);
+            var error_server = $('.alert-danger.server', form2);
+
 
             form2.validate({
                 errorElement: 'span', //Por defecto la entrada de mensaje de error contiene span. default input error message container
@@ -15,7 +17,7 @@ var FormValidation = function () {
                 /* errorClass y validClass: podemos especificar el nombre de la clase CSS que se agregará al elemento validado en caso de fracaso
                  o de éxito de la validación.
                 */
-                errorClass: 'osmel help-block help-block-error', // por defecto la entrada de mensaje de error tiene esta clase. default input error message class
+                errorClass: 'help-block help-block-error', // por defecto la entrada de mensaje de error tiene esta clase. default input error message class
 				//validClass: 'help-block help-block-ok',                 
                 focusInvalid: false, // tenga focus la ultima  invalidada. do not focus the last invalid input
                 ignore: "",  // validando todos los campos incluyendo los hidden. validate all fields including form hidden input
@@ -82,6 +84,7 @@ var FormValidation = function () {
 				//InvalidHandler: Es una función que "se llamará si la validación no ha tenido éxito".
                 invalidHandler: function (event, validator) { //Mostrar errores en envio de formulario. display error alert on form submit              
                     success2.hide();
+                    error_server.hide();
                     error2.show();
                     App.scrollTo(error2, -200);
                 },
@@ -92,11 +95,10 @@ var FormValidation = function () {
 					nuestra enviar definitivamente el formulario con form.submit().
                 */
                 submitHandler: function (form) {
-                    success2.show();
-                    error2.hide();
+
                     //form[0].submit(); // submit the form
                     
-                    console.log(form[0]);
+                    //console.log(form[0]);
 
 					jQuery.ajax({
 						        url : 'validar_login',
@@ -107,65 +109,35 @@ var FormValidation = function () {
 						       // dataType : 'json',
 						        success : function(data) {	
 						        	if(data != true){
-						        		console.log(data);
-						        		alert(data);
+						        		//fallo
+					  					error_server.show();
+					                    success2.hide();
+					                    error2.hide();						        		
 						        	} else {
-						        		alert('asd');
+						        		//exito
+						        		success2.show();
+						        		error_server.hide();
+					                    error2.hide();						        		
+
 										window.location.href = '';        		
 						        	}	
 						        }
 					});						        
-					
 
+                },
 
+                /*
+                	showErrors: es una función que nos permite tratar con todos los mensajes de errores encontrados para visualizar
+                	 de una forma concreta o realizar la operación que creamos oportuna.
+                */
+				showErrors: function(errorMap, errorList) {
+				 	jQuery.each(errorList, function(e) {
+				 		 //console.log(e);
+				 	});
+				 	//http://stackoverflow.com/questions/285428/how-to-display-jquery-validation-error-container-only-on-submit
+				 	this.defaultShowErrors();
+				  },                  
 
-					/*
-
-//logueo y recuperar contraseña
-	jQuery("#form_login").submit(function(e){
-		jQuery('#foo').css('display','block');
-		var spinner = new Spinner(opts).spin(target);
-		jQuery(this).ajaxSubmit({
-			success: function(data){
-				if(data != true){
-					spinner.stop();
-					jQuery('#foo').css('display','none');
-					jQuery('#messages').css('display','block');
-					jQuery('#messages').addClass('alert-danger');
-					jQuery('#messages').html(data);
-					jQuery('html,body').animate({
-						'scrollTop': jQuery('#messages').offset().top
-					}, 1000);
-				}else{
-						spinner.stop();
-						jQuery('#foo').css('display','none');
-						window.location.href = '';						
-				}
-			} 
-		});
-		return false;
-	});
-
-					$(this).ajaxSubmit({
-					    type : 'POST',
-					    data : { 
-									formulario 	: $(form).serialize(), //JSON.stringify($(form)), //
-						        },
-				        dataType : 'json',						
-						success: function(data){
-							alert(data);
-						return false;
-						}
-
-					});
-					return false;
-					*/
-					
-
-
-
-
-                }
             
             }); //fin de   form2.validate({
 
@@ -189,6 +161,9 @@ var FormValidation = function () {
 
 
 jQuery(document).ready(function($) {
+
+
+
 
  	FormValidation.init();
 //////////////////////////////////////////////////

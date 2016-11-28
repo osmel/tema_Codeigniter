@@ -12,7 +12,7 @@
 			$this->timezone    = 'UM1';
 
 				//usuarios
-			$this->usuarios    = $this->db->dbprefix('usuarios');
+			     $this->usuarios    = $this->db->dbprefix('usuarios');
             $this->perfiles    = $this->db->dbprefix('perfiles');
             $this->catalogo_operaciones    = $this->db->dbprefix('catalogo_operaciones');
             $this->proveedores             = $this->db->dbprefix('catalogo_empresas');
@@ -65,7 +65,53 @@
 				return FALSE;
 			$login->free_result();
 		}
+
+      //Lista de todos los usuarios 
+
+        public function listado_usuarios(  ){
+
+            $this->db->select('u.id, nombre,  apellidos');
+
+            $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
+            $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
+            $this->db->select('p.id_perfil,p.perfil,p.operacion');
+            
+            $this->db->from($this->usuarios.' as u');
+            $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');
+
+            $result = $this->db->get();
+            
+            if ( $result->num_rows() > 0 )
+               return $result->result();
+            else
+               return False;
+            $result->free_result();
+        }       
    
+
+     public function datos_usuario( $uid ){
+            $this->db->select('u.id, nombre, apellidos, u.id_perfil,  coleccion_id_operaciones, id_cliente,id_almacen');
+            $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
+            $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
+            $this->db->select( "AES_DECRYPT( contrasena,'{$this->key_hash}') AS contrasena", FALSE );
+
+            $this->db->select( "p.perfil", FALSE );
+            
+            $this->db->from($this->usuarios.' as u');
+            $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');
+            $this->db->where('id', $uid);
+
+            $result = $this->db->get();            
+            
+            
+            
+            if ($result->num_rows() > 0)
+              return $result->row();
+            else 
+              return FALSE;
+            $result->free_result();
+        }  
+
 
 
 	} 

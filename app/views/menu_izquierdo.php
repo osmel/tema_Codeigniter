@@ -105,6 +105,59 @@
                              <!-- Fin Caracteristicas -->     
                                 
                                 
+                                <!-- encabezado Caracteristicas -->        
+                                <li class="heading">
+                                    <h3 class="uppercase">Usuarios</h3>
+                                </li>
+                                
+                           
+                                <li class="nav-item">
+                                    <a href="javascript:;" class="nav-link nav-toggle">
+                                        <i class="icon-user"></i>
+                                        <span class="title">Listados</span>
+                                        <span class="arrow"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <?php foreach ($usuarios as $usuario) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="<?php echo base_url(); ?>editar_usuario/<?php echo $usuario->id; ?>" class="nav-link ">
+                                                    <i class="icon-user"></i>
+                                                    <span class="title"><?php echo $usuario->nombre.' '.$usuario->apellidos; ?></span>
+                                                    <span class="badge badge-success">6</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>    
+                                    </ul>
+
+                                </li>
+
+                                <li class="nav-item  ">
+                                    <a href="#" class="nav-link nav-toggle">
+                                        <i class="icon-users"></i>
+                                        <span class="title">Perfiles</span>                                        
+                                    </a>
+                                </li>
+                                
+                                <!-- http://keenthemes.com/preview/metronic/theme/admin_4/ui_icons.html-->
+                                <li class="nav-item  ">
+                                    <a href="#" class="nav-link nav-toggle">
+                                        <i class="fa fa-user-plus" ></i>
+                                        <span class="title">Agregar nuevo</span>                                        
+                                    </a>
+                                </li>
+
+                               <li class="nav-item  ">
+                                    <a href="#" class="nav-link nav-toggle">
+                                        <i class="fa fa-history"></i>
+                                        <span class="title">Histórico de accesos</span>
+                                    </a>
+                                </li>
+                                
+                                
+                             <!-- Fin Caracteristicas --> 
+
+
+
                             </ul>
                             <!-- END SIDEBAR MENU -->
                         <!-- END SIDEBAR MENU -->

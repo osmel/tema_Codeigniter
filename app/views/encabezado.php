@@ -187,7 +187,7 @@
                                             <li class="divider"> </li>
                                             
                                             <li>
-                                                <a href="page_user_login_1.html">
+                                                <a href="salir">
                                                     <i class="icon-key"></i> Salir </a>
                                             </li>
                                         </ul>

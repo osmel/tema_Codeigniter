@@ -65,7 +65,7 @@ $route['validar_nuevo_usuario']         = 'nucleo/validar_nuevo_usuario';
 $route['eliminar_usuario/(:any)/(:any)']		= 'nucleo/eliminar_usuario/$1/$2';
 $route['validando_eliminar_usuario']    = 'nucleo/validar_eliminar_usuario';
 $route['actualizar_perfil']		         = 'nucleo/actualizar_perfil';
-$route['editar_usuario/(:any)']			= 'nucleo/actualizar_perfil/$1';
+$route['editar_usuario/(:any)']			= 'nucleo/editar_usuario/$1';
 $route['validacion_edicion_usuario']    = 'nucleo/validacion_edicion_usuario';
 $route['salir']							= 'nucleo/logout';
 

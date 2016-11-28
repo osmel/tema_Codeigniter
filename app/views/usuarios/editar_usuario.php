@@ -12,6 +12,7 @@
 		                <div class="page-content-wrapper">
 		                	<div class="page-content">
 									<?php $this->load->view( 'navegacion' ); ?>
+									<?php $this->load->view( 'usuarios/user',$dat_usuario ); ?>
 		                	</div>
 		                </div>
 	                <!--Fin Contenido de la pagina-->
