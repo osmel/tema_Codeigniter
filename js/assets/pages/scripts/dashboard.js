@@ -460,14 +460,17 @@ var Dashboard = function() {
             if (!jQuery().sparkline) {
                 return;
             }
-            $("#sparkline_bar").sparkline([8, 9, 10, 11, 10, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12], {
-                type: 'bar',
-                width: '100',
-                barWidth: 5,
-                height: '55',
-                barColor: '#f36a5b',
-                negBarColor: '#e02222'
-            });
+            $("#sparkline_bar").sparkline(
+                [8, 9, 10, 11, 10, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12], 
+                {
+                    type: 'bar',
+                    width: '100',
+                    barWidth: 5,
+                    height: '55',
+                    barColor: '#f36a5b',
+                    negBarColor: '#e02222'
+                }
+            );
 
             $("#sparkline_bar2").sparkline([9, 11, 12, 13, 12, 13, 10, 14, 13, 11, 11, 12, 11, 11, 10, 12, 11, 10], {
                 type: 'bar',

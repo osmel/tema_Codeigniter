@@ -17,7 +17,7 @@
                                         <!-- END SIDEBAR USERPIC -->
                                         <!-- SIDEBAR USER TITLE -->
                                         <div class="profile-usertitle">
-                                            <div class="profile-usertitle-name"> <?php echo $usuario->nombre?> </div>
+                                            <div class="profile-usertitle-name"> <?php echo $usuario->nombre.' '.$usuario->apellidos; ?> </div>
                                             <div class="profile-usertitle-job"> <?php echo $usuario->perfil?> </div>
                                         </div>
                                         <!-- END SIDEBAR USER TITLE -->
@@ -35,7 +35,7 @@
                                                         <i class="icon-home"></i> Inicio </a>
                                                 </li>
                                                 <li>
-                                                    <a href="page_user_profile_1_account.html">
+                                                    <a href="/tema/actualizar_perfil">
                                                         <i class="icon-settings"></i> Configuración de Cuenta </a>
                                                 </li>
                                                 <li>
@@ -89,32 +89,37 @@
                                 <div class="profile-content">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <!-- BEGIN PORTLET -->
+                                            <!-- Fin PORTLET -->
                                             <div class="portlet light ">
                                                 <div class="portlet-title">
                                                     <div class="caption caption-md">
                                                         <i class="icon-bar-chart theme-font hide"></i>
-                                                        <span class="caption-subject font-blue-madison bold uppercase">Your Activity</span>
+                                                        <span class="caption-subject font-blue-madison bold uppercase">Tus Actividades</span>
                                                         <span class="caption-helper hide">weekly stats...</span>
                                                     </div>
                                                     <div class="actions">
                                                         <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                             <label class="btn btn-transparent grey-salsa btn-circle btn-sm active">
-                                                                <input type="radio" name="options" class="toggle" id="option1">Today</label>
+                                                                <input type="radio" name="options" class="toggle" id="option1">Hoy</label>
                                                             <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
-                                                                <input type="radio" name="options" class="toggle" id="option2">Week</label>
+                                                                <input type="radio" name="options" class="toggle" id="option2">Semana</label>
                                                             <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
-                                                                <input type="radio" name="options" class="toggle" id="option2">Month</label>
+                                                                <input type="radio" name="options" class="toggle" id="option2">Mes</label>
                                                         </div>
                                                     </div>
                                                 </div>
+                                               
                                                 <div class="portlet-body">
                                                     <div class="row number-stats margin-bottom-30">
                                                         <div class="col-md-6 col-sm-6 col-xs-6">
                                                             <div class="stat-left">
                                                                 <div class="stat-chart">
-                                                                    <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
+                                                                    <!--  http://omnipotent.net/jquery.sparkline/#s-news
+                                                                    do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break 
+                                                                    No rompe la línea "sparkline_bar" div. El gráfico Sparkline tiene un problema cuando la div del contenedor tiene salto de línea-->
                                                                     <div id="sparkline_bar"></div>
+                                                                    <div class="mouseoverregion"></div>
+                                                                    
                                                                 </div>
                                                                 <div class="stat-number">
                                                                     <div class="title"> Total </div>
@@ -129,12 +134,13 @@
                                                                     <div id="sparkline_bar2"></div>
                                                                 </div>
                                                                 <div class="stat-number">
-                                                                    <div class="title"> New </div>
+                                                                    <div class="title"> Nuevos </div>
                                                                     <div class="number"> 719 </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                     <div class="table-scrollable table-scrollable-borderless">
                                                         <table class="table table-hover table-light">
                                                             <thead>
@@ -199,11 +205,16 @@
                                                                 </td>
                                                             </tr>
                                                         </table>
-                                                    </div>
-                                                </div>
+                                                    </div> <!-- Fin tabla -->
+
+                                                </div> <!-- Fin portlet-body -->
                                             </div>
                                             <!-- END PORTLET -->
                                         </div>
+
+
+
+
                                         <div class="col-md-6">
                                             <!-- BEGIN PORTLET -->
                                             <div class="portlet light ">

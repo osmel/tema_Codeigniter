@@ -67,7 +67,10 @@
         <!-- END THEME GLOBAL SCRIPTS -->
     
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-      		<script src="<?php echo base_url(); ?>js/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
+      		<!--<script src="<?php echo base_url(); ?>js/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>-->
+      		 <!-- Propio -->
+           <script src="<?php echo base_url(); ?>js/sistema.js" type="text/javascript"></script>
+        <!-- fin Propio -->  
         <!-- END PAGE LEVEL SCRIPTS -->
     
         <!-- BEGIN THEME LAYOUT SCRIPTS -->

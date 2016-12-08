@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php $this->load->view( 'header' ); ?>
+	
+	
 
             <!-- Comienzo del contenedor -->
 	            <div class="page-container">
@@ -12,6 +14,8 @@
 		                <div class="page-content-wrapper">
 		                	<div class="page-content">
 									<?php $this->load->view( 'navegacion' ); ?>
+
+									
 									<?php $this->load->view( 'usuarios/user',$dat_usuario ); ?>
 		                	</div>
 		                </div>

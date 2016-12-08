@@ -352,8 +352,53 @@ function dashboard() {
 
 
 
+function actualizar_perfil( $uid = '' ){
+
+      $id=$this->session->userdata('id');
+
+	  if ($uid=='') {
+			$uid= $id;
+			$data['retorno']='';
+	  }
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+      }   
+
+
+	  $id_perfil=$this->session->userdata('id_perfil');
+		
+    //Administrador con permiso a todo ($id_perfil==1)
+    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
+    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
+		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
+			/*
+			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
+			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
+			$data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
+			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
+
+			
+			$data['operaciones'] = $this->modelo->listado_operaciones();
+			*/	
+
+				$this->load->view('usuarios/edicion');
+			/*
+	        $data['id']  = $uid;
+			if ( $data['usuario'] !== FALSE ){
+					$this->load->view('usuarios/edicion',$data);
+			} else {
+						redirect('');
+			}*/
+		} else
+		{
+			 redirect('');
+		}	
+	}
+
 	//edicion del especialista o el perfil del especialista o administrador activo
-	function actualizar_perfil( $uid = '' ){
+	function actualizar_perfil111( $uid = '' ){
 
       $id=$this->session->userdata('id');
 
