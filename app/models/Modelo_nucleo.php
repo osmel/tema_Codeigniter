@@ -282,7 +282,7 @@ WHERE 1
           
           //copiar a tabla "historico_conteo_almacen"
           foreach ($objeto as $key => $value) {
-                $dia[date('d', strtotime($value->fecha) )] =$value;
+                $dia[date('j', strtotime($value->fecha) )] =$value; //j: dia sin ceros
           }
 
           return $dia; 

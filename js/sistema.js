@@ -10,7 +10,7 @@ var graficos = function () {
         var values = [1, 3,null, 5,0, 3.6, 8,6,-4];
         //$('#sparkline_bar12').sparkline(values, {
 
-        $('#sparkline_bar12, #sparkline_bar22').sparkline('html', {
+        $('#sparkline_bar12').sparkline('html', {
             type: 'bar',
             //interactividad o eventos
 
@@ -38,7 +38,59 @@ var graficos = function () {
 
             width: '100',
             barWidth: 3, //Tamaño de cada barra, en pixels
-            barSpacing: 2, //Separación entre barras, en pixels.
+            barSpacing: 1, //Separación entre barras, en pixels.
+
+            height: '55',
+            nullColor:'#008000', //color usado para valores iguales a null
+            zeroColor:'#000000', //Color de los valores ceros
+            barColor: '#f36a5b', //Color de los valores positivos
+            negBarColor: '#2499a3', //Color de los valores negativos
+            //colorMap: { '1:2': '#33cc33', '3:6': '#668cff', '7:': '#ff3385' }, // mapa de rango para asignar valores específicos a los colores seleccionados
+            
+            
+            //tooltipFormat: $.spformat('{{value}}', 'tooltip-class'),
+            tooltipFormat: '{{value:levels}} - {{value}}',  //level es el valor que va tomando abajo
+            tooltipValueLookups: {  //Traduce los "nombres de campos" y "valores" a otras cadenas arbitrarias utilizando esta opción
+                levels: $.range_map({ ':2': 'Bajo', '3:6': 'Medio', '7:': 'Alto','null': 'Valor nulo' })
+                //:2 -> Núm desde -infinito hasta 2
+                //3:6 -> Núm desde 3 hasta 6
+                //7: -> Núm desde 7 hasta  +infinito 
+            },
+
+              
+        });
+
+
+
+   $('#sparkline_bar22').sparkline('html', {
+            type: 'bar',
+            //interactividad o eventos
+
+            disableInteraction: false, //true = "desactivar todas las interactividad(eventos)"
+            disableTooltips: false, //true = "desactivar todos los tooltips"
+            disableHighlight: false, //true = "desactivar todos los Highlight(resaltados de las barras)"
+            highlightLighten:1.4,  //Controla cantidad aclarar u oscurecer. 
+                                  //1.5: aclarará en un 50%,
+                                  //0.5: oscurece en un 50%.   
+                                  //El valor predeterminado es 1,4
+            //highlightColor:'#f36a5b', // Será el color que toma las varas cuando se hace mouse-over
+            
+            
+            //tooltipOffsetX:50, //número de píxeles de distancia del puntero del ratón para presentar el tooltip en el eje X
+            //tooltipOffsetY:50, //número de píxeles de distancia del puntero del ratón para presentar el tooltip en el eje Y
+
+            tooltipChartTitle: 'titulo',
+            tooltipSkipNull: false, //true=>  "valores nulos" no tendrán un tooltip a mostrar
+
+            //FORMATO DE NUMERO
+            numberDigitGroupCount:3,  //Número de dígitos entre el separador de grupo de números. predeterminado es 3.
+            NumberDigitGroupSep:'*', //separador de grupos miles
+            numberDecimalMark:'.', //Caracteres para usar para el punto decimal
+
+
+            width: '100',
+            barWidth: 4, //Tamaño de cada barra, en pixels
+            barSpacing: 1, //Separación entre barras, en pixels.
 
             height: '55',
             nullColor:'#008000', //color usado para valores iguales a null

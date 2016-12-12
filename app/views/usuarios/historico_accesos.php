@@ -79,10 +79,10 @@
                             <div id="sparkline_bar22">
                                 <?php 
                                     foreach ($dat_historico_mes as $key => $value) {
-                                            echo($value->cantidad.  (($key!=count($dat_historico_mes)-1) ? ',':'') );
+                                            echo($value->cantidad.  (($key!=count($dat_historico_mes)) ? ',':'') );
                                     }   
                                 ?>
-                                
+
                             </div>
                         </div>
                         <div class="stat-number">
