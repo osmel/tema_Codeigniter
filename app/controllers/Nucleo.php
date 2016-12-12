@@ -112,9 +112,22 @@ function dashboard() {
 
 
   function editar_usuario( $uid = '' ){
-  	 	$data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
-  	 	
-  	 	$data['dat_usuario']['usuario'] =  $this->modelo->datos_usuario( $uid );
+
+
+     	  
+
+  	 	$data['usuarios'] = $this->modelo->listado_usuarios(); 
+  	 	$data['dat_usuario']  = $this->modelo->datos_usuario( $uid );
+  	 	$data['uid'] = $uid;
+  	 	$data['dat_historico_semana']  = $this->modelo->historico_acceso_semana( $data );
+  	 	$data['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
+  	 	//print_r($data['dat_historico_mes']);
+  	 	//print date_default_timezone_get();
+  	 	//die;
+
+  	 	//$data['dat_usuario']['usuario'] =  $this->modelo->datos_usuario( $uid );
+  	 	//$data['dat_user']['dat_usuario']['usuario'] = $data['dat_usuario']['usuario'];
+
   		$this->load->view('usuarios/editar_usuario',$data);
   }
   	

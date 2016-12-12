@@ -7,7 +7,7 @@
 	            <div class="page-container">
 	                
 	                <!--Menu Izquierdo-->	
-	            		<?php $this->load->view( 'menu_izquierdo',$datos ); ?>	
+	            		<?php $this->load->view( 'menu_izquierdo' ); ?>	
 	            	<!--Fin menu Izquierdo-->	
 
 	                <!--Contenido de la pagina -->
@@ -16,7 +16,7 @@
 									<?php $this->load->view( 'navegacion' ); ?>
 
 									
-									<?php $this->load->view( 'usuarios/user',$dat_usuario ); ?>
+									<?php $this->load->view( 'usuarios/user'); ?>
 		                	</div>
 		                </div>
 	                <!--Fin Contenido de la pagina-->

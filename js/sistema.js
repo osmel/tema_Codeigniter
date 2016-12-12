@@ -6,8 +6,11 @@ var graficos = function () {
             }
 
 
+       // $('#sparkline_bar12').sparkline();
         var values = [1, 3,null, 5,0, 3.6, 8,6,-4];
-        $('#sparkline_bar').sparkline(values, {
+        //$('#sparkline_bar12').sparkline(values, {
+
+        $('#sparkline_bar12, #sparkline_bar22').sparkline('html', {
             type: 'bar',
             //interactividad o eventos
 
@@ -34,7 +37,7 @@ var graficos = function () {
 
 
             width: '100',
-            barWidth: 10, //Tamaño de cada barra, en pixels
+            barWidth: 3, //Tamaño de cada barra, en pixels
             barSpacing: 2, //Separación entre barras, en pixels.
 
             height: '55',
@@ -309,7 +312,7 @@ jQuery(document).ready(function($) {
 
     graficos.init();
 
- 	FormValidation.init();
+// 	FormValidation.init();
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 
