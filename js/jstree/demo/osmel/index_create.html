@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- CSS -->
+  
+  <link rel="stylesheet" href="./../../dist/themes/default/style.min.css" />
+  <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+  <!-- Marcado basico es un contenedor envolviendo al menos un nodo  <ul> con algunos nodos anidados <li> con un poco de texto en su interior. -->
+  <div class="col-md-2 col-sm-4 col-xs-4">
+    <input type="text" value=""  id="buscar" placeholder="Buscar..." />
+  </div>
+
+  <div id="tree">
+    
+
+  </div>
+  <!--<button>demo button</button>-->
+
+  <!-- jQuery library -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- jstree -->
+  <script src="./../../dist/jstree.min.js"></script>
+
+  <script>
+  $(function () {
+
+
+        var to = false;
+        $('#buscar').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#buscar').val();
+                $('#tree').jstree(true).search(v); //esta es la funcion
+            }, 250);
+        });
+
+        function customMenu(node) {
+            // The default set of all items
+            var items = {
+
+                createItem: { // The "create" menu item
+                    label: "Crear",
+                    action: function (data) {
+                        
+                        /*
+                        //obtener una referencia de una instancia existente
+
+                        Proporcionado un contenedor con un ID de "tree", y un nodo anidado con un ID de "rama"
+                        todos retornaran  la misma instancia
+
+                                    $.jstree.reference('tree');
+                                    $.jstree.reference('#tree');
+                                    $.jstree.reference($('#tree'));
+                                    $.jstree.reference(document.getElementByID('tree'));
+                                    $.jstree.reference('branch');
+                                    $.jstree.reference('#branch');
+                                    $.jstree.reference($('#branch'));
+                                    $.jstree.reference(document.getElementByID('branch'));                        
+
+                          */  
+                        var inst = $.jstree.reference(data.reference), //instancia o referencia
+                            ref = $('#tree').jstree(true),  //instancia o referencia
+
+
+                            referencia = data.reference,
+                            posicion = data.position,
+                            elemento  = data.element, 
+                            item = data.item,
+                            
+                            /*
+                            obtener la representación JSON total de un nodo (o la consulta actual extendida del nodo del DOM) mediante el uso de cualquier entrada (niño elemento DOM, cadena de ID, selector, etc.)
+                            get_node (obj [, boolean])   true->Como DOM, false->Como json
+                            */
+
+                            obj = inst.get_node(data.reference), //objeto(nodo) que estoy manipulando
+
+                             /*   
+                            get_selected ([boolean])
+                            obtener un array de todos los nodos seleccionados
+                                "true": el array retornado estará formado por los objetos del nodo completo, 
+                                "false": sólo serán retornados los id
+                            */
+                            sel = inst.get_selected();
+
+                            /*
+                            console.log(inst);
+                            console.log(ref);
+                            console.log(obj);
+                            console.log(sel);*/
+
+
+                            console.log(referencia); //[a#ajson1_anchor.jstree-anchor.jstree-clicked.jstree-context, prevObject: m.fn.init[1], context: div#tree.jstree.jstree-1.jstree-default]
+                            console.log(posicion); //Object {x: 32, y: 53}
+                            console.log(elemento); //[ul.vakata-context.jstree-contextmenu.jstree-default-contextmenu]
+                            console.log(item);  //Object {label: "Crear"}
+                        /*
+                        inst.create_node(obj, {}, "", function (new_node) {
+                            new_node.data = {file: true};
+                            setTimeout(function () { inst.edit(new_node); },0);
+                        });*/
+
+
+                        /*
+                        create_node ([par, node, pos, callback, is_loaded])
+
+                             crear un nuevo nodo (no confundir con load_node)
+                                par: nodo padre (para crear un nodo raíz use "#" (string) o `null`)
+                                node: los datos para el nuevo nodo (un objeto JSON válido, o una simple cadena con el nombre)
+                                pos(0,1,2,first,last): índice en el que insertar el nodo, "first" y "last" también son compatibles, por defecto es "last"
+                                callback(Function): una función que se llama cuando ha sido creado el nodo
+                                is_loaded(Boolean): argumento interno que indica si el nodo padre fue cargado con éxito
+                            Retorna(String): el id del nodo recien creado  
+
+                            nota:Provoca los eventos "model.jstree" y "create_node.jstree"
+
+                        */
+                        //inst.create_node(sel, {"type":"file"});
+                        //inst.create_node(sel, {"text": "osmel", "data" : { "file" : true } }, "last",
+                        inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
+                            function (new_node) {
+                                console.log(new_node);
+
+                                //new_node.data = {file: true};
+                                new_node.icon = "fa fa-coffee";
+                                new_node.text = "nuevo Nombre";
+                                
+                                inst.edit(new_node);
+                                //inst.edit(obj);
+                                //console.log(new_node.data);
+                                //new_node.data = {"text":"osmel2"};
+                                //new_node.data = {file: true};
+                                //setTimeout(function () { inst.edit(new_node); },0);
+                            }
+                        );
+
+                        if(sel) {
+                               // inst.edit(sel);
+                        }
+                    }
+                },
+
+                /*
+                    createItem: {
+                            label: "Create",
+                            action: function (data) {
+                                var ref = $('#tree').jstree(true),
+                                    sel = ref.get_selected();
+                                if(!sel.length) { return false; }
+                                sel = sel[0];
+                                sel = ref.create_node(sel, {"type":"file"});
+                                if(sel) {
+                                    ref.edit(sel);
+                                }
+                            }    
+                    },
+                 */   
+
+                renameItem: { // The "rename" menu item
+                    label: "Renombrar",
+                    action: function (data) {
+                        var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                        inst.edit(obj);
+                    }
+                },
+                deleteItem: { // The "delete" menu item
+                    label: "Eliminar",
+                    action: function (data) {
+                        var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                        if(inst.is_selected(obj)) {
+                            inst.delete_node(inst.get_selected());
+                        }
+                        else {
+                            inst.delete_node(obj);
+                        }
+                    }
+                }
+            };
+            
+            
+            if (node.data.file) {
+                delete items.createItem;
+            }
+            
+            else{
+                delete items.deleteItem;
+                delete items.renameItem;
+            }
+            
+            return items;
+        }
+
+        $('#tree').jstree({
+            'core': {
+                'check_callback': true, //hace posible q el menu contextual haga su tatea
+                'data': [
+                    { "id": "ajson1", "parent": "#", "text": "Proyectos", "state": {"opened": true}, "type":"root", "data" : { "file" : false } },
+                    /*
+                    { "id": "ajson2", "parent": "ajson1", "text": "File 1", "type":"file", "data" : { "file" : true } },
+                    { "id": "ajson3", "parent": "ajson1", "text": "File 2", "type":"file", "data" : { "file" : true } }
+                    */
+                ]
+            },
+            
+            "types" : {
+                "#" : { 
+                         "max_children" : 1, //maximos hijos
+                         "max_depth" : 5,  //maxima profundidad
+                         "valid_children" : ["root"] 
+                     },
+                "root" : { "icon":"fa fa-tree", "valid_children" : ["default"] },
+                "file" : { "icon":"fa fa-pagelines", "valid_children" : [] },
+                "default" : {  "icon":"fa fa-check-square-o", "valid_children" : ["default"] },
+                //"#" : { "icon":"fa fa-tree", "valid_children" : ["default"] },
+                //"default" : { "valid_children" : ["default","file"] },
+                //"file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : [] }
+                
+                
+            },
+
+
+
+
+            "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow" ],
+            //dnd: arrastrar y soltar
+            //types: añadir tipos predefinidos para grupos de nodos
+            //state: guarda todos los nodos abiertos y seleccionados 
+            //Wholerow: Hace que cada nodo aparezca a nivel de bloque que hace que sea más fácil la selección
+            "contextmenu": {items: customMenu}
+        });
+
+        // http://jsfiddle.net/7xpbf/1/
+
+/*
+        $('#tree').jstree({ 'core' : {
+            'data' : {
+                'url' : function (node) {
+                  return node.id === '#' ? 'ejemplo.json' :  'hijo.json'; //hijos_heredero.json
+                },
+                'data' : function (node) {
+                  return { 'id' : node.id };
+                }
+              }
+
+            
+        }});
+
+  */      
+
+
+
+  });
+  </script>
+</body>
+</html>

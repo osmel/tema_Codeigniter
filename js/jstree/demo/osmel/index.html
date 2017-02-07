@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- CSS -->
+  
+  <link rel="stylesheet" href="./../../dist/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- Marcado basico es un contenedor envolviendo al menos un nodo  <ul> con algunos nodos anidados <li> con un poco de texto en su interior. -->
+  <div id="jstree">
+    	<!-- id de los nodos id="j1_1", id="j1_2", etc. Pero puede cambiar el id para un especificamente   -->    
+    <ul>
+      <li>raiz <!--Internamente jstree convierte el texto en un enlace -->
+        
+        <ul>
+
+          <!-- Dar a sus nodos identificadores únicos añadir el atributo id-->	
+          <li id="child_node_1">nodo 1</li>
+          
+          <li>nodo 2</li>
+
+
+          <li> 
+          	<!-- Se usa para el caso en que haga falta, presentar el elemento <a> señalado, o agregar una clase, etc en el elemento <a>  -->
+          		<a href="#" class="jstree-clicked">Hijo cliqueado</a>
+          </li>		
+
+          <!-- establecer la "clase jstree-open" en cualquier elemento <li> para que sea inicialmente (abierta) -->
+          <li class="jstree-open" id="node_1">Elemento abierto
+			  <ul>
+			    <li>Sub-hijo</li>
+			  </ul>
+		  </li>
+
+		  <!-- 
+		   -->
+
+		  <!-- 
+			
+				
+		  establecer el estado de un nodo(opened, selected, disabled, icon) utilizando un atributo data-jstree -->
+
+			<li data-jstree='{"opened":true,"selected":true}'>Estado de un nodo
+			  <ul>
+			    <li data-jstree='{"disabled":true}'>hijo 1</li>
+			    <li data-jstree='{"icon":"//jstree.com/tree.png"}'>hijo 2</li> <!-- url-->
+			    <li data-jstree='{"icon":"glyphicon glyphicon-leaf"}'>hijo 3</li><!-- Twitter Bootstrap-->
+			  </ul>
+			</li>
+
+
+
+        </ul>
+
+
+      </li>
+      <li>raiz 2</li>
+    </ul>
+
+  </div>
+  <button>demo button</button>
+
+  <!-- jQuery library -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- jstree -->
+  <script src="./../../dist/jstree.min.js"></script>
+
+  <script>
+  $(function () {
+
+//
+
+	    // Crea una instancia cdo el DOM esta listo
+	    //$('#jstree').jstree();
+
+	    //no es una fiesta que se da en todo cfgos, pero que al menos ese pequeño lugar mantiene la tradición. Aqui en cambio esta gente solo amanecen comiendo tamales, pero ni cantan, ni bailan
+
+		$('#jstree').jstree({
+		  //* opciones que no dependen de un plugin están contenidas en el objeto de configuración "core"
+		  
+		  "core" : { 
+		    "themes" : {
+		      "variant" : "large", //estirar el diseño
+		    },
+		    //"multiple" : true, //puede marcar varios al mismo tiempo  
+		    					// $.jstree.defaults.core.multiple=false;
+		  },
+		  
+		  /*  Ajax
+		 'core' : {
+		    
+		    'data' : {
+		      'url' : 'ajax_nodes.html',
+		      'data' : function (node) {
+			        //console.log(node);
+			        //console.log(node.id);
+			        return { 'id' : node.id };
+		      }
+		    } 
+
+		  },*/
+
+
+		  //* opciones para cada plugin, contenidos dentro de cada llave con el mismo nombre que el plugin 
+
+		  "checkbox" : { 
+		    "keep_selected_style" : false
+		  },
+
+		  "plugins" : [ "wholerow", "checkbox" ]
+
+
+		});
+
+
+
+
+		
+
+
+
+
+
+	    // dispara un evento cuando cambio entre tree
+	    $('#jstree').on("changed.jstree", function (e, data) {
+	      //console.log(data);
+	      console.log(data.selected);
+	    });
+	    
+	    // Interactura con el arbol de cualquier manera esta bien
+	    //en este caso lo que hace es seleccionar el "child node 1"
+	    $('button').on('click', function () {
+	      $('#jstree').jstree(true).select_node('child_node_1');
+	      $('#jstree').jstree('select_node', 'child_node_1');
+	      $.jstree.reference('#jstree').select_node('child_node_1');
+	    });
+
+
+
+
+
+
+
+
+
+
+
+
+  });
+  </script>
+</body>
+</html>

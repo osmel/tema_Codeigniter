@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- CSS -->
+  
+  <link rel="stylesheet" href="./../../dist/themes/default/style.min.css" />
+  <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+  <!-- Marcado basico es un contenedor envolviendo al menos un nodo  <ul> con algunos nodos anidados <li> con un poco de texto en su interior. -->
+  <div class="col-md-2 col-sm-4 col-xs-4">
+    <input type="text" value=""  id="buscar" placeholder="Buscar..." />
+  </div>
+
+  <div id="tree">
+    
+
+  </div>
+  <!--<button>demo button</button>-->
+
+  <!-- jQuery library -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- jstree -->
+  <script src="./../../dist/jstree.min.js"></script>
+
+  <script>
+  $(function () {
+
+
+        var to = false;
+        $('#buscar').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#buscar').val();
+                $('#tree').jstree(true).search(v); //esta es la funcion
+            }, 250);
+        });
+
+        function customMenu(node) {
+            // The default set of all items
+            var items = {
+
+                createItem: { // The "create" menu item
+                    label: "Crear",
+                    action: function (data) {
+                        var inst = $.jstree.reference(data.reference), //instancia o referencia
+                            ref = $('#tree').jstree(true),  //instancia o referencia
+
+
+                            referencia = data.reference,
+                            posicion = data.position,
+                            elemento  = data.element, 
+                            item = data.item,
+                            obj = inst.get_node(data.reference), //objeto(nodo) que estoy manipulando
+                            sel = inst.get_selected();
+
+                        inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
+                            function (new_node) {
+                                console.log(new_node);
+                                new_node.icon = "fa fa-coffee";
+                                new_node.text = "nuevo Nombre";
+                                inst.edit(new_node);
+                            }
+                        );
+
+                        if(sel) {
+                               // inst.edit(sel);
+                        }
+                    }
+                },
+
+                renameItem: { // The "rename" menu item
+                    label: "Renombrar",
+                    action: function (data) {
+                        var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                        inst.edit(obj);
+                    }
+                },
+                deleteItem: { // The "delete" menu item
+                    label: "Eliminar",
+                    action: function (data) {
+                        var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                        if(inst.is_selected(obj)) {
+                            inst.delete_node(inst.get_selected());
+                        }
+                        else {
+                            inst.delete_node(obj);
+                        }
+                    }
+                }
+            };
+            
+            
+            if (node.data.file) {
+                delete items.createItem;
+            }
+            
+            else{
+                delete items.deleteItem;
+                delete items.renameItem;
+            }
+            
+            return items;
+        }
+
+        $('#tree').jstree({
+            'core': {
+                'check_callback': true, //hace posible q el menu contextual haga su tatea
+                'data': [
+                    { "id": "ajson1", "parent": "#", "text": "Proyectos", "state": {"opened": true}, "type":"root", "data" : { "file" : false } },
+                ]
+            },
+            
+            "types" : {
+                "#" : { 
+                         "max_children" : 1, //maximos hijos
+                         "max_depth" : 5,  //maxima profundidad
+                         "valid_children" : ["root"] 
+                     },
+                "root" : { "icon":"fa fa-tree", "valid_children" : ["default"] },
+                "file" : { "icon":"fa fa-pagelines", "valid_children" : [] },
+                "default" : {  "icon":"fa fa-check-square-o", "valid_children" : ["default"] },
+            },
+
+
+
+
+            "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow" ],
+            //dnd: arrastrar y soltar
+            //types: añadir tipos predefinidos para grupos de nodos
+            //state: guarda todos los nodos abiertos y seleccionados 
+            //Wholerow: Hace que cada nodo aparezca a nivel de bloque que hace que sea más fácil la selección
+            "contextmenu": {items: customMenu}
+        });
+
+
+  });
+  </script>
+</body>
+</html>

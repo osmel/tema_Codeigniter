@@ -160,6 +160,22 @@
 
 
 
+
+
+                            <!-- encabezado Caracteristicas -->        
+                            <li class="heading">
+                                    <h3 class="uppercase">Catalogo de Proyectos</h3>
+                                </li>
+                                
+                                <li class="nav-item  ">
+                                    <a href="<?php echo base_url(); ?>crear_proyecto" class="nav-link nav-toggle">
+                                        <i class="fa fa-history"></i>
+                                        <span class="title">Crear Proyecto</span>
+                                        <span class="badge badge-success">6</span>
+                                    </a>
+                                </li>
+
+
                             </ul>
                             <!-- END SIDEBAR MENU -->
                         <!-- END SIDEBAR MENU -->

@@ -37,7 +37,7 @@ var graficos = function () {
 
 
             width: '100',
-            barWidth: 3, //Tamaño de cada barra, en pixels
+            barWidth: 5, //Tamaño de cada barra, en pixels
             barSpacing: 1, //Separación entre barras, en pixels.
 
             height: '55',
@@ -60,9 +60,100 @@ var graficos = function () {
               
         });
 
+        //http://stackoverflow.com/questions/22723085/json-response-as-tooltip-value-lookup-for-a-jquery-sparklines-graph
+        var agents = {'names':{ ':2': 'lindo', '3:6': 'feo', '7:': 'rrr','null': 'No' }};
+
+        var agents = $.ajax({
+            url     : "/tema/ajaxAgents",
+            type    : "POST",
+            dataType: 'json',
+            data:{
+                uid:$("#uid").val()
+            }
+        });
 
 
-   $('#sparkline_bar22').sparkline('html', {
+        /*
+
+
+jQuery.ajax({
+                                url : 'validar_login',
+                                data : { 
+                                    formulario  : $(form).serialize(), //JSON.stringify($(form)), //
+                                },
+                                type : 'POST',
+                               // dataType : 'json',
+                                success : function(data) {  
+                                    if(data != true){
+                                        //fallo
+                                        error_server.show();
+                                        success2.hide();
+                                        error2.hide();                                      
+                                    } else {
+                                        //exito
+                                        success2.show();
+                                        error_server.hide();
+                                        error2.hide();                                      
+
+                                        window.location.href = '';              
+                                    }   
+                                }
+                    });                             
+
+
+
+
+
+
+        var agents = $.ajax({
+            url     : "/ajaxAgents",
+            type    : "get",
+            dataType: 'json'
+        });
+
+        response:   {"names":{"0":"Mulder", "1":"Scully"}}
+        */
+
+        $('#sparkline_bar22').sparkline('html',  {
+                type: 'bar',
+                tagOptionsPrefix: 'data-',
+                enableTagOptions: true,
+                //tagValuesAttribute: 'valores',
+                tooltipSuffix: " sufijo", //Un texto antes de cada campo que aparece en un tooltip
+                tooltipPrefix: " Prefijo", //Un texto despues de cada campo que aparece en un tooltip
+                 
+                 tooltipPre: " Prefijo",
+                  
+                  tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{offset:offset}}:{{value:niveles}} - {{value}}',
+                  tooltipValueLookups:{
+                   // niveles: $.range_map({ ':2': 'B', '3:6': 'M', '7:': 'A','null': 'N' }),
+                    niveles: $.range_map(agents.names)
+                   },
+
+                    tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{offset:niveles}}: {{value}}',
+                    tooltipValueLookups:{                       
+                        niveles: $.range_map(agents.names)
+                    },
+
+
+
+                /*    
+                tooltipFormat: '{{value:levels}} - {{value}} - <br/> {{ajaxa}} - {{value:niveles}} - {{prefix}}{{y}}{{suffix}}',  //level es el valor que va tomando abajo
+                tooltipValueLookups: {  //Traduce los "nombres de campos" y "valores" a otras cadenas arbitrarias utilizando esta opción
+                    levels: $.range_map({ ':2': 'Bajo', '3:6': 'Medio', '7:': 'Alto','null': 'Valor nulo' }),
+                    niveles: $.range_map({ ':2': 'B', '3:6': 'M', '7:': 'A','null': 'N' }),
+                    ajaxa: agents.names,
+                    //:2 -> Núm desde -infinito hasta 2
+                    //3:6 -> Núm desde 3 hasta 6
+                    //7: -> Núm desde 7 hasta  +infinito 
+                     //$.range_map: Varios parámetros, tales como colorMap y tooltipLookupValues ​​aceptan un rango de mapa como un parametro. Como el nombre sugiere, se asigna rangos de números a los valores.
+                },
+                */
+
+
+         });
+
+   $('#sparkline_bar22no').sparkline('html', {
             type: 'bar',
             //interactividad o eventos
 
@@ -89,7 +180,7 @@ var graficos = function () {
 
 
             width: '100',
-            barWidth: 4, //Tamaño de cada barra, en pixels
+            barWidth: 5, //Tamaño de cada barra, en pixels
             barSpacing: 1, //Separación entre barras, en pixels.
 
             height: '55',
@@ -97,16 +188,19 @@ var graficos = function () {
             zeroColor:'#000000', //Color de los valores ceros
             barColor: '#f36a5b', //Color de los valores positivos
             negBarColor: '#2499a3', //Color de los valores negativos
-            //colorMap: { '1:2': '#33cc33', '3:6': '#668cff', '7:': '#ff3385' }, // mapa de rango para asignar valores específicos a los colores seleccionados
+            colorMap: { '1:2': '#33cc33', '3:6': '#668cff', '7:': '#ff3385' }, // mapa de rango para asignar valores específicos a los colores seleccionados
             
-            
+             
             //tooltipFormat: $.spformat('{{value}}', 'tooltip-class'),
-            tooltipFormat: '{{value:levels}} - {{value}}',  //level es el valor que va tomando abajo
+            tooltipFormat: '{{value:levels}} - {{value}} - osmel - {{value:niveles}} - {{prefix}}{{y}}{{suffix}}',  //level es el valor que va tomando abajo
             tooltipValueLookups: {  //Traduce los "nombres de campos" y "valores" a otras cadenas arbitrarias utilizando esta opción
-                levels: $.range_map({ ':2': 'Bajo', '3:6': 'Medio', '7:': 'Alto','null': 'Valor nulo' })
+                levels: $.range_map({ ':2': 'Bajo', '3:6': 'Medio', '7:': 'Alto','null': 'Valor nulo' }),
+                niveles: $.range_map({ ':2': 'B', '3:6': 'M', '7:': 'A','null': 'N' })
                 //:2 -> Núm desde -infinito hasta 2
                 //3:6 -> Núm desde 3 hasta 6
                 //7: -> Núm desde 7 hasta  +infinito 
+
+                 //$.range_map: Varios parámetros, tales como colorMap y tooltipLookupValues ​​aceptan un rango de mapa como un parametro. Como el nombre sugiere, se asigna rangos de números a los valores.
             },
 
               

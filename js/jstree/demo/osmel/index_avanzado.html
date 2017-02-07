@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- CSS -->
+  
+  <link rel="stylesheet" href="./../../dist/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- Marcado basico es un contenedor envolviendo al menos un nodo  <ul> con algunos nodos anidados <li> con un poco de texto en su interior. -->
+  <div id="jstree">
+    	<!-- id de los nodos id="j1_1", id="j1_2", etc. Pero puede cambiar el id para un especificamente   -->    
+    <ul>
+      <li>raiz <!--Internamente jstree convierte el texto en un enlace -->
+        
+        <ul>
+
+          <!-- Dar a sus nodos identificadores únicos añadir el atributo id-->	
+          <li id="child_node_1">nodo 1</li>
+          
+          <li>nodo 2</li>
+
+
+          <li> 
+          	<!-- Se usa para el caso en que haga falta, presentar el elemento <a> señalado, o agregar una clase, etc en el elemento <a>  -->
+          		<a href="#" class="jstree-clicked">Hijo cliqueado</a>
+          </li>		
+
+          <!-- establecer la "clase jstree-open" en cualquier elemento <li> para que sea inicialmente (abierta) -->
+          <li class="jstree-open" id="node_1">Elemento abierto
+			  <ul>
+			    <li>Sub-hijo</li>
+			  </ul>
+		  </li>
+
+		  <!-- establecer el estado de un nodo(opened, selected, disabled, icon) utilizando un atributo data-jstree -->
+			<li data-jstree='{"opened":true,"selected":true}'>Estado de un nodo
+			  <ul>
+			    <li data-jstree='{"disabled":true}'>hijo 1</li>
+			    <li data-jstree='{"icon":"//jstree.com/tree.png"}'>hijo 2</li> <!-- url-->
+			    <li data-jstree='{"icon":"glyphicon glyphicon-leaf"}'>hijo 3</li><!-- Twitter Bootstrap-->
+			  </ul>
+			</li>
+
+
+
+        </ul>
+
+
+      </li>
+      <li>raiz 2</li>
+    </ul>
+
+  </div>
+  <button>demo button</button>
+
+  <!-- jQuery library -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!-- jstree -->
+  <script src="./../../dist/jstree.min.js"></script>
+
+  <script>
+  $(function () {
+
+	    // Crea una instancia cdo el DOM esta listo
+	    //$('#jstree').jstree();
+
+	 
+   /*Para rellenar el árbol con un objeto JSON es necesario utilizar la opción de configuración:
+     
+     $.jstree.defaults.core.data.
+     
+         O lo que es lo mismo decir
+     
+     'data' : [
+     				.....
+     		  ]   
+
+     	nota: data es un array de nodos, donde cada nodo debe ser un objeto.	  
+
+    */ 
+
+
+
+	/*  
+
+	//  enfoque de children anidado
+	$('#jstree').jstree({ 'core' : {
+	    
+	    'data' : [
+		       'Nodo simple raiz',  //raiz1
+		       { //raiz2
+		      
+		         'id': "r2",
+		         'text' : 'Node 2 Raiz',
+		         'icon': "//jstree.com/tree.png",
+
+		         
+		         'state' : {
+		           'opened' : true,
+		           'selected' : true,
+		           'disabled'  : true,  //  esta el nodo disabled
+		         },
+
+		         'children' : [
+			        { 'text' : 'Hijo 1' ,
+						 'icon': "//jstree.com/tree.png", //se aplica elemento <i> utilizado para representar el icono.
+						 'state' : {
+						 	'disabled'  : true,  //  esta el nodo disabled		           
+						 },	
+		       		},
+
+		       		{
+		       		  'text' : 'Hijo 2' ,
+					 'icon': false,	//para no mostrar el icono
+
+
+		       		},
+		           'Hijo 3'
+		         ]
+		      }
+	    ]
+
+	} });
+
+	*/
+
+
+//Alternativa formato JSON
+//cada objeto nodo tiene dos campos obligatorios: "id y parent" no la propiedad  "children"(todo lo demás permanece igual).
+
+/*
+$('#jstree').jstree({ 'core' : {
+	    
+	    'data' : [
+
+		       { //raiz2
+		      
+			         'id': "r2",
+			         'parent': "#", //para indicar que un nodo debe ser un nodo raíz parent = "#".
+			         'text' : 'Node 2 Raiz',
+			         'icon': "//jstree.com/tree.png",
+			         'state' : {
+			           'opened' : true,
+			         },
+		        }, 
+
+		       { //raiz2
+		      
+			         'id': "r1",
+			         'parent': "#", //para indicar que un nodo debe ser un nodo raíz parent = "#".
+			         'text' : 'Node 1 Raiz',
+			         'icon': "//jstree.com/tree.png",
+			         'state' : {
+			           'opened' : true,
+			           'selected' : true,
+			           
+			         },
+
+		        }, 
+
+		        { //Nodo1 apunta con parent a la raiz "r1"
+		      
+				         'id': "nodo1",
+				         'parent': "r1", //para indicar que un nodo debe ser un nodo raíz parent = "#".
+				         'text' : 'Node 1',
+				         'icon': "//jstree.com/tree.png",
+				         'state' : {
+				           'opened' : true,
+				           
+				         },
+
+
+		      
+		      }
+	    ]
+
+	} });
+
+*/
+
+
+
+		/*
+
+			Utilizando AJAX para rellenar el árbol con sus retornos JSON desde servidor("url" : "ejemplo.json",).
+			El formato es el mismo que el anterior, la única diferencia es que el JSON no está dentro del objeto de configuración, pero es retornado desde el servidor.
+			[{"id":1,"text":"RAIZ JSON","children":[{"id":2,"text":"Child node 1"},{"id":3,"text":"Child node 2"}]}]
+			
+
+			jstree: automáticamente hará un request AJAX rellenado el árbol con la "respuesta".
+
+
+		
+		$('#jstree').jstree({ 'core' : {
+		    
+			      'data' : {
+				        "url" : "ejemplo.json",
+				        "dataType" : "json" // Se necesita solo si no se aplica bien el JSON headers
+			      }
+		    
+		}});
+
+		*/
+
+
+
+
+
+		/*
+
+		Se puede suministrar funciones para "data y url", las funciones se ejecutan en el alcance(scope) de la instancia actual y un "parametro" pasado lo que indica qué el nodo se está cargando, 
+		el valor de retorno de esas funciones se utilizará como dirección URL y los datos respectivamente.
+
+			Rellenar el árbol usando AJAX y los nodos de carga diferida(Lazy)
+
+			Carga diferida: significa que los nodos se cargarán cuando se necesitan. 
+			Cargar los nodos en el momento - jstree realizará peticiones AJAX cuando el usuario navega por el árbol.
+
+
+
+Each time jstree needs to make an AJAX call this function will be called and will receive a single parameter - the node that is being loaded. The return value of this function will be used as the actual "data" of the AJAX call. To understand better open up the demo and see the requests go off in the console.
+
+Cada vez que jstree necesite hacer una llamada AJAX esta función ""data" : function (node) {" será llamada y recibirá un solo parámetro - el nodo que se está cargando. 
+El valor devuelto por esta función se utilizará como el actual "data" de la llamada AJAX. Para entender mejor abrir la demo y ver los request que se apagan en la consola.
+
+
+
+El primer request se va a: http://www.jstree.com/fiddle?lazy&id=# 
+# es el identificador especial que la función recibe cuando jstree necesita cargar los nodos raíz.
+
+Ahora seguir adelante y abrir el nodo raíz - se le aparecen dos hijos, pero no se hará ningún request 
+- eso es porque cargamos esos hijos junto con la primera solicitud.
+
+A la siguiente diferencia - "nodo child 1" aparece cerrado - esto es debido a que en los datos que suministramos fueron "children"=true de este nodo (se puede ver en la respuesta del servidor). Este valor especial indica, que la carga es perezosa al "nodo child 1".
+
+Proceder y abrir este nodo - verá una próxima petición llamas más allá de: http://www.jstree.com/fiddle?lazy&id=2 ID se establece en 2 porque el nodo que está siendo cargado tiene un diámetro interior de 2, y hemos configurado jstree para enviar el ID de nodo junto con la petición AJAX (la datafunción).
+
+
+
+
+
+
+
+		$('#jstree').jstree({ 'core' : {
+		    
+			 'data' : {
+				        "url" : "//www.jstree.com/fiddle/?lazy",
+				        //"url" : "ejemplo.json",
+				        "data" : function (node) {
+				        	console.log(node);
+				          return { 
+				          		"id" : node.id,
+				          };
+				        }
+      			}
+		    
+		}});
+
+		
+
+
+
+*/
+
+/*
+    Rellenar el árbol usando una función callback
+
+	A veces, puede que no desee que jsTree haga llamadas AJAX para usted - es posible que desee hacerlo por sí mismo, o utilizar algún otro método de llenado del árbol. En ese caso se puede utilizar una función callback
+
+    La función recibirá dos argumentos 
+	 - el nodo cuyos hijos necesitan ser cargado 
+	 - y una función de devolución de llamada para llamar a los datos una vez que lo tienes. 
+	 Los datos sigue el mismo formato familiar JSON y carga lazy funciona igual que con AJAX 
+
+
+
+		$('#jstree').jstree({ 'core' : {
+		    
+			 
+				       'data' : function (node, cb) {
+				        	if(node.id === "#") {
+					          cb([{"text" : "Root", "id" : "1", "children" : true}]);
+					        }
+					        else {
+					          cb(["Child"]);
+					        }
+					        
+				        }
+
+				        
+      		
+		    
+		}});
+
+*/
+
+		/*
+
+		Se puede suministrar funciones para "data y url", las funciones se ejecutan en el alcance(scope) de la instancia actual y un "parametro" pasado lo que indica qué el nodo se está cargando, 
+		el valor de retorno de esas funciones se utilizará como dirección URL y los datos respectivamente.
+			
+		*/
+
+		$('#jstree').jstree({ 'core' : {
+		    'data' : {
+			    'url' : function (node) {
+			      return node.id === '#' ? 'ejemplo.json' :  'hijo.json'; //hijos_heredero.json
+			    },
+			    'data' : function (node) {
+			      return { 'id' : node.id };
+			    }
+			  }
+
+		    
+		}});
+
+		
+
+
+
+  });
+  </script>
+</body>
+</html>

@@ -76,7 +76,7 @@
                     <div class="stat-right">
                         <div class="stat-chart">
                             <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
-                            <div id="sparkline_bar22">
+                            <div id="sparkline_bar22" data-BarColor="green" data-BarNombre="green" >
                                 <?php 
                                     foreach ($dat_historico_mes as $key => $value) {
                                             echo($value->cantidad.  (($key!=count($dat_historico_mes)) ? ',':'') );

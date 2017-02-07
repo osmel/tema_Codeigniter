@@ -130,6 +130,16 @@ function dashboard() {
 
   		$this->load->view('usuarios/editar_usuario',$data);
   }
+
+  
+
+
+  function ajaxAgents(){
+  		$data['uid'] = 	$this->input->post('uid');
+  	 	$dato['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
+  		//$this->load->view('usuarios/editar_usuario',$data);
+  		echo json_encode($dato) ; 
+  }
   	
 
   function editar_usuario1( $uid = '' ){
