@@ -226,6 +226,19 @@ $sql = "
                  ON DUPLICATE KEY UPDATE");
 
 
+/*
+
+if exists (select ID from Clientes where ID = 2)
+ --> el registro existe, update
+ update Clientes set Nombre = 'NAMEX', Apellidos = 'APE2' where ID = 2
+else
+ --> el registro no existe, insert
+ INSERT INTO Clientes (ID,Usuario,Nombre,Apellidos) VALUES (2,USER2,NAMEX,APEX) 
+
+
+*/
+
+
          /*
          $this->db->query("INSERT INTO ".$this->data."(nm,id) VALUES(?,?)
                  ON DUPLICATE KEY UPDATE nm = '".$tmp['nm']."', id = ".$tmp['id']);
