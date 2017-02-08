@@ -91,11 +91,23 @@ jQuery(document).ready(function($) {
 
                 
             'data' : {
+                          
+
+                            'url' : 'obtener_nodo?operation=obtener_nodo',
+                            'data' : function (node) {
+                                return { 'id' : node.id };
+                            },
+                            "dataType" : "json"
+                            
+
+                            /*
                             'url' : 'get_node?operation=get_node',
                             'data' : function (node) {
                                 return { 'id' : node.id };
                             },
                             "dataType" : "json"
+
+                            */
                         }
                 /*
                 'data': [
@@ -125,15 +137,17 @@ jQuery(document).ready(function($) {
             "contextmenu": {items: customMenu}
             
         })
-
-        .on('delete_node.jstree', function (e, data) {
-                            $.get('get_node?operation=delete_node', { 'id' : data.node.id })
-                                .fail(function () {
-                                    data.instance.refresh();
-                                });
+                        //Eliminar nodos y sus hijos
+                        .on('delete_node.jstree', function (e, data) {
+                            $.get('eliminar_nodo?operation=delete_node', { 'id' : data.node.id })
+                                    .fail(function () {
+                                        data.instance.refresh();
+                                    });
                         })
+                        
+                        //crear un unico nodo
                         .on('create_node.jstree', function (e, data) {
-                            $.get('get_node?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
+                            $.get('crear_nodo?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
                                 .done(function (d) {
                                     data.instance.set_id(data.node, d.id);
                                 })
@@ -141,12 +155,16 @@ jQuery(document).ready(function($) {
                                     data.instance.refresh();
                                 });
                         })
+
+                        //renombrar un único nodo
                         .on('rename_node.jstree', function (e, data) {
-                            $.get('get_node?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+                            $.get('renombrar_nodo?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
                                 .fail(function () {
                                     data.instance.refresh();
                                 });
                         })
+
+
                         .on('move_node.jstree', function (e, data) {
                             $.get('get_node?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
                                 .fail(function () {
@@ -159,15 +177,17 @@ jQuery(document).ready(function($) {
                                     data.instance.refresh();
                                 });
                         })
+
+                            //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
                             if(data && data.selected && data.selected.length) {
-                                $.get('get_node?operation=get_content&id=' + data.selected.join(':'), function (d) {
+                                $.get('obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
                                     $('#data .default').text(d.content).show();
                                 });
                             }
                             else {
                                 $('#data .content').hide();
-                                $('#data .default').text('Select a file from the tree.').show();
+                                $('#data .default').text('Seleccione un nodo desde el arbol.').show();
                             }
                         });
 

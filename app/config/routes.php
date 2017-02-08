@@ -78,11 +78,23 @@ $route['ajaxAgents']	= 'nucleo/ajaxAgents';
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 $route['crear_proyecto']						= 'catalogos/crear_proyecto';
-$route['crear_nodo']							= 'catalogos/crear_nodo';
-$route['obtener_nodo']							= 'catalogos/obtener_nodo';
-//$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';
+
 
 $route['get_node']				= 'catalogos/get_node';
+
+//
+$route['obtener_nodo']							= 'catalogos/obtener_nodo';
+$route['obtener_contenido']						= 'catalogos/obtener_contenido';
+$route['renombrar_nodo']						= 'catalogos/renombrar_nodo';
+$route['eliminar_nodo']							= 'catalogos/eliminar_nodo';
+$route['crear_nodo']							= 'catalogos/crear_nodo';
+
+
+
+
+//$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';
+
+
 
 
 

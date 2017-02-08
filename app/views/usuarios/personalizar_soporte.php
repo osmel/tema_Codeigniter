@@ -33,7 +33,7 @@
                 <div class="item">
                     <div class="item-head">
                         <div class="item-details">
-                            <img class="item-pic" src="<?php echo base_url(); ?>js/assets/pages/media/users/avatar3.jpg">
+                            <img class="item-pic" src="<?php echo base_url(); ?>js/assets/layouts/layout3/img/avatar3.jpg">
                             <a href="" class="item-name primary-link">Mark</a>
                             <span class="item-label">5 hrs ago</span>
                         </div>

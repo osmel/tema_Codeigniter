@@ -13,8 +13,7 @@ $db->one('SELECT * FROM table WHERE id = ?', array(1), "assoc"/"num");
 $db->get('SELECT * FROM table WHERE id = ?', array(1), "assoc"/"num")[1];
 */
 
-namespace
-{
+namespace {
 	class db
 	{
 		private function __construct() {
@@ -32,14 +31,14 @@ namespace
 	}
 }
 
-namespace vakata\database
-{
-	class Exception extends \Exception
-	{
+namespace vakata\database {
+
+	class Exception extends \Exception{
+
 	}
 
-	class Settings
-	{
+	class Settings	{
+
 		public $type		= null;
 		public $username	= 'root';
 		public $password	= 'root';
@@ -86,8 +85,7 @@ namespace vakata\database
 		}
 	}
 
-	interface IDB
-	{
+	interface IDB {
 		public function connect();
 		public function query($sql, $vars);
 		public function get($sql, $data, $key, $skip_key, $mode);
@@ -99,8 +97,7 @@ namespace vakata\database
 		public function disconnect();
 	}
 
-	interface IDriver
-	{
+	interface IDriver	{
 		public function prepare($sql);
 		public function execute($data);
 		public function query($sql, $data);
@@ -113,8 +110,7 @@ namespace vakata\database
 		public function get_settings();
 	}
 
-	abstract class ADriver implements IDriver
-	{
+	abstract class ADriver implements IDriver {
 		protected $lnk = null;
 		protected $settings = null;
 
@@ -191,8 +187,7 @@ namespace vakata\database
 		public function seek($result, $row) {}
 	}
 
-	class Result implements \Iterator, \ArrayAccess, \Countable
-	{
+	class Result implements \Iterator, \ArrayAccess, \Countable	{
 		protected $all  = null;
 		protected $rdy  = false;
 		protected $rslt	= null;
@@ -331,8 +326,7 @@ namespace vakata\database
 		}
 	}
 
-	class Query
-	{
+	class Query	{
 		protected $drv = null;
 		protected $sql = null;
 		protected $prp = null;

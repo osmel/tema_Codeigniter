@@ -6,7 +6,7 @@ class Catalogos extends CI_Controller {
     public function __construct(){ 
 		parent::__construct();
 		$this->load->model('Modelo_nucleo', 'modelo'); 
-		//$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
+		$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
 	}
 
 	public function crear_proyecto(){
@@ -40,6 +40,124 @@ class Catalogos extends CI_Controller {
 	        }	
 	        
 	}
+
+
+/*  with_children
+mk
+mv
+cp
+rm
+get_node
+
+*/
+
+	//para obtener cada nodo e hijos y mostrarlo
+	public function obtener_nodo() {
+		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
+		$temp = $this->modelo_catalogo->get_children($node);
+		$rslt = array();
+		
+		
+		foreach($temp as $v) {
+			//if (derecho -izquierdo >1) significa que tiene hijos y por tanto envia "true"
+			$rslt[] = array('id' => $v['id'], 'text' => $v['nm'], 'children' => ($v['rgt'] - $v['lft'] > 1));
+		}
+
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($rslt);
+		
+	}
+
+
+
+	//este es solo para obtener el recorrido seleccionado
+	public function obtener_contenido() {
+
+		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : 0;
+		
+		$node = explode(':', $node);
+
+		if(count($node) > 1) {
+				$rslt = array('content' => 'Multiples Seleccionados');
+		} else {
+			 //en este caso $temp[path] es agregado para el recorrido seleccionado
+			 $temp = $this->modelo_catalogo->get_node((int)$node[0], array('with_path' => true));
+
+			 //aqui se conforma el formato q voy a presentar del recorrido seleccionado
+			 $rslt = array('content' => 'Seleccionado: /' . 
+			 			implode('/',array_map(function ($v) { return $v['nm']; }, $temp['path'])).
+			 			 '/'.$temp['nm']);
+			 }
+		 
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($rslt);
+		
+	}
+
+
+	// Este es solo para "renombrar el nodo"
+	public function renombrar_nodo() {
+
+		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
+
+		$rslt = $this->modelo_catalogo->rn($node, //id
+			 			array('nm' => isset($_GET['text']) ? $_GET['text'] : 'Renamed node') //data
+			 );
+
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($rslt);
+		
+	}
+
+
+
+
+	//Eliminar el nodo, hijo, nieto, etc
+	public function eliminar_nodo() {
+
+				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
+
+				$rslt = $this->modelo_catalogo->rm(
+									$node //id
+								);
+
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($rslt);
+
+	}
+
+
+	//crear un único nodo
+	public function crear_nodo() {
+
+		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
+		
+		$temp = $this->modelo_catalogo->mk($node,  //padre
+						isset($_GET['position']) ? (int)$_GET['position'] : 0,  //posicion
+				      	array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node') //data
+				      );
+		$rslt = array('id' => $temp);
+
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($rslt);
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 public function get_node() {
 
@@ -86,17 +204,30 @@ object(tree)#23 (3) { ["db":protected]=> object(vakata\database\DBC)#24 (2) { ["
 				}
 				break;
 			case 'create_node':
+				
 				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$temp = $fs->mk($node, isset($_GET['position']) ? (int)$_GET['position'] : 0, array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node'));
+				$temp = $fs->mk($node,  //padre
+								isset($_GET['position']) ? (int)$_GET['position'] : 0,  //posicion
+						      	array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node') //data
+						      );
 				$rslt = array('id' => $temp);
+
 				break;
+
 			case 'rename_node':
 				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$rslt = $fs->rn($node, array('nm' => isset($_GET['text']) ? $_GET['text'] : 'Renamed node'));
+				$rslt = $fs->rn($node, //id
+					 			array('nm' => isset($_GET['text']) ? $_GET['text'] : 'Renamed node') //data
+					 );
+
+				print_r($rslt);
+				die;
 				break;
 			case 'delete_node':
 				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$rslt = $fs->rm($node);
+				$rslt = $fs->rm(
+									$node //id
+								);
 				break;
 			case 'move_node':
 				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
@@ -127,49 +258,10 @@ object(tree)#23 (3) { ["db":protected]=> object(vakata\database\DBC)#24 (2) { ["
 }
 
 
-	public function obtener_nodo() {
-
-		$padre = isset($_POST['id']) && $_POST['id'] !== '#' ? (int)$_POST['id'] : 0;
-
-		
-
-		$temp= $this->modelo_catalogo->crear_nodo(
-						$padre, //padre
-						isset($_POST['position']) ? (int)$_POST['position'] : 0, //posicion
-				        array('nm' => isset($_POST['text']) ? $_POST['text'] : 'Nuevo node') //data
-				);
 
 
 
-
-		$rslt = array('id' => 8, 'exito' => true);
-
-		//header('Content-Type: application/json; charset=utf-8');
-		echo json_encode($rslt);
-	}
-
-
-
-	public function crear_nodo() {
-
-		$padre = isset($_POST['id']) && $_POST['id'] !== '#' ? (int)$_POST['id'] : 0;
-
-		
-
-		$temp= $this->modelo_catalogo->crear_nodo(
-						$padre, //padre
-						isset($_POST['position']) ? (int)$_POST['position'] : 0, //posicion
-				        array('nm' => isset($_POST['text']) ? $_POST['text'] : 'Nuevo node') //data
-				);
-
-
-
-
-		$rslt = array('id' => 8, 'exito' => true);
-
-		//header('Content-Type: application/json; charset=utf-8');
-		echo json_encode($rslt);
-	}
+	
 
 
 

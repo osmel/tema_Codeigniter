@@ -145,7 +145,7 @@
                                 <li> 
                                     <a href="inbox.html?a=view"> 
                                     <span class="photo"> 
-                                    <img src="../assets/layouts/layout/img/avatar2.jpg" alt=""/> 
+                                    <img src="<?php echo base_url(); ?>js/assets/layouts/layout3/img/avatar2.jpg" alt=""/> 
                                     </span> 
                                     <span class="subject"> 
                                     <span class="from"> 
@@ -160,7 +160,7 @@
                                 <li> 
                                     <a href="inbox.html?a=view"> 
                                     <span class="photo"> 
-                                    <img src="../assets/layouts/layout/img/avatar3.jpg" alt=""/> 
+                                    <img src="<?php echo base_url(); ?>js/assets/layouts/layout3/img/avatar3.jpg" alt=""/> 
                                     </span> 
                                     <span class="subject"> 
                                     <span class="from"> 
@@ -190,7 +190,7 @@
                                 <li> 
                                     <a href="inbox.html?a=view"> 
                                     <span class="photo"> 
-                                    <img src="../assets/layouts/layout/img/avatar2.jpg" alt=""/> 
+                                    <img src="<?php echo base_url(); ?>js/assets/layouts/layout3/img/avatar2.jpg" alt=""/> 
                                     </span> 
                                     <span class="subject"> 
                                     <span class="from"> 
@@ -205,7 +205,7 @@
                                 <li> 
                                     <a href="inbox.html?a=view"> 
                                     <span class="photo"> 
-                                    <img src="../assets/layouts/layout/img/avatar3.jpg" alt=""/> 
+                                    <img src="<?php echo base_url(); ?>js/assets/layouts/layout3/img/avatar3.jpg" alt=""/> 
                                     </span> 
                                     <span class="subject"> 
                                     <span class="from"> 
