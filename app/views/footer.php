@@ -21,7 +21,15 @@
 		<![endif]-->
        
         <!-- BEGIN CORE PLUGINS -->
-	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	        <!--<script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery.min.js" type="text/javascript"></script> 
+	        <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.js"></script>
+        -->
+
+
+             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.js"></script>
+             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.form.min.js"></script>
+
+
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
@@ -69,7 +77,35 @@
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
       		<!--<script src="<?php echo base_url(); ?>js/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>-->
       		 <!-- Propio -->
+
+
+			<!--datatables para el caso de salidas -->
+	
+			<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>js/media/css/jquery.dataTables.css">
+			
+			<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>js/media/js/jquery.dataTables.js"></script>
+
+			<!--
+			<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>js/extensions/TableTools/css/dataTables.tableTools.css">
+			<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>js/extensions/TableTools/js/dataTables.tableTools.js"></script> -->
+			
+
+			<!--para conversion a base64.encode y base64.decode -->
+			<script src="<?php echo base_url(); ?>js/base64/jquery.base64.js" type="text/javascript"></script>
+			<script src="<?php echo base_url(); ?>js/base64/jquery.base64.min.js" type="text/javascript"></script>
+				
+
+
+
+			<script src="<?php echo base_url(); ?>js/jstree/dist/jstree.min.js" type="text/javascript"></script>
+
+
            <script src="<?php echo base_url(); ?>js/sistema.js" type="text/javascript"></script>
+           <script src="<?php echo base_url(); ?>js/catalogos.js" type="text/javascript"></script>
+
+           
+		   <script src="<?php echo base_url(); ?>js/sistema_tree.js" type="text/javascript"></script>
+
         <!-- fin Propio -->  
         <!-- END PAGE LEVEL SCRIPTS -->
     

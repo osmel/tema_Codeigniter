@@ -6,6 +6,7 @@ class Catalogos extends CI_Controller {
     public function __construct(){ 
 		parent::__construct();
 		$this->load->model('Modelo_nucleo', 'modelo'); 
+		$this->load->model('Modelo_arbol', 'modelo_arbol'); 
 		$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
 	}
 
@@ -40,6 +41,366 @@ class Catalogos extends CI_Controller {
 	        }	
 	        
 	}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////ENTORNOS/////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//***********************Entornos **********************************//
+
+
+	public function listado_entornos(){
+	
+		$id_perfil=$this->session->userdata('id_perfil');
+
+	    if($this->session->userdata('session') === TRUE ){
+	    				
+	    			  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+
+			          switch ($id_perfil) {    
+			            case 1:		            
+			                $this->load->view( 'catalogos/entornos/entornos',$data);
+			              break;
+			            
+			            case 2: //
+			            case 3: //
+			            case 4: //
+
+			                $this->load->view( 'catalogos/entornos/entornos',$data);
+			              break;
+			          
+			            default:  
+			              redirect('');
+			              break;
+			          }
+
+	        }
+	        else{ 
+	          redirect('');
+	        }	
+	        
+	}	
+
+
+
+
+
+
+ public function procesando_cat_entornos(){
+
+    $data=$_POST;
+    $busqueda = $this->modelo_catalogo->buscador_cat_entornos($data);
+    echo $busqueda;
+  } 
+
+
+
+
+public function crear_tabla($nombre) {
+/*
+https://www.uno-de-piera.com/migraciones-en-codeigniter/
+CREATE TABLE IF NOT EXISTS `tree_data` (
+  `id` int(10) unsigned NOT NULL,
+  `nm` varchar(255) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+*/			
+
+		$this->load->dbforge();
+
+
+		//creamos la estructura de una tabla con un 
+		//id autoincremental, un campo varchar(255) para el nm
+		//y otro para el passwords también varchar
+		$this->dbforge->add_field(
+			array(
+				"id"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+					//"auto_increment"	=>		TRUE,
+ 
+				),
+				"nm"	=>		array(
+					"type"				=>		"VARCHAR",
+					"constraint"		=>		255,
+				),
+			)
+		);
+
+
+
+ 
+		$this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
+		$this->dbforge->create_table('data_'.$nombre);//creamos la tabla inven_prueba
+
+
+
+		$this->dbforge->add_field(
+			array(
+				"id"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+					"auto_increment"	=>		TRUE,
+				),
+				"lft"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"rgt"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"lvl"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"pid"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"pos"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+			)
+		);
+
+
+		$this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
+		$this->dbforge->create_table('struct_'.$nombre);//creamos la tabla inven_prueba
+
+
+		//insertar registro en cada tabla
+
+			$data["nombre"]="Proyecto";
+			$data["tabla"]=$nombre;
+			$this->modelo_catalogo->insertar_registro_nuevas_tablas($data); 	
+		 
+		//$this->dbforge->drop_table('prueba');
+
+}	
+
+
+    // crear
+  function nuevo_entorno(){
+	if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+
+	      
+	      //crear la tabla	
+	      if ($this->session->userdata('creando_entorno') == "0") {
+	      			   $data['nombre'] = date('Y').date('m').date('d').date('H').date('i').date('s').random_string('alpha',4).random_string('numeric',3);
+	      			   $this->session->set_userdata('creando_entorno', $data['nombre']);	
+				      self::crear_tabla($data['nombre']);
+	      }
+	      $data['nombre'] = $this->session->userdata('creando_entorno');
+	       
+	      switch ($id_perfil) {    
+	        case 1:
+	            $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
+	          break;
+	        case 2:
+	        case 3:
+	        case 4:
+	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	                $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
+	              }   
+	          break;
+
+
+	        default:  
+	          redirect('');
+	          break;
+	      }
+	    }
+	    else{ 
+	      redirect('index');
+	    }
+	  }
+
+
+
+  function validar_nuevo_entorno(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+      $this->form_validation->set_rules('entorno', 'Entorno', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          $data['entorno']   = $this->input->post('entorno');
+
+         $existe            =  $this->modelo_catalogo->check_existente_entorno( $data );
+         if ( $existe !== TRUE ){
+
+            $data         =   $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->anadir_entorno( $data );
+            if ( $guardar !== FALSE ){
+              $this->session->set_userdata('creando_entorno', "0");	 //listo para crear otro entorno
+              echo true;
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo entorno no pudo ser agregada</span>';
+            }
+          } else {
+            echo '<span class="error"><b>E01</b> - El entorno que desea agregar ya existe. No es posible agregar dos entornos iguales.</span>';
+          }  
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+
+  // editar
+  function editar_entorno( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       $data['entorno'] = $this->modelo_catalogo->coger_entorno($data);
+
+		//lo pase 
+		if ( $data['entorno'] !== FALSE ){       
+       			$this->session->set_userdata('creando_entorno', $data['entorno']->tabla);
+       	}		
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                  if ( $data['entorno'] !== FALSE ){
+                      $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
+                  } else {
+                        redirect('');
+                  }       
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                  if ( $data['entorno'] !== FALSE ){
+                      $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
+                  } else {
+                        redirect('');
+                  }       
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+function validacion_edicion_entorno(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+        $this->form_validation->set_rules('entorno', 'entorno', 'trim|required|min_length[1]|max_lenght[80]|xss_clean');
+        $this->form_validation->set_rules('hexadecimal_entorno', 'entorno', 'trim|required|min_lenght[3]|max_length[6]|xss_clean');
+
+
+      if ($this->form_validation->run() === TRUE){
+            $data['id']           = $this->input->post('id');
+          $data['entorno']         = $this->input->post('entorno');
+          $data['hexadecimal_entorno'] = $this->input->post('hexadecimal_entorno');
+
+         $existe            =  $this->modelo_catalogo->check_existente_entorno( $data );
+         if ( $existe !== TRUE ){
+
+            $data               = $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->editar_entorno( $data );
+
+            if ( $guardar !== FALSE ){
+              echo true;
+
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo entorno no pudo ser agregada</span>';
+            }
+
+         } else {
+            echo '<span class="error"><b>E01</b> - El entorno que desea agregar ya existe. No es posible agregar dos entornos iguales.</span>';
+         }  
+
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+  
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -267,6 +628,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,8 +642,10 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 	//para obtener cada nodo e hijos y mostrarlo
 	public function obtener_nodo() {
+
 		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-		$temp = $this->modelo_catalogo->get_children($node);
+		$temp = $this->modelo_arbol->get_children($node);
+
 		$rslt = array();
 		
 		
@@ -308,7 +672,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 				$rslt = array('content' => 'Multiples Seleccionados');
 		} else {
 			 //en este caso $temp[path] es agregado para el recorrido seleccionado
-			 $temp = $this->modelo_catalogo->get_node((int)$node[0], array('with_path' => true));
+			 $temp = $this->modelo_arbol->get_node((int)$node[0], array('with_path' => true));
 
 			 //aqui se conforma el formato q voy a presentar del recorrido seleccionado
 			 $rslt = array('content' => 'Seleccionado: /' . 
@@ -327,7 +691,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
 
-		$rslt = $this->modelo_catalogo->rn($node, //id
+		$rslt = $this->modelo_arbol->rn($node, //id
 			 			array('nm' => isset($_GET['text']) ? $_GET['text'] : 'Renamed node') //data
 			 );
 
@@ -344,7 +708,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
 
-				$rslt = $this->modelo_catalogo->rm(
+				$rslt = $this->modelo_arbol->rm(
 									$node //id
 								);
 
@@ -359,7 +723,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
 		
-		$temp = $this->modelo_catalogo->mk($node,  //padre
+		$temp = $this->modelo_arbol->mk($node,  //padre
 						isset($_GET['position']) ? (int)$_GET['position'] : 0,  //posicion
 				      	array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node') //data
 				      );
@@ -380,7 +744,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
 		$parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? (int)$_GET['parent'] : 0;
 
-		$rslt = $this->modelo_catalogo->mv($node, //id
+		$rslt = $this->modelo_arbol->mv($node, //id
 										   $parn, //padre
 										   isset($_GET['position']) ? (int)$_GET['position'] : 0 //posicion
 										  );

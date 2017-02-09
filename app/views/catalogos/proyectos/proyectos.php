@@ -2,9 +2,6 @@
 <?php $this->load->view( 'header' ); ?>
 
  
- <link href="<?php echo base_url(); ?>js/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css" />
- <link href="<?php echo base_url(); ?>js/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
- 
  
  
 
@@ -36,5 +33,3 @@
             <!-- Fin del Contenedor -->
 
 <?php $this->load->view( 'footer' ); ?>
-<script src="<?php echo base_url(); ?>js/jstree/dist/jstree.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url(); ?>js/sistema_tree.js" type="text/javascript"></script>

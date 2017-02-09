@@ -53,6 +53,7 @@ class Nucleo extends CI_Controller {
 								$this->session->set_userdata('modulo', 'home');				
 								$this->session->set_userdata('especial', $login_element->especial);	
 								$this->session->set_userdata('id_almacen_ajuste', 1);		
+								$this->session->set_userdata('creando_entorno', "0");		
 							}
 
 							$data['id_almacen'] = $this->session->userdata('id_almacen') ;

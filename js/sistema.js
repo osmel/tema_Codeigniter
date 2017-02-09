@@ -64,7 +64,7 @@ var graficos = function () {
         var agents = {'names':{ ':2': 'lindo', '3:6': 'feo', '7:': 'rrr','null': 'No' }};
 
         var agents = $.ajax({
-            url     : "/tema/ajaxAgents",
+            url     : "/ajaxAgents",
             type    : "POST",
             dataType: 'json',
             data:{
@@ -394,7 +394,7 @@ var FormValidation = function () {
                     //console.log(form[0]);
 
 					jQuery.ajax({
-						        url : 'validar_login',
+						        url : '/validar_login',
 						        data : { 
 									formulario 	: $(form).serialize(), //JSON.stringify($(form)), //
 						        },
@@ -416,6 +416,83 @@ var FormValidation = function () {
 						        	}	
 						        }
 					});						        
+                    
+                    /*
+                        jQuery(this).ajaxSubmit({
+                            success: function(data){
+                                if(data != true){
+                                    //spinner.stop();
+                                    jQuery('#foo').css('display','none');
+                                    jQuery('#messages').css('display','block');
+                                    jQuery('#messages').addClass('alert-danger');
+                                    jQuery('#messages').html(data);
+                                    //jQuery('html,body').animate({
+                                      //  'scrollTop': jQuery('#messages').offset().top
+                                    //}, 1000);
+                                }else{
+                                       // spinner.stop();
+                                       // jQuery('#foo').css('display','none');
+                                        window.location.href = '/';                      
+                                }
+                            } 
+                        });
+                        return false;*/
+/*
+
+                            alert('ccc');
+            jQuery(this).ajaxSubmit({
+                success: function(data){
+                    
+                    alert('bbb');
+                    if(data != true){
+                        
+                        //spinner.stop();
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                        
+                        //jQuery('html,body').animate({
+                        //   'scrollTop': jQuery('#messages').offset().top
+                        //}, 1000);
+                        
+                    
+
+                    }else{
+                            alert('asd');
+                            
+                             window.location.href = '/';  
+
+                            //$catalogo = e.target.name;
+                            //spinner.stop();
+                           // jQuery('#foo').css('display','none');
+                            //e.preventDefault();
+                           // window.location.href = ''+$catalogo;   
+                            
+                    }
+
+                } 
+            });
+            return false;
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 },
 
@@ -487,6 +564,18 @@ jQuery(document).ready(function($) {
 		return false;
 		
 	});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

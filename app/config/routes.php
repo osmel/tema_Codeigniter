@@ -90,7 +90,31 @@ $route['eliminar_nodo']							= 'catalogos/eliminar_nodo';
 $route['crear_nodo']							= 'catalogos/crear_nodo';
 $route['mover_nodo']							= 'catalogos/mover_nodo';
 
+//Creacion de tablas
 
+
+
+
+
+
+
+
+
+//color
+$route['entornos']					     = 'catalogos/listado_entornos';
+
+$route['nuevo_entorno']                  = 'catalogos/nuevo_entorno';
+$route['crear_tabla/(:any)']			 = 'catalogos/crear_tabla/$1';
+
+$route['procesando_cat_entornos']        = 'catalogos/procesando_cat_entornos';
+
+$route['validar_nuevo_entorno']          = 'catalogos/validar_nuevo_entorno';
+
+$route['editar_entorno/(:any)']			 = 'catalogos/editar_entorno/$1';
+$route['validacion_edicion_entorno']     = 'catalogos/validacion_edicion_entorno';
+
+$route['eliminar_entorno/(:any)/(:any)/(:any)'] = 'catalogos/eliminar_entorno/$1/$2/$3';
+$route['validar_eliminar_entorno']    	 = 'catalogos/validar_eliminar_entorno';
 
 
 //$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';

@@ -24,7 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$config['base_url']	='http://localhost/tema/'; // 'http://45.55.85.45';
+//$config['base_url']	='http://localhost/tema/'; // 'http://45.55.85.45';
+$config['base_url']	='http://inventarios.dev.com/'; 
 
 /*
 |--------------------------------------------------------------------------

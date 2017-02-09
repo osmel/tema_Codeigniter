@@ -166,6 +166,14 @@
                             <li class="heading">
                                     <h3 class="uppercase">Catalogo de Proyectos</h3>
                                 </li>
+
+                                <li class="nav-item  ">
+                                    <a href="<?php echo base_url(); ?>entornos" class="nav-link nav-toggle">
+                                        <i class="fa fa-history"></i>
+                                        <span class="title">Crear Entornos</span>
+                                        <span class="badge badge-success">2</span>
+                                    </a>
+                                </li>
                                 
                                 <li class="nav-item  ">
                                     <a href="<?php echo base_url(); ?>crear_proyecto" class="nav-link nav-toggle">

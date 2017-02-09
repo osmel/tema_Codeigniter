@@ -55,6 +55,11 @@ License: You must have a valid license purchased only from themeforest(the above
 	        <link href="<?php echo base_url(); ?>js/assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
 	        <link href="<?php echo base_url(); ?>js/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
 
+             <link href="<?php echo base_url(); ?>js/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css" />
+             <link href="<?php echo base_url(); ?>js/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+
+
         <!-- FIN DE DISEÑO DE ESTILO DE TEMA  -->
         <link rel="shortcut icon" href="favicon.ico" /> </head>
 
@@ -69,5 +74,6 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- BEGIN HEADER & CONTENT DIVIDER -->
             <div class="clearfix"> </div>
             <!-- END HEADER & CONTENT DIVIDER -->
+            
             
 

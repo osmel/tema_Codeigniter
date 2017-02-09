@@ -12,3 +12,5 @@
 	        </ul>
 	    </div>
     <!-- END PAGE BAR -->
+
+    <div class="alert" id="messages"></div>

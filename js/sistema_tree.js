@@ -93,7 +93,7 @@ jQuery(document).ready(function($) {
             'data' : {
                           
 
-                            'url' : 'obtener_nodo?operation=obtener_nodo',
+                            'url' : '/obtener_nodo?operation=obtener_nodo',
                             'data' : function (node) {
                                 return { 'id' : node.id };
                             },
@@ -165,7 +165,7 @@ jQuery(document).ready(function($) {
                             //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
                             if(data && data.selected && data.selected.length) {
-                                $.get('obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
+                                $.get('/obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
                                     $('#data .default').text(d.content).show();
                                 });
                             }
