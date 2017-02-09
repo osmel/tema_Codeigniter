@@ -99,20 +99,7 @@ jQuery(document).ready(function($) {
                             },
                             "dataType" : "json"
                             
-
-                            /*
-                            'url' : 'get_node?operation=get_node',
-                            'data' : function (node) {
-                                return { 'id' : node.id };
-                            },
-                            "dataType" : "json"
-
-                            */
                         }
-                /*
-                'data': [
-                    { "id": "raiz_proyecto", "parent": "#", "text": "Proyectos", "state": {"opened": true}, "type":"root", "data" : { "file" : false } },
-                ]*/
             },
             
             "types" : {
@@ -137,6 +124,8 @@ jQuery(document).ready(function($) {
             "contextmenu": {items: customMenu}
             
         })
+                    //**** faltan por completar  "copy_node" y "analyze" ****
+
                         //Eliminar nodos y sus hijos
                         .on('delete_node.jstree', function (e, data) {
                             $.get('eliminar_nodo?operation=delete_node', { 'id' : data.node.id })
@@ -166,17 +155,12 @@ jQuery(document).ready(function($) {
 
 
                         .on('move_node.jstree', function (e, data) {
-                            $.get('get_node?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+                            $.get('mover_nodo?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
                                 .fail(function () {
                                     data.instance.refresh();
                                 });
                         })
-                        .on('copy_node.jstree', function (e, data) {
-                            $.get('get_node?operation=copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
-                                .always(function () {
-                                    data.instance.refresh();
-                                });
-                        })
+
 
                             //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
@@ -190,34 +174,9 @@ jQuery(document).ready(function($) {
                                 $('#data .default').text('Seleccione un nodo desde el arbol.').show();
                             }
                         });
+                        
 
-           
-/*
-            //evento crear Nodo
-            .on('create_node.jstree', function (e, data) {
-                    jQuery.ajax({
-                                url : 'crear_nodo',
-                                data : { 
-                                          id : data.node.parent,
-                                    position : data.position,
-                                        text  : data.node.text
-                                },
-                                type : 'POST',
-                                dataType : 'json',
-                                success : function(respuesta) {  
-                                    if(respuesta.exito != true){
-                                        data.instance.refresh();
-                                        console.log('fallo');
-                                    } else {
-                                        data.instance.set_id(data.node, respuesta.id); 
-                                        console.log('exito');
-                                    }   
-                                }
-                    });                             
-
-            }); //fin evento crear nodo
-
-*/
   });
+
 
 

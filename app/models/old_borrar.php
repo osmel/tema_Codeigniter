@@ -359,6 +359,47 @@ public function rm($id) {
         
     
 
+      $this->db->set( 'lft', "lft + ".$width, false );  
+      $arreglo =  "('".implode("','",$tmp)."')";
+      $where = "(
+                             ( id NOT IN ".$arreglo." ) AND 
+                             ( lft >=".(int)$ref_lft." )
+              )";   
+      $this->db->where($where);
+      $this->db->update($this->struct );
+
+
+
+
+      $this->db->set( 'rgt', "rgt + ".$width, false );  
+      $arreglo =  "('".implode("','",$tmp)."')";
+      $where = "(
+                             ( id NOT IN ".$arreglo." ) AND 
+                             ( rgt >=".(int)$ref_rgt." )
+              )";   
+      $this->db->where($where);
+      $this->db->update($this->struct );
+
+
+
+
+
+    $this->db->set( 'rgt', "rgt + ".$diff, false );  
+      $this->db->set( 'lft', "lft + ".$diff, false );  
+      $this->db->set( 'lvl', "lvl + ".$ldiff, false );  
+
+      $arreglo =  "('".implode("','",$tmp)."')";
+      $where = "(
+                             ( id IN ".$arreglo." ) 
+                             
+              )";   
+      $this->db->where($where);
+      $this->db->update($this->struct );
+
+      
+
+
+
           $this->db->set( 'lft', "lft + 2", false );  
           $this->db->where('lft >=', (int)$ref_lft );
           $this->db->update($this->struct );
@@ -456,18 +497,16 @@ public function rm($id) {
 
     $sql = array();
 
-     
-     //PREPARAR NUEVOS PADRES
-     //actualizar las posiciones de todos los proximos elementos 
-
-      $this->db->set( "pos", "pos + 1", false );  
-      
-      $this->db->where('id !=', (int)$id["id"] );
-      $this->db->where('pid =', (int)$parent["id"] );
-      $this->db->where('pos >=', $position );
-
-      $this->db->update($this->struct );
-
+    // PREPARE NEW PARENT
+    // update positions of all next elements
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET pos = pos + 1
+      WHERE
+        id != ".(int)$id["id"]." AND
+        pid = ".(int)$parent["id"]." AND
+        pos >= ".$position."
+      ";
 
     // update left indexes
     $ref_lft = false;
@@ -480,18 +519,13 @@ public function rm($id) {
     else {
       $ref_lft = $parent['children'][(int)$position]["lft"];
     }
-
-
-      $this->db->set( 'lft', "lft + ".$width, false );  
-      $arreglo =  "('".implode("','",$tmp)."')";
-      $where = "(
-                             ( id NOT IN ".$arreglo." ) AND 
-                             ( lft >=".(int)$ref_lft." )
-              )";   
-      $this->db->where($where);
-      $this->db->update($this->struct );
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET lft = lft + ".$width."
+      WHERE
+        lft >= ".(int)$ref_lft." AND
+        id NOT IN(".implode(',',$tmp).")
+      ";
     // update right indexes
     $ref_rgt = false;
     if(!$parent['children']) {
@@ -503,18 +537,13 @@ public function rm($id) {
     else {
       $ref_rgt = $parent['children'][(int)$position]["lft"] + 1;
     }
-
-
-      $this->db->set( 'rgt', "rgt + ".$width, false );  
-      $arreglo =  "('".implode("','",$tmp)."')";
-      $where = "(
-                             ( id NOT IN ".$arreglo." ) AND 
-                             ( rgt >=".(int)$ref_rgt." )
-              )";   
-      $this->db->where($where);
-      $this->db->update($this->struct );
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET rgt = rgt + ".$width."
+      WHERE
+        rgt >= ".(int)$ref_rgt." AND
+        id NOT IN(".implode(',',$tmp).")
+      ";
 
     // MOVE THE ELEMENT AND CHILDREN
     // left, right and level
@@ -522,64 +551,74 @@ public function rm($id) {
 
     if($diff > 0) { $diff = $diff - $width; }
     $ldiff = ((int)$parent["lvl"] + 1) - (int)$id["lvl"];
-    
-       $this->db->set( 'rgt', "rgt + ".$diff, false );  
-      $this->db->set( 'lft', "lft + ".$diff, false );  
-      $this->db->set( 'lvl', "lvl + ".$ldiff, false );  
-
-      $arreglo =  "('".implode("','",$tmp)."')";
-      $where = "(
-                             ( id IN ".$arreglo." ) 
-                             
-              )";   
-      $this->db->where($where);
-      $this->db->update($this->struct );
-
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET rgt = rgt + ".$diff.",
+          lft = lft + ".$diff.",
+          lvl = lvl + ".$ldiff."
+        WHERE id IN(".implode(',',$tmp).")
+    ";
     // position and parent_id
-  
-      $this->db->set( 'pos', $position );  
-      $this->db->set( 'pid', (int)$parent["id"]);  
-      $this->db->where('id', (int)$id["id"] );
-      $this->db->update($this->struct );
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET pos = ".$position.",
+          pid = ".(int)$parent["id"]."
+        WHERE id  = ".(int)$id["id"]."
+    ";
 
     // CLEAN OLD PARENT
     // position of all next elements
-  
-      $this->db->set( 'pos', "pos - 1", false ); 
-      $this->db->where('pid', (int)$id["pid"] );
-      $this->db->where('pos >', (int)$id["pos"] );
-      $this->db->update($this->struct );
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET pos = pos - 1
+      WHERE
+        pid = ".(int)$id["pid"]." AND
+        pos > ".(int)$id["pos"];
     // left indexes
-
-      $this->db->set( 'lft', "lft - ".$width, false );  
-      $arreglo =  "('".implode("','",$tmp)."')";
-      $where = "(
-                             ( id NOT IN ".$arreglo." ) AND 
-                             ( lft >".(int)$id["rgt"]." )
-              )";   
-      $this->db->where($where);
-      $this->db->update($this->struct );
-
-
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET lft = lft - ".$width."
+      WHERE
+        lft > ".(int)$id["rgt"]." AND
+        id NOT IN(".implode(',',$tmp).")
+    ";
     // right indexes
-       $this->db->set( 'rgt', "rgt - ".$width, false );  
-      $arreglo =  "('".implode("','",$tmp)."')";
-      $where = "(
-                             ( id NOT IN ".$arreglo." ) AND 
-                             ( rgt >".(int)$id["rgt"]." )
-              )";   
-      $this->db->where($where);
-      $this->db->update($this->struct );
+    $sql[] = "
+      UPDATE ".$this->struct."
+        SET rgt = rgt - ".$width."
+      WHERE
+        rgt > ".(int)$id["rgt"]." AND
+        id NOT IN(".implode(',',$tmp).")
+    ";
 
+    foreach($sql as $k => $v) {
+      //echo preg_replace('@[\s\t]+@',' ',$v) ."\n";
+      try {
+        $this->db->query($v);
+      } catch(Exception $e) {
+        $this->reconstruct();
+        throw new Exception('Error moving');
+      }
+    }
     return true;
   }
 
 
-} 
+  /*
+    'structure'     => array(     // which field (value) maps to what in the structure (key)
+      'id'      => 'id',
+      'left'      => 'lft',
+      'right'     => 'rgt',
+      'level'     => 'lvl',
+      'parent_id'   => 'pid',
+      'position'    => 'pos'
+    ),
+
+    */
+
+
+
+
+
+	} 
 ?>

@@ -42,14 +42,6 @@ class Catalogos extends CI_Controller {
 	}
 
 
-/*  with_children
-mk
-mv
-cp
-rm
-get_node
-
-*/
 
 	//para obtener cada nodo e hijos y mostrarlo
 	public function obtener_nodo() {
@@ -147,143 +139,24 @@ get_node
 
 
 
+	//crear un único nodo
+	public function mover_nodo() {
 
+		$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
+		$parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? (int)$_GET['parent'] : 0;
 
+		$rslt = $this->modelo_catalogo->mv($node, //id
+										   $parn, //padre
+										   isset($_GET['position']) ? (int)$_GET['position'] : 0 //posicion
+										  );
 
-
-
-
-
-
-
-
-
-
-public function get_node() {
-
-
-require_once(dirname(__FILE__) . '/class.db.php');
-require_once(dirname(__FILE__) . '/class.tree.php');
-
-if(isset($_GET['operation'])) {
-	$fs = new tree(db::get('mysqli://root@127.0.0.1/inventarios'), array('structure_table' => 'inven_struct', 'data_table' => 'inven_data', 'data' => array('nm')));
-
-	//print_r(($fs));
-	//echo json_encode($fs);
-
-/*
-object(tree)#23 (3) { ["db":protected]=> object(vakata\database\DBC)#24 (2) { ["drv":protected]=> object(vakata\database\mysqli_driver)#26 (5) { ["iid":protected]=> int(0) ["aff":protected]=> int(0) ["mnd":protected]=> bool(false) ["lnk":protected]=> NULL ["settings":protected]=> object(vakata\database\Settings)#25 (9) { ["type"]=> string(6) "mysqli" ["username"]=> string(4) "root" ["password"]=> string(4) "root" ["database"]=> string(11) "inventarios" ["servername"]=> string(9) "127.0.0.1" ["serverport"]=> int(3306) ["persist"]=> bool(false) ["timezone"]=> NULL ["charset"]=> string(4) "UTF8" } } ["que":protected]=> NULL } ["options":protected]=> array(5) { ["structure_table"]=> string(12) "inven_struct" ["data_table"]=> string(10) "inven_data" ["data2structure"]=> string(2) "id" ["structure"]=> array(6) { ["id"]=> string(2) "id" ["left"]=> string(3) "lft" ["right"]=> string(3) "rgt" ["level"]=> string(3) "lvl" ["parent_id"]=> string(3) "pid" ["position"]=> string(3) "pos" } ["data"]=> array(1) { [0]=> string(2) "nm" } } ["default":protected]=> array(5) { ["structure_table"]=> string(9) "structure" ["data_table"]=> string(9) "structure" ["data2structure"]=> string(2) "id" ["structure"]=> array(6) { ["id"]=> string(2) "id" ["left"]=> string(3) "lft" ["right"]=> string(3) "rgt" ["level"]=> string(3) "lvl" ["parent_id"]=> string(3) "pid" ["position"]=> string(3) "pos" } ["data"]=> array(0) { } } }
-
-*/
-
-	//die;
-	try {
-		$rslt = null;
-		switch($_GET['operation']) {
-			case 'analyze':
-				var_dump($fs->analyze(true));
-				die();
-				break;
-			case 'get_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$temp = $fs->get_children($node);
-				$rslt = array();
-				foreach($temp as $v) {
-					$rslt[] = array('id' => $v['id'], 'text' => $v['nm'], 'children' => ($v['rgt'] - $v['lft'] > 1));
-				}
-				break;
-			case "get_content":
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : 0;
-				$node = explode(':', $node);
-				if(count($node) > 1) {
-					$rslt = array('content' => 'Multiple selected');
-				}
-				else {
-					$temp = $fs->get_node((int)$node[0], array('with_path' => true));
-					$rslt = array('content' => 'Selected: /' . implode('/',array_map(function ($v) { return $v['nm']; }, $temp['path'])). '/'.$temp['nm']);
-				}
-				break;
-			case 'create_node':
-				
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$temp = $fs->mk($node,  //padre
-								isset($_GET['position']) ? (int)$_GET['position'] : 0,  //posicion
-						      	array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node') //data
-						      );
-				$rslt = array('id' => $temp);
-
-				break;
-
-			case 'rename_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$rslt = $fs->rn($node, //id
-					 			array('nm' => isset($_GET['text']) ? $_GET['text'] : 'Renamed node') //data
-					 );
-
-				print_r($rslt);
-				die;
-				break;
-			case 'delete_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$rslt = $fs->rm(
-									$node //id
-								);
-				break;
-			case 'move_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? (int)$_GET['parent'] : 0;
-				$rslt = $fs->mv($node, $parn, isset($_GET['position']) ? (int)$_GET['position'] : 0);
-				break;
-			case 'copy_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? (int)$_GET['parent'] : 0;
-				$rslt = $fs->cp($node, $parn, isset($_GET['position']) ? (int)$_GET['position'] : 0);
-				break;
-			default:
-				throw new Exception('Unsupported operation: ' . $_GET['operation']);
-				break;
-		}
 		header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($rslt);
+
 	}
-	catch (Exception $e) {
-		header($_SERVER["SERVER_PROTOCOL"] . ' 500 Server Error');
-		header('Status:  500 Server Error');
-		echo $e->getMessage();
-	}
-	die();
-}
-
-
-}
 
 
 
-
-
-	
-
-
-
-/*
-case 'create_node':
-				$node = isset($_GET['id']) && $_GET['id'] !== '#' ? (int)$_GET['id'] : 0;
-				$temp = $fs->mk(
-
-						 $node, //padre
-						 isset($_GET['position']) ? (int)$_GET['position'] : 0, //posicion
-				         array('nm' => isset($_GET['text']) ? $_GET['text'] : 'New node') //data
-
-				         );
-
-
-				$rslt = array('id' => $temp);
-				
-				break;
-
-
-
-*/
 
 
 /////////////////validaciones/////////////////////////////////////////	

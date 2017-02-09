@@ -88,6 +88,7 @@ $route['obtener_contenido']						= 'catalogos/obtener_contenido';
 $route['renombrar_nodo']						= 'catalogos/renombrar_nodo';
 $route['eliminar_nodo']							= 'catalogos/eliminar_nodo';
 $route['crear_nodo']							= 'catalogos/crear_nodo';
+$route['mover_nodo']							= 'catalogos/mover_nodo';
 
 
 
