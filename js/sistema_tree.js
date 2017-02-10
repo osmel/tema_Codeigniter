@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
             }, 250);
         });
 
-
+         alert(parseInt($("#depth_arbol").val()));
 
         //modulo para menu contextual
         function customMenu(node) {
@@ -30,15 +30,42 @@ jQuery(document).ready(function($) {
                             item = data.item,
                             obj = inst.get_node(data.reference), //objeto(nodo) que estoy manipulando
                             sel = inst.get_selected();
+                            
+                            /*
+                            console.log(ref);    
+                            console.log(obj);    
+                            console.log(obj.children.length);  
 
-                        inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
-                            function (new_node) {
-                                //console.log(new_node);
-                                new_node.icon = "fa fa-coffee";
-                                new_node.text = "nuevo Nombre";
-                                inst.edit(new_node);
-                            }
-                        );
+                            console.log(obj.id);  //identificador id=1 es la raiz
+                            console.log(item);    
+                            console.log(sel);    
+                            console.log(elemento); 
+                            */   
+                            
+                            
+                            if ( parseInt($("#crea_multiple_simple").val())==0)    { //entornos es simple
+                                if (obj.children.length==0)    { //pueda crear nodo solo si no tiene hijos
+                                        inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
+                                            function (new_node) {
+                                                //console.log(new_node);
+                                                new_node.icon = "fa fa-coffee";
+                                                new_node.text = "nuevo Nombre";
+                                                inst.edit(new_node);
+                                            }
+                                        );
+                                }
+                            } else {  //proyectos pueden tener multiples hijos
+                                    inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
+                                        function (new_node) {
+                                            //console.log(new_node);
+                                            new_node.icon = "fa fa-coffee";
+                                            new_node.text = "nuevo Nombre";
+                                            inst.edit(new_node);
+                                        }
+                                    );
+
+
+                            }                          
 
                         if(sel) {
                                // inst.edit(sel);
@@ -59,12 +86,19 @@ jQuery(document).ready(function($) {
                     action: function (data) {
                         var inst = jQuery.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
-                        if(inst.is_selected(obj)) {
-                            inst.delete_node(inst.get_selected());
+
+
+                        if (obj.id!=1) { //sino es la raiz puede eliminarlo
+                            if(inst.is_selected(obj)) {
+                                inst.delete_node(inst.get_selected());
+                            }
+                            else {
+                                inst.delete_node(obj);
+                            }
+
+
                         }
-                        else {
-                            inst.delete_node(obj);
-                        }
+
                     }
                 }
             };
@@ -105,7 +139,7 @@ jQuery(document).ready(function($) {
             "types" : {
                 "#" : { 
                          "max_children" : 1, //maximos hijos
-                         "max_depth" : 5,  //maxima profundidad
+                         "max_depth" : parseInt($("#depth_arbol").val()) ,  //maxima profundidad
                          "valid_children" : ["root"] 
                      },
                 "root" : { "icon":"fa fa-tree", "valid_children" : ["default"] },
@@ -128,7 +162,7 @@ jQuery(document).ready(function($) {
 
                         //Eliminar nodos y sus hijos
                         .on('delete_node.jstree', function (e, data) {
-                            $.get('eliminar_nodo?operation=delete_node', { 'id' : data.node.id })
+                            $.get('/eliminar_nodo?operation=delete_node', { 'id' : data.node.id })
                                     .fail(function () {
                                         data.instance.refresh();
                                     });
@@ -136,7 +170,7 @@ jQuery(document).ready(function($) {
                         
                         //crear un unico nodo
                         .on('create_node.jstree', function (e, data) {
-                            $.get('crear_nodo?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
+                            $.get('/crear_nodo?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
                                 .done(function (d) {
                                     data.instance.set_id(data.node, d.id);
                                 })
@@ -147,7 +181,7 @@ jQuery(document).ready(function($) {
 
                         //renombrar un único nodo
                         .on('rename_node.jstree', function (e, data) {
-                            $.get('renombrar_nodo?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+                            $.get('/renombrar_nodo?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
                                 .fail(function () {
                                     data.instance.refresh();
                                 });
@@ -155,7 +189,7 @@ jQuery(document).ready(function($) {
 
 
                         .on('move_node.jstree', function (e, data) {
-                            $.get('mover_nodo?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+                            $.get('/mover_nodo?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
                                 .fail(function () {
                                     data.instance.refresh();
                                 });

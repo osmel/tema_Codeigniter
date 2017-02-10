@@ -34,10 +34,11 @@
 						<table id="tabla_cat_entornos" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 							<thead>
 								<tr>
-									<th class="text-center cursora" width="12%">Entorno</th>
-									<th class="text-center cursora" width="6%">Profundidad</th>
+									<th class="text-center cursora" width="10%">Entorno</th>
+									<th class="text-center cursora" width="10%">Tabla</th>
+									<th class="text-center cursora" width="10%">Profundidad</th>
 									<th class="text-center cursora" width="50%">Ruta</th>
-									<th class="text-center cursora" width="12%">Usuario</th>
+									<!--<th class="text-center cursora" width="10%">Usuario</th>-->
 									<th class="text-center " width="10%"><strong>Editar</strong></th>
 									<th class="text-center " width="10%"><strong>Eliminar</strong></th>
 									

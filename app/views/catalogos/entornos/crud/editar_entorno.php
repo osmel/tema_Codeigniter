@@ -29,6 +29,10 @@
   $attr = array('class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
   echo form_open('validacion_edicion_entorno', $attr,$hidden);
 ?>	
+
+<input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
+<input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
+
 <div class="container">
 		<br>
 	<div class="row">

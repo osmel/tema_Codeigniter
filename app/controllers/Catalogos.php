@@ -70,6 +70,29 @@ class Catalogos extends CI_Controller {
 	    if($this->session->userdata('session') === TRUE ){
 	    				
 	    			  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	    			  
+	    
+	    	//comienzo "cancelaciones"			  
+			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
+		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
+		 			  
+		 			  $data['tabla'] =  $this->session->userdata('creando_entorno');
+					  $existe            =  $this->modelo_catalogo->check_existente_entorno_tabla( $data );
+		         	  if ( $existe !== TRUE ){	//esto significa que salio de un nuevo que no tiene "NOMBRE" 			 
+		         	  		$this->load->dbforge();
+		         	  		$tabla_struct  = 'struct_'.$this->session->userdata('creando_entorno');	
+					        $tabla_data  =   'data_'.$this->session->userdata('creando_entorno');	
+
+							$this->dbforge->drop_table($tabla_struct);
+							$this->dbforge->drop_table($tabla_data);
+
+					  }
+				}	  
+				//que aqui siempre este en cero, para cuando de cancelar que no haya session activa
+		     	 $this->session->set_userdata('creando_entorno', "0");
+		    //fin de "cancelaciones"			  
+
+
 
 			          switch ($id_perfil) {    
 			            case 1:		            
@@ -223,6 +246,10 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 	      }
 	      $data['nombre'] = $this->session->userdata('creando_entorno');
 	       
+
+	      $data['crea_multiple_simple'] =   0;   //simple, no podra haber hijos multiples
+       	  $data['depth_arbol'] =   2;   //$this->modelo_catalogo->configuracion($data); profundidad
+        
 	      switch ($id_perfil) {    
 	        case 1:
 	            $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
@@ -292,13 +319,18 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 
        $data['id']  = base64_decode($id); 
        $data['entorno'] = $this->modelo_catalogo->coger_entorno($data);
-
+       
+   
 		//lo pase 
 		if ( $data['entorno'] !== FALSE ){       
        			$this->session->set_userdata('creando_entorno', $data['entorno']->tabla);
        	}		
 
        $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+
+       $data['crea_multiple_simple'] =   0;   //simple, no podra haber hijos multiples
+       $data['depth_arbol'] =   2;   //$this->modelo_catalogo->configuracion($data); profundidad
+       
 
       switch ($id_perfil) {    
         case 1:
@@ -339,31 +371,29 @@ function validacion_edicion_entorno(){
     if ($this->session->userdata('session') !== TRUE) {
       redirect('');
     } else {
-        $this->form_validation->set_rules('entorno', 'entorno', 'trim|required|min_length[1]|max_lenght[80]|xss_clean');
-        $this->form_validation->set_rules('hexadecimal_entorno', 'entorno', 'trim|required|min_lenght[3]|max_length[6]|xss_clean');
+        $this->form_validation->set_rules('entorno', 'entorno', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+	        
+	      if ($this->form_validation->run() === TRUE){
+	            $data['id']           = $this->input->post('id');
+	          $data['entorno']         = $this->input->post('entorno');
 
+	         $existe            =  $this->modelo_catalogo->check_existente_entorno( $data );
+	         //if ( $existe !== TRUE ){
+	         if ( TRUE ){
 
-      if ($this->form_validation->run() === TRUE){
-            $data['id']           = $this->input->post('id');
-          $data['entorno']         = $this->input->post('entorno');
-          $data['hexadecimal_entorno'] = $this->input->post('hexadecimal_entorno');
+	            $data               = $this->security->xss_clean($data);  
+	            $guardar            = $this->modelo_catalogo->editar_entorno( $data );
 
-         $existe            =  $this->modelo_catalogo->check_existente_entorno( $data );
-         if ( $existe !== TRUE ){
+	            if ( $guardar !== FALSE ){
+	              $this->session->set_userdata('creando_entorno', "0");	 //listo para crear otro entorno
+	              echo true;
+	            } else {
+	              echo '<span class="error"><b>E01</b> - El nuevo entorno no pudo ser agregada</span>';
+	            }
 
-            $data               = $this->security->xss_clean($data);  
-            $guardar            = $this->modelo_catalogo->editar_entorno( $data );
-
-            if ( $guardar !== FALSE ){
-              echo true;
-
-            } else {
-              echo '<span class="error"><b>E01</b> - El nuevo entorno no pudo ser agregada</span>';
-            }
-
-         } else {
-            echo '<span class="error"><b>E01</b> - El entorno que desea agregar ya existe. No es posible agregar dos entornos iguales.</span>';
-         }  
+	         } else {
+	            echo '<span class="error"><b>E01</b> - El entorno que desea agregar ya existe. No es posible agregar dos entornos iguales.</span>';
+	         }  
 
 
       } else {      
@@ -375,6 +405,69 @@ function validacion_edicion_entorno(){
 
 
 
+
+  function eliminar_entorno($id = '', $nombrecompleto=''){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+        $data['id']         = base64_decode($id);
+        $data['nombrecompleto']   = base64_decode($nombrecompleto);
+        
+        $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+        //obtener la tabla a eliminar
+        $data['entorno'] = $this->modelo_catalogo->coger_entorno($data);
+
+      switch ($id_perfil) {    
+        case 1:
+                 $this->load->view( 'catalogos/entornos/crud/eliminar_entorno', $data );
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+              if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                     $this->load->view( 'catalogos/entornos/crud/eliminar_entorno', $data );
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+  function validar_eliminar_entorno(){
+    
+
+       $data['id'] = $this->input->post('id');
+            $tabla = $this->input->post('tabla');
+
+    $eliminado = $this->modelo_catalogo->eliminar_entorno(  $data );
+    if ( $eliminado !== FALSE ){
+		$this->load->dbforge();
+
+		$tabla_struct  = ('struct_'.$tabla);
+        $tabla_data  = ('data_'.$tabla); //$this->db->dbprefix
+
+		$this->dbforge->drop_table($tabla_struct);
+		$this->dbforge->drop_table($tabla_data);
+
+      echo TRUE;
+    } else {
+      echo '<span class="error">No se ha podido eliminar la entorno</span>';
+    }
+  }   
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

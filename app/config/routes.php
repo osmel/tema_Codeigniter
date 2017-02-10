@@ -113,7 +113,7 @@ $route['validar_nuevo_entorno']          = 'catalogos/validar_nuevo_entorno';
 $route['editar_entorno/(:any)']			 = 'catalogos/editar_entorno/$1';
 $route['validacion_edicion_entorno']     = 'catalogos/validacion_edicion_entorno';
 
-$route['eliminar_entorno/(:any)/(:any)/(:any)'] = 'catalogos/eliminar_entorno/$1/$2/$3';
+$route['eliminar_entorno/(:any)/(:any)'] = 'catalogos/eliminar_entorno/$1/$2';
 $route['validar_eliminar_entorno']    	 = 'catalogos/validar_eliminar_entorno';
 
 

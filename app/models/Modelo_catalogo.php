@@ -59,6 +59,18 @@
         }  
 
 
+   //checar si el entorno por TABLA ya existe
+    public function check_existente_entorno_tabla($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_entornos);
+            $this->db->where('tabla',$data['tabla']);  
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
 
 
    //checar si el entorno ya existe
@@ -75,12 +87,83 @@
     } 
 
 
+
+
+
+
+   //checar si el entorno ya existe
+    public function profundidad($tabla){
+            
+              $tabla  = $this->db->dbprefix('struct_'.$tabla);
+              $sql = "select MAX(profundidad.depth) max_profundida_arbol from  (
+                            SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+                            FROM ".$tabla." AS nodo,
+                                    ".$tabla." AS padre
+                            WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                            GROUP BY nodo.id
+                            ORDER BY nodo.lft
+                            )
+                             profundidad";
+
+             $query = $this->db->query($sql);                
+
+
+
+
+            if ($query->num_rows() > 0)
+                return $query->row()->max_profundida_arbol+1;
+            else
+                return 0;
+            $login->free_result();
+    } 
+
+
+
+   //checar si el entorno ya existe
+    public function ruta($tabla){
+            //http://www.teacupapps.com/blog/mysql/concatenar-varias-filas-en-una-con-mysql
+              $tabla_struct  = $this->db->dbprefix('struct_'.$tabla);
+              $tabla_data  = $this->db->dbprefix('data_'.$tabla);
+              $sql="
+              select GROUP_CONCAT(data.nm SEPARATOR ' / ') ruta 
+                 from(
+                    SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    GROUP BY nodo.id
+                    ORDER BY nodo.lft
+                ) profundidad
+                INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+              ";                
+
+             $query = $this->db->query($sql);                
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();
+    } 
+
+
+
+
+
+
       //crear
         public function anadir_entorno( $data ){
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
           $this->db->set( 'entorno', $data['entorno'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );  
+
+          $profundidad = self::profundidad($this->session->userdata('creando_entorno'));
+          $ruta = self::ruta($this->session->userdata('creando_entorno'));
+
+          $this->db->set( 'profundidad', $profundidad );  
+          $this->db->set( 'ruta', $ruta );  
+
 
           $this->db->insert($this->catalogo_entornos );
             if ($this->db->affected_rows() > 0){
@@ -130,7 +213,7 @@
 
           $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
           
-          $this->db->select('c.id, c.entorno, c.tabla');
+          $this->db->select('c.id, c.entorno, c.tabla, c.profundidad, c.ruta');
 
           $this->db->from($this->catalogo_entornos.' as c');
           
@@ -139,7 +222,8 @@
           $where = '(
 
                       (
-                        ( c.id LIKE  "%'.$cadena.'%" ) OR (c.entorno LIKE  "%'.$cadena.'%") OR (c.tabla LIKE  "%'.$cadena.'%") 
+                        ( c.id LIKE  "%'.$cadena.'%" ) OR 
+                        ( c.ruta LIKE  "%'.$cadena.'%" ) OR (c.entorno LIKE  "%'.$cadena.'%") OR (c.tabla LIKE  "%'.$cadena.'%") 
                         
                        )
             )';   
@@ -170,6 +254,8 @@
                                       0=>$row->id,
                                       1=>$row->entorno,
                                       2=>$row->tabla,
+                                      3=>$row->profundidad,
+                                      4=>$row->ruta,
 
                                       //4=>self::entornos_en_uso($row->id),
                                     );
@@ -215,7 +301,7 @@
             $this->db->where('c.id',$data['id']);
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
-                   $this->session->set_userdata('creando_entorno', $result->row()->tabla);
+                   //$this->session->set_userdata('creando_entorno', $result->row()->tabla);
                    return $result->row();
                 } else {
                    return FALSE;
@@ -236,9 +322,19 @@
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
           $this->db->set( 'entorno', $data['entorno'] );  
-          $this->db->set( 'tabla', $data['tabla'] );  
+          //$this->db->set( 'tabla', $data['tabla'] );  
+          $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );
+
+          $profundidad = self::profundidad($this->session->userdata('creando_entorno'));
+          $ruta = self::ruta($this->session->userdata('creando_entorno'));
+          $this->db->set( 'profundidad', $profundidad );  
+          $this->db->set( 'ruta', $ruta );  
+
           $this->db->where('id', $data['id'] );
           $this->db->update($this->catalogo_entornos );
+            
+            return TRUE;
+
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
             }  else
@@ -248,6 +344,16 @@
 
 
 
+
+
+        //eliminar entorno
+        public function eliminar_entorno( $data ){
+            $this->db->delete( $this->catalogo_entornos, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }  
+       
+          
 
 
 

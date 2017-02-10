@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
                             //spinner.stop();
                            // jQuery('#foo').css('display','none');
                             //e.preventDefault();
-                            window.location.href = ''+$catalogo;   
+                            window.location.href = '/'+$catalogo;   
                             
                     }
 
@@ -99,14 +99,14 @@ jQuery('#tabla_cat_entornos').dataTable( {
 
                     { 
                         "render": function ( data, type, row ) {
-                                return row[2];
+                                return row[3];
                         },
                         "targets": [2] //,2,3,4
                     },
 
                     { 
                         "render": function ( data, type, row ) {
-                                return row[2];
+                                return row[4];
                         },
                         "targets": [3] //,2,3,4
                     },
@@ -136,7 +136,7 @@ jQuery('#tabla_cat_entornos').dataTable( {
 
                             if (row[4]==0) {
                                 texto=' <td>';                              
-                                    texto+=' <a href="eliminar_entorno/'+(row[0])+'/'+jQuery.base64.encode(row[1])+'/'+jQuery.base64.encode(row[3])+ '"'; 
+                                    texto+=' <a href="eliminar_entorno/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
@@ -150,6 +150,14 @@ jQuery('#tabla_cat_entornos').dataTable( {
                                 texto+=' </td></fieldset>'; 
                             
                             }
+
+
+                                texto=' <td>';                              
+                                    texto+=' <a href="eliminar_entorno/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td>';  
                                     
 
 
