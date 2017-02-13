@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
-<?php $this->load->view( 'header' ); ?>
+<?php $this->load->view( 'header', $datos ); ?>
 	<div class="container">
 		<div class="row">
 			<h3 class="text-center"><strong>¿No recuerdas tu contraseña?</strong></h3>

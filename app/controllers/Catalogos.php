@@ -8,39 +8,378 @@ class Catalogos extends CI_Controller {
 		$this->load->model('Modelo_nucleo', 'modelo'); 
 		$this->load->model('Modelo_arbol', 'modelo_arbol'); 
 		$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
+		$this->load->model('Modelo_proyecto', 'modelo_proyecto'); 
 	}
 
-	public function crear_proyecto(){
-	
-		$id_perfil=$this->session->userdata('id_perfil');
 
-	    if($this->session->userdata('session') === TRUE ){
-	    				
-	    			  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////Proyectos/////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			          switch ($id_perfil) {    
-			            case 1:		            
-			                $this->load->view( 'catalogos/proyectos/proyectos',$data);
-			              break;
-			            
-			            case 2: //
-			            case 3: //
-			            case 4: //
 
-			                $this->load->view( 'catalogos/proyectos/proyectos',$data);
-			              break;
-			          
-			            default:  
-			              redirect('');
-			              break;
-			          }
 
-	        }
-	        else{ 
+public function crear_tabla_proyecto($nombre) {
+
+		$this->load->dbforge();
+		//creamos la estructura de una tabla con un 
+		//id autoincremental, un campo varchar(255) para el nm
+		//y otro para el passwords también varchar
+		$this->dbforge->add_field(
+			array(
+				"id"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+					//"auto_increment"	=>		TRUE,
+ 
+				),
+				"nm"	=>		array(
+					"type"				=>		"VARCHAR",
+					"constraint"		=>		255,
+				),
+			)
+		);
+
+
+
+ 
+		$this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
+		$this->dbforge->create_table('pdata_'.$nombre);//creamos la tabla inven_prueba
+
+
+
+		$this->dbforge->add_field(
+			array(
+				"id"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+					"auto_increment"	=>		TRUE,
+				),
+				"lft"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"rgt"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"lvl"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"pid"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+				"pos"		=>		array(
+					"type"				=>		"INT",
+					"constraint"		=>		11,
+					"unsigned"			=>		TRUE,
+				),
+			)
+		);
+
+
+		$this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
+		$this->dbforge->create_table('pstruct_'.$nombre);//creamos la tabla inven_prueba
+
+
+		//insertar registro en cada tabla
+
+			$data["nombre"]="Proyectos";
+			$data["tabla"]=$nombre;
+			$this->modelo_proyecto->insertar_registro_nuevas_tablas($data); 	
+		 
+		//$this->dbforge->drop_table('prueba');
+
+}	
+
+
+
+    // crear
+  function crear_proyecto(){
+	if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	      $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+
+	      
+	      //crear la tabla	
+	      if ($this->session->userdata('creando_proyecto') == "0") {
+	      			   $data['nombre'] = date('Y').date('m').date('d').date('H').date('i').date('s').random_string('alpha',4).random_string('numeric',3);
+	      			   $this->session->set_userdata('creando_proyecto', $data['nombre']);	
+				      self::crear_tabla_proyecto($data['nombre']);
+	      }
+	      $data['nombre'] = $this->session->userdata('creando_proyecto');
+	       
+		  $dato["id"] = $this->session->userdata('entorno_activo');
+          $data['depth_arbol'] =$this->modelo_proyecto->coger_entorno($dato)->profundidad;
+          $dato['id'] = 3;
+	      $data['crea_multiple_simple'] = $this->modelo_catalogo->coger_configuracion($dato)->valor; //1 multiple
+	      
+	      $data['ambito_app'] =2;  //proyecto
+	      $this->session->set_userdata('ambito_app', $data['ambito_app']);	
+       	  
+        
+	      switch ($id_perfil) {    
+	        case 1:
+	            $this->load->view( 'catalogos/proyectos/crud/nuevo_proyecto',$data);
+	          break;
+	        case 2:
+	        case 3:
+	        case 4:
+	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	                $this->load->view( 'catalogos/proyectos/crud/nuevo_proyecto',$data);
+	              }   
+	          break;
+
+
+	        default:  
 	          redirect('');
-	        }	
+	          break;
+	      }
+	    }
+	    else{ 
+	      redirect('index');
+	    }
+	  }
+
+  
+  function validar_nuevo_proyecto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+      $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          $data['proyecto']   = $this->input->post('proyecto');
+
+         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
+         if ( $existe !== TRUE ){
+
+            $data         =   $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_proyecto->anadir_proyecto( $data );
+            if ( $guardar !== FALSE ){
+              $this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
+              echo true;
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+            }
+          } else {
+            echo '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
+          }  
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+ // editar
+  function editar_proyecto( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+
+       
+		if ($data['id']!=0) {
+			
+	       $data['proyecto'] = $this->modelo_proyecto->coger_proyecto($data);
+	   
+			//lo pase 
+			if ( $data['proyecto'] !== FALSE ){       
+	       			$this->session->set_userdata('creando_proyecto', $data['proyecto']->tabla);
+	       	}		
+
+		}   
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+       $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos();  
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+	       
+		  
+		  $dato["id"] = $this->session->userdata('entorno_activo');
+          $data['depth_arbol'] =$this->modelo_proyecto->coger_entorno($dato)->profundidad;
+          $dato['id'] = 3;
+	      $data['crea_multiple_simple'] = $this->modelo_catalogo->coger_configuracion($dato)->valor; //1 multiple
+	      
+
+	      $data['ambito_app'] =2; 
+	      $this->session->set_userdata('ambito_app', $data['ambito_app']);	
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                  if ( $data['proyecto'] !== FALSE ){
+                      $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
+                  } else {
+                        redirect('');
+                  }       
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                  if ( $data['proyecto'] !== FALSE ){
+                      $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
+                  } else {
+                        redirect('');
+                  }       
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+function validacion_edicion_proyecto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+        $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
 	        
-	}
+	      if ($this->form_validation->run() === TRUE){
+	            $data['id']           = $this->input->post('id');
+	          $data['proyecto']         = $this->input->post('proyecto');
+
+	         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
+	         //if ( $existe !== TRUE ){
+	         if ( TRUE ){
+
+	            $data               = $this->security->xss_clean($data);  
+	            $guardar            = $this->modelo_proyecto->editar_proyecto( $data );
+
+	            if ( $guardar !== FALSE ){
+	              $this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
+	              echo true;
+	            } else {
+	              echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+	            }
+
+	         } else {
+	            echo '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
+	         }  
+
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+  
+
+
+
+
+  function eliminar_proyecto($id = '', $nombrecompleto=''){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+        $data['id']         = base64_decode($id);
+        $data['nombrecompleto']   = base64_decode($nombrecompleto);
+        
+        $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+        $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos();  
+        $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();  
+        //obtener la tabla a eliminar
+        $data['proyecto'] = $this->modelo_proyecto->coger_proyecto($data);
+
+      switch ($id_perfil) {    
+        case 1:
+                 $this->load->view( 'catalogos/proyectos/crud/eliminar_proyecto', $data );
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+              if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                     $this->load->view( 'catalogos/proyectos/crud/eliminar_proyecto', $data );
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+  function validar_eliminar_proyecto(){
+    
+
+       $data['id'] = $this->input->post('id');
+            $tabla = $this->input->post('tabla');
+
+    $eliminado = $this->modelo_proyecto->eliminar_proyecto(  $data );
+    if ( $eliminado !== FALSE ){
+    $this->load->dbforge();
+
+    $tabla_struct  = ('struct_'.$tabla);
+        $tabla_data  = ('data_'.$tabla); //$this->db->dbprefix
+
+    $this->dbforge->drop_table($tabla_struct);
+    $this->dbforge->drop_table($tabla_data);
+
+      echo TRUE;
+    } else {
+      echo '<span class="error">No se ha podido eliminar la proyecto</span>';
+    }
+  }   
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +409,8 @@ class Catalogos extends CI_Controller {
 	    if($this->session->userdata('session') === TRUE ){
 	    				
 	    			  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	    			  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	    			  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 	    			  
 	    
 	    	//comienzo "cancelaciones"			  
@@ -231,6 +572,8 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 	if($this->session->userdata('session') === TRUE ){
 	      $id_perfil=$this->session->userdata('id_perfil');
 	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	      $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
 	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
 	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
@@ -246,9 +589,13 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 	      }
 	      $data['nombre'] = $this->session->userdata('creando_entorno');
 	       
-
-	      $data['crea_multiple_simple'] =   0;   //simple, no podra haber hijos multiples
-       	  $data['depth_arbol'] =   2;   //$this->modelo_catalogo->configuracion($data); profundidad
+		  $dato['id'] = 1;
+          $data['depth_arbol'] =$this->modelo_catalogo->coger_configuracion($dato)->valor; 
+          $dato['id'] = 2;
+	      $data['crea_multiple_simple'] =$this->modelo_catalogo->coger_configuracion($dato)->valor; 
+	      $data['ambito_app'] =1; 
+	      $this->session->set_userdata('ambito_app', $data['ambito_app']);	
+       	  
         
 	      switch ($id_perfil) {    
 	        case 1:
@@ -318,19 +665,38 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
        }   
 
        $data['id']  = base64_decode($id); 
-       $data['entorno'] = $this->modelo_catalogo->coger_entorno($data);
        
+		if ($data['id']!=0) {
+			
+	       $data['entorno'] = $this->modelo_catalogo->coger_entorno($data) ;
+
+			//lo pase 
+			if ( $data['entorno'] !== FALSE ){       
+	       			$this->session->set_userdata('creando_entorno', $data['entorno']->tabla);
+	       	}		
+
+
+		}       
+
    
-		//lo pase 
-		if ( $data['entorno'] !== FALSE ){       
-       			$this->session->set_userdata('creando_entorno', $data['entorno']->tabla);
-       	}		
+/*
+       print_r($data['id']);
+       print_r($data['entorno']);
+       print_r($this->session->userdata('creando_entorno'));
+       
+       die;
+  */ 
 
        $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+       $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
-       $data['crea_multiple_simple'] =   0;   //simple, no podra haber hijos multiples
-       $data['depth_arbol'] =   2;   //$this->modelo_catalogo->configuracion($data); profundidad
-       
+		  $dato['id'] = 1;
+          $data['depth_arbol'] =$this->modelo_catalogo->coger_configuracion($dato)->valor; 
+          $dato['id'] = 2;
+	      $data['crea_multiple_simple'] =$this->modelo_catalogo->coger_configuracion($dato)->valor; 
+	      $data['ambito_app'] =1; 
+	      $this->session->set_userdata('ambito_app', $data['ambito_app']);	
 
       switch ($id_perfil) {    
         case 1:
@@ -419,6 +785,8 @@ function validacion_edicion_entorno(){
         $data['nombrecompleto']   = base64_decode($nombrecompleto);
         
         $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+        $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+        $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
         //obtener la tabla a eliminar
         $data['entorno'] = $this->modelo_catalogo->coger_entorno($data);
 
@@ -468,6 +836,10 @@ function validacion_edicion_entorno(){
       echo '<span class="error">No se ha podido eliminar la entorno</span>';
     }
   }   
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

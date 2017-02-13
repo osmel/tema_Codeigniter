@@ -6,6 +6,8 @@ class Nucleo extends CI_Controller {
     public function __construct(){ 
 		parent::__construct();
 		$this->load->model('Modelo_nucleo', 'modelo'); 
+		$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
+		$this->load->model('Modelo_proyecto', 'modelo_proyecto'); 
 	}
 
 	public function index(){
@@ -53,7 +55,10 @@ class Nucleo extends CI_Controller {
 								$this->session->set_userdata('modulo', 'home');				
 								$this->session->set_userdata('especial', $login_element->especial);	
 								$this->session->set_userdata('id_almacen_ajuste', 1);		
-								$this->session->set_userdata('creando_entorno', "0");		
+								$this->session->set_userdata('creando_entorno', "0"); //
+								$this->session->set_userdata('creando_proyecto', "0"); //
+								$this->session->set_userdata('entorno_activo', 1);		//1 es el entorno por defecto "General"
+								$this->session->set_userdata('ambito_app', 0); //1- Entorno, 2-Proyecto	
 							}
 
 							$data['id_almacen'] = $this->session->userdata('id_almacen') ;
@@ -85,6 +90,54 @@ function dashboard() {
 	          
 
 	    	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
+	    	  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	    	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+			//comienzo "cancelaciones" para Entorno			  
+			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
+		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
+		 			  
+		 			  $data['tabla'] =  $this->session->userdata('creando_entorno');
+					  $existe            =  $this->modelo_catalogo->check_existente_entorno_tabla( $data );
+		         	  if ( $existe !== TRUE ){	//esto significa que salio de un nuevo que no tiene "NOMBRE" 			 
+		         	  		$this->load->dbforge();
+		         	  		$tabla_struct  = 'struct_'.$this->session->userdata('creando_entorno');	
+					        $tabla_data  =   'data_'.$this->session->userdata('creando_entorno');	
+
+							$this->dbforge->drop_table($tabla_struct);
+							$this->dbforge->drop_table($tabla_data);
+
+					  }
+				}	  
+				//que aqui siempre este en cero, para cuando de cancelar que no haya session activa
+		     	 $this->session->set_userdata('creando_entorno', "0");
+		    //fin de "cancelaciones"	
+
+
+
+			//comienzo "cancelaciones" para proyecto			  
+			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
+		 		if ($this->session->userdata('creando_proyecto') != "0") { //significa que cancelo en nuevo o editar
+		 			  
+		 			  $data['tabla'] =  $this->session->userdata('creando_proyecto');
+					  $existe            =  $this->modelo_proyecto->check_existente_proyecto_tabla( $data );
+		         	  if ( $existe !== TRUE ){	//esto significa que salio de un nuevo que no tiene "NOMBRE" 			 
+		         	  		$this->load->dbforge();
+		         	  		$tabla_struct  = 'pstruct_'.$this->session->userdata('creando_proyecto');	
+					        $tabla_data  =   'pdata_'.$this->session->userdata('creando_proyecto');	
+
+							$this->dbforge->drop_table($tabla_struct);
+							$this->dbforge->drop_table($tabla_data);
+
+					  }
+				}	  
+				//que aqui siempre este en cero, para cuando de cancelar que no haya session activa
+		     	 $this->session->set_userdata('creando_proyecto', "0");
+		    //fin de "cancelaciones"	
+
+
+
+
 
 			    	$id_perfil = $this->session->userdata('id_perfil');
 			          switch ($id_perfil) {    
@@ -110,6 +163,26 @@ function dashboard() {
 	        }	
 	        
 	}
+
+
+ // editar
+  function cambio_entorno( $id ){
+      if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+
+	        $id = base64_decode($id); 
+      		$this->session->set_userdata('entorno_activo', $id);
+	       		
+
+
+	      redirect('');
+  	  }
+ }   	
 
 
   function editar_usuario( $uid = '' ){

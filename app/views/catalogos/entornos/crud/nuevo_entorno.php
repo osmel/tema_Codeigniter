@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
-<?php $this->load->view( 'header' ); ?>
+<?php $this->load->view( 'header' , $datos ); ?>
 
  
  
@@ -31,6 +31,7 @@
 
 <input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
+<input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 			
 			<div class="container" style="background-entorno:transparent !important">
 					<br>	

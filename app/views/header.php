@@ -59,6 +59,19 @@ License: You must have a valid license purchased only from themeforest(the above
              <link href="<?php echo base_url(); ?>js/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 
+            <!-- componente fecha simple -->
+            <?php echo link_tag('css/bootstrap-datepicker.css'); ?>            
+            <!-- componente rango fecha -->
+            <?php echo link_tag('css/daterangepicker-bs3.css'); ?>
+
+             <!-- tags input -->   
+            <?php echo link_tag('css/tagsinput_app.css'); ?>
+
+            
+
+            <link href="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />
+            <!--<link href="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css" rel="stylesheet" type="text/css" /> -->
+
 
         <!-- FIN DE DISEÑO DE ESTILO DE TEMA  -->
         <link rel="shortcut icon" href="favicon.ico" /> </head>
@@ -67,9 +80,10 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
         <div class="page-wrapper">
-           
+                
+                <?php $datos['entornos']=$entornos; ?>
             <!-- Encabezado -->
-               <?php $this->load->view( 'encabezado' ); ?>
+               <?php $this->load->view( 'encabezado',$datos ); ?>
 
             <!-- BEGIN HEADER & CONTENT DIVIDER -->
             <div class="clearfix"> </div>

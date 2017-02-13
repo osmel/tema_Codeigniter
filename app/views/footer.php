@@ -95,7 +95,22 @@
 			<script src="<?php echo base_url(); ?>js/base64/jquery.base64.min.js" type="text/javascript"></script>
 				
 
+			<!--menu contextual -->
+			<script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-contextmenu/bootstrap-contextmenu.js" type="text/javascript"></script>
+			 <script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-context-menu.min.js" type="text/javascript"></script>
 
+
+			<!-- componente fecha simple -->
+			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker.js"></script>
+			<!-- componente rango fecha -->
+			<script type="text/javascript" src="<?php echo base_url(); ?>js/daterangepicker.js"></script>	
+
+
+			
+			<!--<script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-bootstrap-tagsinput.min.js" type="text/javascript"></script>-->
+
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+			<script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
 
 			<script src="<?php echo base_url(); ?>js/jstree/dist/jstree.min.js" type="text/javascript"></script>
 

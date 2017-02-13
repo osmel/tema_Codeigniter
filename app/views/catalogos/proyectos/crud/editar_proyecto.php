@@ -16,18 +16,18 @@
 	        	<div class="page-content">
 						<?php $this->load->view( 'navegacion' ); ?>
 
-						<?php //$this->load->view( 'catalogos/entornos/detalle_entorno'); ?>
+						<?php //$this->load->view( 'catalogos/proyectos/detalle_proyecto'); ?>
 			 
 			 
 <?php 
 
  	if (!isset($retorno)) {
-      	$retorno ="entornos";
+      	$retorno =""; //proyectos
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
-  echo form_open('validacion_edicion_entorno', $attr,$hidden);
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_proyectos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  echo form_open('validacion_edicion_proyecto', $attr,$hidden);
 ?>	
 
 <input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
@@ -37,23 +37,23 @@
 <div class="container">
 		<br>
 	<div class="row">
-		<div class="col-sm-8 col-md-8"><h4>Edición de entorno</h4></div>
+		<div class="col-sm-8 col-md-8"><h4>Edición de proyecto</h4></div>
 	</div>
 	<br>
 	<div class="container row">
 		<div class="panel panel-primary">
-			<div class="panel-heading">Datos de entorno</div>
+			<div class="panel-heading">Datos de proyecto</div>
 			<div class="panel-body">
 				<div class="col-sm-6 col-md-6">
 					<div class="form-group">
-						<label for="entorno" class="col-sm-3 col-md-2 control-label">entorno</label>
+						<label for="proyecto" class="col-sm-3 col-md-2 control-label">proyecto</label>
 						<div class="col-sm-9 col-md-10">
 							<?php 
 								$nomb_nom='';
-								if (isset($entorno ->entorno )) 
-								 {	$nomb_nom = $entorno ->entorno ;}
+								if (isset($proyecto ->proyecto )) 
+								 {	$nomb_nom = $proyecto ->proyecto ;}
 							?>
-							<input value="<?php echo  set_value('entorno',$nomb_nom); ?>" type="text" class="form-control ttip" title="Ingresar un nuevo entorno." name="entorno" placeholder="entorno">
+							<input value="<?php echo  set_value('proyecto',$nomb_nom); ?>" type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." name="proyecto" placeholder="proyecto">
 						</div>
 					</div>
 
@@ -66,7 +66,7 @@
 
 				
 
-				<div id="tree" nombre="">  </div> <!--<?php echo $entorno->tabla;?> -->
+				<div id="tree" nombre="">  </div> <!--<?php echo $proyecto->tabla;?> -->
 
 
 				<div id="data">

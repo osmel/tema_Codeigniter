@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
             }, 250);
         });
 
-         alert(parseInt($("#depth_arbol").val()));
+         //alert(parseInt($("#depth_arbol").val()));
 
         //modulo para menu contextual
         function customMenu(node) {

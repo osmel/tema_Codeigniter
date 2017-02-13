@@ -27,8 +27,14 @@
               $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
 
 
-               $this->struct                         = $this->db->dbprefix('struct_'.$this->session->userdata('creando_entorno') );
-               $this->data                         = $this->db->dbprefix('data_'.$this->session->userdata('creando_entorno') );
+            if ($this->session->userdata('ambito_app')==1) { //entorno
+              $this->struct                         = $this->db->dbprefix('struct_'.$this->session->userdata('creando_entorno') );
+              $this->data                           = $this->db->dbprefix('data_'.$this->session->userdata('creando_entorno') );
+            } else { //proyecto
+              $this->struct                         = $this->db->dbprefix('pstruct_'.$this->session->userdata('creando_proyecto') );
+              $this->data                           = $this->db->dbprefix('pdata_'.$this->session->userdata('creando_proyecto') );
+            }
+             
 
 
                $this->options   = array(

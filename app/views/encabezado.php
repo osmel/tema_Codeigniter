@@ -27,6 +27,33 @@
                     <!-- Comienzo menu de navegacion de arriba top BEGIN TOP NAVIGATION MENU -->
                         <div class="top-menu">
                             <ul class="nav navbar-nav pull-right">
+
+
+
+                                <!-- (Entornos)  -->
+                                    <li class="dropdown dropdown-user">
+                                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                            <span class="badge badge-danger">  <?php echo $entornos[0]->profundidad_activo; ?> </span>
+                                            <span class="username username-hide-on-mobile"> <?php echo $entornos[0]->nombre_activo; ?> </span>
+                                            <i class="fa fa-angle-down"></i>
+
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-default">
+                                           
+                                            <?php foreach ($entornos as $entorno) { ?>
+                                                <li>
+                                                    <a href="<?php echo base_url(); ?>cambio_entorno/<?php echo base64_encode($entorno->id); ?>" >
+                                                        <?php echo $entorno->entorno; ?>
+                                                        <span class="badge badge-success"> <?php echo $entorno->profundidad; ?> </span>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>    
+
+                                        </ul>
+                                    </li>
+                               <!-- (Fin de Entornos)  -->
+
+
                                 
                                 <!--(2) Comienzo DROPDOWN(desplegables) -->
                                
@@ -106,6 +133,7 @@
                                         </ul>
                                     </li>
                                 <!-- END INBOX DROPDOWN -->
+
 
 
                                 <!-- (3)  Comienzo tarea desplegable(DROPDOWN) -->

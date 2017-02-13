@@ -98,9 +98,13 @@ $route['mover_nodo']							= 'catalogos/mover_nodo';
 
 
 
+$route['cambio_entorno/(:any)']			 = 'nucleo/cambio_entorno/$1';
+
+//$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';
 
 
-//color
+
+//Entornos
 $route['entornos']					     = 'catalogos/listado_entornos';
 
 $route['nuevo_entorno']                  = 'catalogos/nuevo_entorno';
@@ -117,7 +121,23 @@ $route['eliminar_entorno/(:any)/(:any)'] = 'catalogos/eliminar_entorno/$1/$2';
 $route['validar_eliminar_entorno']    	 = 'catalogos/validar_eliminar_entorno';
 
 
-//$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';
+
+//Proyectos
+$route['proyectos']					     = 'catalogos/listado_proyectos';
+
+$route['nuevo_proyecto']                  = 'catalogos/nuevo_proyecto';
+$route['crear_tabla/(:any)']			 = 'catalogos/crear_tabla/$1';
+
+$route['procesando_cat_proyectos']        = 'catalogos/procesando_cat_proyectos';
+
+$route['validar_nuevo_proyecto']          = 'catalogos/validar_nuevo_proyecto';
+
+$route['editar_proyecto/(:any)']			 = 'catalogos/editar_proyecto/$1';
+$route['validacion_edicion_proyecto']     = 'catalogos/validacion_edicion_proyecto';
+
+$route['eliminar_proyecto/(:any)/(:any)'] = 'catalogos/eliminar_proyecto/$1/$2';
+$route['validar_eliminar_proyecto']    	 = 'catalogos/validar_eliminar_proyecto';
+
 
 
 

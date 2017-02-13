@@ -1,6 +1,6 @@
 <?php if(! defined('BASEPATH')) exit('No tienes permiso para acceder a este archivo');
 
-	class Modelo_catalogo extends CI_Model{
+	class Modelo_proyecto extends CI_Model{
 		
 		private $key_hash;
 		private $timezone;
@@ -26,8 +26,8 @@
 
       
               
-
-              $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
+               $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
+              $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
               
 
 		}
@@ -48,36 +48,28 @@
        }  
 
         public function insertar_registro_nuevas_tablas($data) {
-                /*
-
-                INSERT INTO `tree_struct` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
-                (1, 1, 2, 0, 0, 0);
-
-                INSERT INTO `tree_data` (`id`, `nm`) VALUES
-                (1, 'Proyecto');
-
-                */
+           
           $this->db->set( 'id', 1 );  
           $this->db->set( 'lft', 1 );  
           $this->db->set( 'rgt', 2 );  
           $this->db->set( 'lvl', 0 );  
           $this->db->set( 'pid', 0 );  
           $this->db->set( 'pos', 0 );  
-          $this->db->insert("struct_".$data["tabla"] );
+          $this->db->insert("pstruct_".$data["tabla"] );
 
           $this->db->set( 'id', 1 );  
           $this->db->set( 'nm',  $data["nombre"] );  
-          $this->db->insert("data_".$data["tabla"] );      
+          $this->db->insert("pdata_".$data["tabla"] );      
 
           return true;    
 
         }  
 
 
-   //checar si el entorno por TABLA ya existe
-    public function check_existente_entorno_tabla($data){
+   //checar si el proyecto por TABLA ya existe
+    public function check_existente_proyecto_tabla($data){
             $this->db->select("id", FALSE);         
-            $this->db->from($this->catalogo_entornos);
+            $this->db->from($this->catalogo_proyectos);
             $this->db->where('tabla',$data['tabla']);  
             $login = $this->db->get();
             if ($login->num_rows() > 0)
@@ -88,11 +80,11 @@
     } 
 
 
-   //checar si el entorno ya existe
-    public function check_existente_entorno($data){
+   //checar si el proyecto ya existe
+    public function check_existente_proyecto($data){
             $this->db->select("id", FALSE);         
-            $this->db->from($this->catalogo_entornos);
-            $this->db->where('entorno',$data['entorno']);  
+            $this->db->from($this->catalogo_proyectos);
+            $this->db->where('proyecto',$data['proyecto']);  
             $login = $this->db->get();
             if ($login->num_rows() > 0)
                 return true;
@@ -106,10 +98,10 @@
 
 
 
-   //checar si el entorno ya existe
+   //checar si el proyecto ya existe
     public function profundidad($tabla){
             
-              $tabla  = $this->db->dbprefix('struct_'.$tabla);
+              $tabla  = $this->db->dbprefix('pstruct_'.$tabla);
               $sql = "select MAX(profundidad.depth) max_profundida_arbol from  (
                             SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
                             FROM ".$tabla." AS nodo,
@@ -134,11 +126,11 @@
 
 
 
-   //checar si el entorno ya existe
+   //checar si el proyecto ya existe
     public function ruta($tabla){
             //http://www.teacupapps.com/blog/mysql/concatenar-varias-filas-en-una-con-mysql
-              $tabla_struct  = $this->db->dbprefix('struct_'.$tabla);
-              $tabla_data  = $this->db->dbprefix('data_'.$tabla);
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$tabla);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$tabla);
               $sql="
               select GROUP_CONCAT(data.nm SEPARATOR ' / ') ruta 
                  from(
@@ -167,20 +159,23 @@
 
 
       //crear
-        public function anadir_entorno( $data ){
+        public function anadir_proyecto( $data ){
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
-          $this->db->set( 'entorno', $data['entorno'] );  
-          $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );  
+          $this->db->set( 'proyecto', $data['proyecto'] );  
+          $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );  
 
-          $profundidad = self::profundidad($this->session->userdata('creando_entorno'));
-          $ruta = self::ruta($this->session->userdata('creando_entorno'));
+          $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
+          $ruta = self::ruta($this->session->userdata('creando_proyecto'));
 
           $this->db->set( 'profundidad', $profundidad );  
           $this->db->set( 'ruta', $ruta );  
 
+          $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
 
-          $this->db->insert($this->catalogo_entornos );
+            
+
+          $this->db->insert($this->catalogo_proyectos );
             if ($this->db->affected_rows() > 0){
                     return TRUE;
                 } else {
@@ -192,7 +187,7 @@
 
 
 
-      public function buscador_cat_entornos($data){
+      public function buscador_cat_proyectos($data){
 
           $cadena = addslashes($data['search']['value']);
           $inicio = $data['start'];
@@ -211,7 +206,7 @@
 
           switch ($columa_order) {
                    case '0':
-                        $columna = 'c.entorno';
+                        $columna = 'c.proyecto';
                      break;
                    case '1':
                         $columna = 'c.tabla'; //, tabla
@@ -233,9 +228,9 @@
 
           $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
           
-          $this->db->select('c.id, c.entorno, c.tabla, c.profundidad, c.ruta');
+          $this->db->select('c.id, c.proyecto, c.tabla, c.profundidad, c.ruta');
 
-          $this->db->from($this->catalogo_entornos.' as c');
+          $this->db->from($this->catalogo_proyectos.' as c');
           
           //filtro de busqueda
        
@@ -243,7 +238,7 @@
 
                       (
                         ( c.id LIKE  "%'.$cadena.'%" ) OR 
-                        ( c.ruta LIKE  "%'.$cadena.'%" ) OR (c.entorno LIKE  "%'.$cadena.'%") OR (c.tabla LIKE  "%'.$cadena.'%") 
+                        ( c.ruta LIKE  "%'.$cadena.'%" ) OR (c.proyecto LIKE  "%'.$cadena.'%") OR (c.tabla LIKE  "%'.$cadena.'%") 
                         
                        )
             )';   
@@ -272,12 +267,12 @@
                   foreach ($result->result() as $row) {
                                $dato[]= array(
                                       0=>$row->id,
-                                      1=>$row->entorno,
+                                      1=>$row->proyecto,
                                       2=>$row->tabla,
                                       3=>$row->profundidad,
                                       4=>$row->ruta,
 
-                                      //4=>self::entornos_en_uso($row->id),
+                                      //4=>self::proyectos_en_uso($row->id),
                                     );
                       }
 
@@ -286,7 +281,7 @@
 
                       return json_encode ( array(
                         "draw"            => intval( $data['draw'] ),
-                        "recordsTotal"    => intval( self::total_cat_entornos() ), 
+                        "recordsTotal"    => intval( self::total_cat_proyectos() ), 
                         "recordsFiltered" =>   $registros_filtrados, 
                         "data"            =>  $dato 
                       ));
@@ -311,13 +306,28 @@
 
       }  
       
-        public function total_cat_entornos(){
-           $this->db->from($this->catalogo_entornos);
-           $entornos = $this->db->get();            
-           return $entornos->num_rows();
+        public function total_cat_proyectos(){
+           $this->db->from($this->catalogo_proyectos);
+           $proyectos = $this->db->get();            
+           return $proyectos->num_rows();
         }
 
 
+     public function coger_proyecto( $data ){
+              
+            $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
+            $this->db->from($this->catalogo_proyectos.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   //$this->session->set_userdata('creando_entorno', $result->row()->tabla);
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+     }  
 
      public function coger_entorno( $data ){
               
@@ -326,8 +336,7 @@
             $this->db->where('c.id',$data['id']);
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
-                  // $this->session->set_userdata('creando_entorno', $result->row()->tabla);
-                  //$this->session->set_userdata('creando_entorno', $data['entorno']->tabla)
+                   //$this->session->set_userdata('creando_entorno', $result->row()->tabla);
                    return $result->row();
                 } else {
                    return FALSE;
@@ -337,18 +346,22 @@
      }  
 
 
-    public function listado_entornos(  ){
+    public function listado_proyectos(  ){
             $id_session = $this->session->userdata('id');
             $data["id"] = $this->session->userdata('entorno_activo');
             $nombre_activo = self::coger_entorno($data)->entorno;
             $profundidad_activo = self::coger_entorno($data)->profundidad;
 
-            $this->db->select("c.id, c.entorno, c.tabla, c.profundidad");         
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
             $this->db->select($data["id"]." as id_activo",false);         
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
-            $this->db->from($this->catalogo_entornos.' As c');
+            $this->db->from($this->catalogo_proyectos.' As c');
             $this->db->where('c.id_usuario',$id_session);
+            $this->db->where('c.id_entorno',$id_entorno);
+
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
                    return $result->result();
@@ -365,21 +378,22 @@
 
 
         //editar
-        public function editar_entorno( $data ){
+        public function editar_proyecto( $data ){
 
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
-          $this->db->set( 'entorno', $data['entorno'] );  
+          $this->db->set( 'proyecto', $data['proyecto'] );  
           //$this->db->set( 'tabla', $data['tabla'] );  
-          $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );
+          $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
 
-          $profundidad = self::profundidad($this->session->userdata('creando_entorno'));
-          $ruta = self::ruta($this->session->userdata('creando_entorno'));
+          $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
+          $ruta = self::ruta($this->session->userdata('creando_proyecto'));
           $this->db->set( 'profundidad', $profundidad );  
           $this->db->set( 'ruta', $ruta );  
+          $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
 
           $this->db->where('id', $data['id'] );
-          $this->db->update($this->catalogo_entornos );
+          $this->db->update($this->catalogo_proyectos );
             
             return TRUE;
 
@@ -394,9 +408,9 @@
 
 
 
-        //eliminar entorno
-        public function eliminar_entorno( $data ){
-            $this->db->delete( $this->catalogo_entornos, array( 'id' => $data['id'] ) );
+        //eliminar proyecto
+        public function eliminar_proyecto( $data ){
+            $this->db->delete( $this->catalogo_proyectos, array( 'id' => $data['id'] ) );
             if ( $this->db->affected_rows() > 0 ) return TRUE;
             else return FALSE;
         }  
