@@ -1,17 +1,7 @@
 jQuery(document).ready(function($) {
 
-/*
-
-Francisco 45ba2895-d01a-11e5-b036-04015a6da701 pedidos@iniciativatextil.com NULL
-Gabriela a4a2510d-d02c-11e5-b036-04015a6da701 ventas@impactotextil.com NULL 
-ana 65350f7e-d031-11e5-b036-04015a6da701 ana@hotmail.com 123456789
-Veronica 1f5af5d1-d034-11e5-b036-04015a6da701 ventas@iniciativatextil.com NULL
-Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com NULL
-
-*/
 
 
-/////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {
             
             var $element = $("#etiq_usuarios");
@@ -44,53 +34,15 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
     }); 
 
 
-/////////////////////////validar costo
-
-var reg = /^[0-9]{1,10}(\.[0-9]{0,2})?$/;
-
-jQuery('#costo[restriccion="decimal"]').bind('keypress paste', function (e) {
-    var nn = jQuery('#costo[restriccion="decimal"]');
-    var strValue = nn[0].value.toString() + String.fromCharCode(e.which);
-    strValue = jQuery.trim(strValue);
-    var bool = reg.test(strValue);
-    if (bool) {
-        return true;
-    }
-    else { 
-        e.preventDefault();
-    }
-});
-
-
-
-            $.ajax({
-                url: "/listado_usuarios_json",
-                type: 'POST',
-                dataType: "json",
-                data: {
-                         id: $("#id_proy").val(), 
-                 },
-                success: function(data){
-                    
-                    if(data != false){
-                        console.log(data);
-                        console.log(data);
-                        $.each(data, function( index, value ) {
-                          elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
-                        });
-                    }
-                } 
-            });
-
 /////////////////////////buscar usuarios
 
     var consulta_usuarios = new Bloodhound({
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nombre'), //'text'
        queryTokenizer: Bloodhound.tokenizers.whitespace,
       remote: {
-            url:  '/buscador?key=%QUERY', 
+            url:  'catalogos/buscador?key=%QUERY', 
             replace: function () {
-                var q = '/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
+                var q = 'catalogos/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
                     //q += '&nombre='+encodeURIComponent(jQuery('#etiq_usuarios.tt-input').attr("name"));
                 return  q;
             }
@@ -112,19 +64,49 @@ jQuery('#costo[restriccion="decimal"]').bind('keypress paste', function (e) {
       }
     });
 
-    //elt.tagsinput('add', {"id":"ad5cdc8b-33f9-11e6-b036-04015a6da701","nombre":"Antonio"});
 
-            
 
-       
 
-    //console.log(( jQuery("#json_items").val() ) );        
-    //console.log(eval( $("#json_items").val() ) );
 
+
+  /*
+
+  $('.bs-etiquetas_usuarios input, .bs-etiquetas_usuarios select').on('change', function(event) {
+    var $element = $(event.target);
+    var val = $element.val();
+
+    console.log(JSON.stringify(val));
+    console.log(JSON.stringify($element.tagsinput('items')));
+
+
+
+    console.log((val));
+    console.log(($element.tagsinput('items')));
+
+
+  });
+
+  $('input, select').on('change', function(event) {
+    var $element = $(event.target),
+      $container = $element.closest('.etiquetas_usuarios');
+
+    if (!$element.data('tagsinput'))
+      return;
+
+    var val = $element.val();
+    console.log(JSON.stringify(val));
+    console.log(JSON.stringify($element.tagsinput('items')));
+
+    if (val === null)
+      val = "null";
+    $('code', $('pre.val', $container)).html( ($.isArray(val) ? JSON.stringify(val) : "\"" + val.replace('"', '\\"') + "\"") );
+    $('code', $('pre.items', $container)).html(JSON.stringify($element.tagsinput('items')));
+  }); //.trigger('change');
+*/
+//Fin del tagsinput
 
 
 jQuery('.fecha').datepicker({ format: 'dd-mm-yyyy'});
-
 
 
 //Menu contextual de "ENTORNOS"
@@ -132,10 +114,23 @@ jQuery('.contexto_entorno').contextmenu({
       target: "#context-menu_entorno",
       before: function(e, element, target) {
         this.getMenu().find("li").eq(0).find('a').attr('href',"/editar_entorno/"+element.attr('identificador'));
+//        this.getMenu().find("li").eq(2).find('a').attr('href',"/eliminar_entorno/"+element.attr('identificador')+"/"+element.attr('nombre'));
+        /* 
+    this.getMenu().find("li").eq(2).find('a').html(
+        '<a href="/eliminar_entorno/'+element.attr('identificador')+'/'+element.attr('nombre')+'" class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">  <span class="glyphicon glyphicon-remove"></span>  </a>'
+    );
+    */
+
+
+
+
          return true;
       },
       onItem: function(context, e) {
         window.location.href = jQuery(e.target).attr('href');
+        //jQuery('#modalMessage').modal('show');
+        
+        //return true;
       }  
 
 });
@@ -143,44 +138,40 @@ jQuery('.contexto_entorno').contextmenu({
 
 //Menu contextual de "PROYECTOS"
 jQuery('.context').contextmenu({
+//jQuery('body').on('contextmenu','.context', function (ee) {
+
   target: "#context-menu",
   before: function(e, element, target) {
+    /*
+        console.log(e); //evento
+        console.log(element);
+        console.log(element.html());
+        console.log(element.attr('identificador'));
+        console.log(this.getMenu().find("li").eq(0).find('a').attr('href'));
+        console.log(this.getMenu().find("li").eq(2).find('a').html());
+    */
+     //e.preventDefault();
     this.getMenu().find("li").eq(0).find('a').attr('href',"/editar_proyecto/"+element.attr('identificador'));
+    //this.getMenu().find("li").eq(2).find('a').attr('href',"/eliminar_proyecto/"+element.attr('identificador')+"/"+element.attr('nombre'));
+    
+     //window.location.href = '/'+$catalogo;       
      return true;
   },
 
   onItem: function(context, e) {
+    //alert(jQuery(e.target).text());
     window.location.href = jQuery(e.target).attr('href');
   }  
+
 });
 
                  
 
 
     jQuery('body').on('submit','#form_entornos', function (e) {
-            jQuery(this).ajaxSubmit({
-                success: function(data){
-                    
-                    if(data != true){
-                        
-                        jQuery('#foo').css('display','none');
-                        jQuery('#messages').css('display','block');
-                        jQuery('#messages').addClass('alert-danger');
-                        jQuery('#messages').html(data);
 
-                    }else{
-                        
-                            $catalogo = e.target.name;
-                            window.location.href = '/'+$catalogo;   
-                            
-                    }
-
-                } 
-            });
-            return false;
-    }); 
-
-  jQuery('body').on('submit','#form_proyectos', function (e) {
+           // jQuery('#foo').css('display','block');
+            //var spinner = new Spinner(opts).spin(target);
             jQuery(this).ajaxSubmit({
                 success: function(data){
                     
@@ -191,9 +182,55 @@ jQuery('.context').contextmenu({
                         jQuery('#messages').css('display','block');
                         jQuery('#messages').addClass('alert-danger');
                         jQuery('#messages').html(data);
+                        /*
+                        jQuery('html,body').animate({
+                            'scrollTop': jQuery('#messages').offset().top
+                        }, 1000);
+                        */
+                    
+
                     }else{
                         
                             $catalogo = e.target.name;
+                            //spinner.stop();
+                           // jQuery('#foo').css('display','none');
+                            //e.preventDefault();
+                            window.location.href = '/'+$catalogo;   
+                            
+                    }
+
+                } 
+            });
+            return false;
+    }); 
+
+  jQuery('body').on('submit','#form_proyectos', function (e) {
+
+           // jQuery('#foo').css('display','block');
+            //var spinner = new Spinner(opts).spin(target);
+            jQuery(this).ajaxSubmit({
+                success: function(data){
+                    
+                    if(data != true){
+                        
+                        //spinner.stop();
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                        /*
+                        jQuery('html,body').animate({
+                            'scrollTop': jQuery('#messages').offset().top
+                        }, 1000);
+                        */
+                    
+
+                    }else{
+                        
+                            $catalogo = e.target.name;
+                            //spinner.stop();
+                           // jQuery('#foo').css('display','none');
+                            //e.preventDefault();
                             window.location.href = '/'+$catalogo;   
                             
                     }

@@ -25,9 +25,12 @@
             $this->configuraciones    = $this->db->dbprefix('catalogo_configuraciones');
 
       
-              
-
               $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
+              $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
+              $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
+
+
+              
               
 
 		}
@@ -326,8 +329,7 @@
             $this->db->where('c.id',$data['id']);
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
-                  // $this->session->set_userdata('creando_entorno', $result->row()->tabla);
-                  //$this->session->set_userdata('creando_entorno', $data['entorno']->tabla)
+                 
                    return $result->row();
                 } else {
                    return FALSE;
@@ -343,12 +345,27 @@
             $nombre_activo = self::coger_entorno($data)->entorno;
             $profundidad_activo = self::coger_entorno($data)->profundidad;
 
+
             $this->db->select("c.id, c.entorno, c.tabla, c.profundidad");         
             $this->db->select($data["id"]." as id_activo",false);         
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
             $this->db->from($this->catalogo_entornos.' As c');
-            $this->db->where('c.id_usuario',$id_session);
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_entorno = c.id', 'LEFT');
+            
+            
+            $where ='(
+                        (c.id_usuario= "'.$id_session.'") OR
+                        (LOCATE("'.$id_session.'",r.id_val)>0)
+                      )'; 
+                          
+             $this->db->where($where);
+
+             $this->db->group_by("c.id");
+
+             
+
+           // $this->db->where('c.id_usuario',$id_session);
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
                    return $result->result();

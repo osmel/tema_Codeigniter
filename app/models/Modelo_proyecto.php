@@ -23,14 +23,40 @@
             
             $this->historico_acceso    = $this->db->dbprefix('historico_acceso');
             $this->configuraciones    = $this->db->dbprefix('catalogo_configuraciones');
-
+      
+            //usuarios
+            $this->usuarios    = $this->db->dbprefix('usuarios');
       
               
                $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
               $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
+              $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
+
+              
               
 
 		}
+
+      public function buscador_usuarios($data){
+            $this->db->select( 'id' );
+            $this->db->select("nombre", FALSE);  
+            $this->db->from($this->usuarios);
+            $this->db->like("nombre" ,$data['key'],FALSE);
+
+              $result = $this->db->get();
+              if ( $result->num_rows() > 0 ) {
+                  foreach ($result->result() as $row) 
+                      {
+                            $dato[]= array("id"=>$row->id, 
+                                            "nombre"=>$row->nombre, 
+                                    );
+                      }
+                      return json_encode($dato);
+              }   
+              else 
+                 return False;
+              $result->free_result();
+      }    
 
 
 
@@ -176,13 +202,69 @@
             
 
           $this->db->insert($this->catalogo_proyectos );
+          
+
+          
+
+
+
             if ($this->db->affected_rows() > 0){
+                    $data['id_proyecto'] = $this->db->insert_id(); //obtener el id
+                    $data['id_entorno'] = $this->session->userdata('entorno_activo');
+                    self::anadir_registro_proyecto( $data );
+
+
                     return TRUE;
                 } else {
                     return FALSE;
                 }
                 $result->free_result();
         }    
+
+
+         public function anadir_registro_proyecto( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          
+          
+          $this->db->set( 'id_entorno', $data['id_entorno'] );
+          $this->db->set( 'id_proyecto', $data['id_proyecto'] );
+          $this->db->set( 'proyecto', $data['proyecto'] );  
+
+          $this->db->set( 'descripcion', $data['descripcion'] );  
+          $this->db->set( 'privacidad', $data['privacidad'] );  
+          $this->db->set( 'costo', $data['costo'] );  
+
+          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
+          $this->db->set( 'fecha_final', $data['fecha_final'] );  
+
+          $this->db->set( 'contrato_firmado', $data['contrato_firmado'] );  
+          $this->db->set( 'pago_anticipado', $data['pago_anticipado'] );  
+          $this->db->set( 'factura_enviada', $data['factura_enviada'] );  
+          $this->db->set( 'id_val', $data['id_val'] );  
+          $this->db->set( 'json_items', $data['json_items'] );  
+
+
+
+            
+
+          $this->db->insert($this->registro_proyecto );
+          
+
+          
+
+
+
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();          
+
+         } 
 
 
 
@@ -316,7 +398,19 @@
      public function coger_proyecto( $data ){
               
             $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
+
+            //$this->db->select("");         
+            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo");         
+            $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
+            $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
+            $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
+            
+            $this->db->select("r.contrato_firmado, r.pago_anticipado, r.factura_enviada");
+            $this->db->select("r.id_val, r.json_items");
+
+
             $this->db->from($this->catalogo_proyectos.' As c');
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id');
             $this->db->where('c.id',$data['id']);
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
@@ -328,6 +422,22 @@
                     
                 $result->free_result();
      }  
+
+
+        public function listado_usuarios_json( $data ){
+            
+            $this->db->select("r.json_items");
+            $this->db->from($this->registro_proyecto.' As r');
+            $this->db->where('r.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row()->json_items;
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+      }  
 
      public function coger_entorno( $data ){
               
@@ -359,8 +469,16 @@
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
             $this->db->from($this->catalogo_proyectos.' As c');
-            $this->db->where('c.id_usuario',$id_session);
-            $this->db->where('c.id_entorno',$id_entorno);
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id', 'LEFT');
+
+            $where ='(
+
+                        ( (c.id_usuario= "'.$id_session.'") OR (LOCATE("'.$id_session.'",r.id_val)>0) ) AND
+                        (c.id_entorno= '.$id_entorno.')
+
+                      )'; 
+                          
+             $this->db->where($where);
 
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
@@ -395,14 +513,68 @@
           $this->db->where('id', $data['id'] );
           $this->db->update($this->catalogo_proyectos );
             
-            return TRUE;
+            
+              $data['id_entorno'] = $this->session->userdata('entorno_activo');
+              self::editar_registro_proyecto( $data );
 
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
-            }  else
-                 return FALSE;
+              return TRUE;
+
+           if ($this->db->affected_rows() > 0){
+                    
+
+
+                    return TRUE;
+                } else {
+                    return TRUE;
+                }
                 $result->free_result();
-        }   
+        }    
+
+
+         public function editar_registro_proyecto( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_entorno', $data['id_entorno'] );
+          $this->db->set( 'id_proyecto', $data['id'] );
+          $this->db->set( 'proyecto', $data['proyecto'] );  
+
+          $this->db->set( 'descripcion', $data['descripcion'] );  
+          $this->db->set( 'privacidad', $data['privacidad'] );  
+          $this->db->set( 'costo', $data['costo'] );  
+
+          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
+          $this->db->set( 'fecha_final', $data['fecha_final'] );  
+
+          $this->db->set( 'contrato_firmado', $data['contrato_firmado'] );  
+          $this->db->set( 'pago_anticipado', $data['pago_anticipado'] );  
+          $this->db->set( 'factura_enviada', $data['factura_enviada'] );  
+          $this->db->set( 'id_val', $data['id_val'] );  
+          $this->db->set( 'json_items', $data['json_items'] );  
+
+          $this->db->where('id', $data['id_proy'] );
+          $this->db->update($this->registro_proyecto );
+
+
+
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();          
+
+         } 
+
+
+
+
+
+
+
+
+
 
 
 

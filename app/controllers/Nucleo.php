@@ -93,6 +93,9 @@ function dashboard() {
 	    	  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
 	    	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
+	    	  //print_r($data['datos']['entornos']);
+	    	  //die;
+
 			//comienzo "cancelaciones" para Entorno			  
 			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
 		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
@@ -149,7 +152,7 @@ function dashboard() {
 			            case 3: //
 			            case 4: //
 
-			                $this->load->view( 'principal/dashboard',$data);
+			                $this->load->view( 'principal/home',$data);
 			              break;
 			          
 			            default:  

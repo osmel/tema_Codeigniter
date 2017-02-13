@@ -12,6 +12,22 @@ class Catalogos extends CI_Controller {
 	}
 
 
+
+
+  public function buscador(){
+
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+      
+       $data['key']=$_GET['key'];
+	   $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
+
+       echo $busqueda;
+    }  
+  }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +192,31 @@ public function crear_tabla_proyecto($nombre) {
       $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
       
       if ($this->form_validation->run() === TRUE){
-          $data['proyecto']   = $this->input->post('proyecto');
+          
+
+
+		
+		 // $data['id_entorno']   		 = $this->input->post('id_entorno');
+      	 //$this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
+		  $data['id_proyecto']   		 = $this->input->post('id_proyecto');
+
+          $data['proyecto']   		 = $this->input->post('proyecto');
+          $data['descripcion']   	 = $this->input->post('descripcion');
+          $data['privacidad']   	 = $this->input->post('privacidad');
+          $data['costo']   			 = $this->input->post('costo');
+          $data['fecha_creacion']  	 = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
+          $data['fecha_inicial']  	 = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
+          $data['fecha_final']   	 = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
+          $data['contrato_firmado']  = $this->input->post('contrato_firmado');
+          $data['pago_anticipado']   = $this->input->post('pago_anticipado');
+          $data['factura_enviada']   = $this->input->post('factura_enviada');
+          $data['id_val']  			 = $this->input->post('id_val');
+          $data['json_items']   	 = $this->input->post('json_items');
+
+
+
+
+
 
          $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
          if ( $existe !== TRUE ){
@@ -198,6 +238,20 @@ public function crear_tabla_proyecto($nombre) {
       }
     }
   }
+
+
+
+
+function listado_usuarios_json(  ){
+
+          $data['id']   		 = $this->input->post('id');
+          
+          $usuario_json = $this->modelo_proyecto->listado_usuarios_json($data);
+
+          echo $usuario_json;
+
+}	
+
 
 
  // editar
@@ -284,6 +338,23 @@ function validacion_edicion_proyecto(){
 	      if ($this->form_validation->run() === TRUE){
 	            $data['id']           = $this->input->post('id');
 	          $data['proyecto']         = $this->input->post('proyecto');
+
+		
+		  $data['id_proy']   		 = $this->input->post('id_proy');
+          $data['descripcion']   	 = $this->input->post('descripcion');
+          $data['privacidad']   	 = $this->input->post('privacidad');
+          $data['costo']   			 = $this->input->post('costo');
+          $data['fecha_creacion']  	 = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
+          $data['fecha_inicial']  	 = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
+          $data['fecha_final']   	 = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
+          $data['contrato_firmado']  = $this->input->post('contrato_firmado');
+          $data['pago_anticipado']   = $this->input->post('pago_anticipado');
+          $data['factura_enviada']   = $this->input->post('factura_enviada');
+          $data['id_val']  			 = $this->input->post('id_val');
+          $data['json_items']   	 = $this->input->post('json_items');
+
+
+
 
 	         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
 	         //if ( $existe !== TRUE ){

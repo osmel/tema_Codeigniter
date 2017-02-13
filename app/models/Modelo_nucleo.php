@@ -24,14 +24,13 @@
             $this->historico_acceso = $this->db->dbprefix('historico_acceso');
 
       
-              $this->registros_temporales               = $this->db->dbprefix('temporal_registros');
-              $this->registros_cambios               = $this->db->dbprefix('registros_cambios');
-              $this->registros_entradas             = $this->db->dbprefix('registros_entradas');
-              $this->registros_salidas       = $this->db->dbprefix('registros_salidas');
-              $this->historico_registros_entradas = $this->db->dbprefix('historico_registros_entradas');
-              $this->historico_registros_salidas    = $this->db->dbprefix('historico_registros_salidas');
             
                $this->almacenes                         = $this->db->dbprefix('catalogo_almacenes');
+
+              $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
+              $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
+              $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
+
 
 		}
 

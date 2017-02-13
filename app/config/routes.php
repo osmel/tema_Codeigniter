@@ -141,6 +141,9 @@ $route['validar_eliminar_proyecto']    	 = 'catalogos/validar_eliminar_proyecto'
 
 
 
+//buscador
+$route['buscador']						     = 'catalogos/buscador';
+$route['listado_usuarios_json']			     = 'catalogos/listado_usuarios_json';
 
 
 

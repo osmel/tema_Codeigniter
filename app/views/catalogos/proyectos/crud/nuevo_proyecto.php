@@ -25,7 +25,7 @@
 			      	$retorno ="";
 			    }
 			    $funcion ="validar_nuevo_proyecto";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_proyectos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_nuevo_proyectos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 
@@ -51,22 +51,22 @@
 									</div>
 
 									<div class="form-group">
-										<label for="proyecto" class="col-sm-3 col-md-2 control-label">Descripción</label>
+										<label for="descripcion" class="col-sm-3 col-md-2 control-label">Descripción</label>
 	                                       <div class="col-sm-9 col-md-10">
-	                                            <textarea id="descripcion" class="form-control" rows="3"></textarea>
+	                                            <textarea id="descripcion" name="descripcion" class="form-control" rows="3"></textarea>
 	                                        </div>
 									</div>
 
-
+									<!--Privacidad -->	
 									<div class="form-group">
 	                                    <label>Privacidad</label>
 	                                    <div class="mt-radio-list">
 	                                        <label class="mt-radio mt-radio-outline"> Público
-	                                            <input type="radio" value="1" name="test">
+	                                            <input type="radio" value="1" name="privacidad" checked>
 	                                            <span></span>
 	                                        </label>
 	                                        <label class="mt-radio mt-radio-outline"> Privado
-	                                            <input type="radio" value="1" name="test">
+	                                            <input type="radio" value="2" name="privacidad">
 	                                            <span></span>
 	                                        </label>
 	                                    </div>
@@ -76,7 +76,8 @@
 									<div class="form-group">
 										<label for="costo" class="col-sm-3 col-md-2 control-label">Costo</label>
 										<div class="col-sm-9 col-md-10">
-											<input type="text" class="form-control ttip" title="Costo." id="costo" name="costo" placeholder="costo">
+											<input restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
+
 											<em>Costo del proyecto.</em>
 										</div>
 									</div>	
@@ -84,12 +85,14 @@
 								  <div class="etiquetas_usuarios objeto_como_tags">
 								          <h3>Usuarios</h3>
 								          <p>
-								            En lugar de agregar cadenas como etiquetas(tag), vincule objetos a sus etiquetas. Esto hace posible establecer valores de id en el valor de su campo de entrada, en lugar de sólo el texto de la etiqueta.
+								            Adjunte los usuarios
 								          </p>
 								          <div class="bs-etiquetas_usuarios">
-								            	<input type="text" />
+								            	<input id="etiq_usuarios" type="text" />
 								          </div>
+								          <!--
 								             <table class="table table-bordered table-condensed"><thead><tr><th>declaracion</th><th>Retornos</th></tr></thead><tbody><tr><td><code>$("input").val()</code></td><td><pre class="val"><code data-language="javascript"></code></pre></td></tr><tr><td><code>$("input").tagsinput('items')</code></td><td><pre class="items"><code data-language="javascript"></code></pre></td></tr></tbody></table>
+								          -->   
 								        
 								   </div>															
 
@@ -125,20 +128,22 @@
 									</div>
 
 
+									<!--Checkbox -->	
+
 								<div class="form-group">
 								    <label>Otros...</label>				
 										
 										<div class="mt-checkbox-list">
 											<label class="mt-checkbox">
-								                <input type="checkbox"> Contrato firmado
+								                <input type="checkbox" value="1" name="contrato_firmado"> Contrato firmado
 								                <span></span>
 								            </label> 
 											<label class="mt-checkbox">
-								                <input type="checkbox"> Pago anticipado
+								                <input type="checkbox" value="1" name="pago_anticipado"> Pago anticipado
 								                <span></span>
 								            </label> 
 											<label class="mt-checkbox">
-								                <input type="checkbox"> Factura enviada
+								                <input type="checkbox" value="1" name="factura_enviada"> Factura enviada
 								                <span></span>
 								            </label> 
 
@@ -154,21 +159,15 @@
 
 
 
-							<div class="col-sm-6 col-md-6">
+							<div class="col-sm-12 col-md-12">
+								<h3>Cree su estructura</h3>
 								<input type="text" value=""  id="buscar" placeholder="Buscar..." />
+								<div id="tree" nombre="<?php echo $nombre;?>">  </div>
+								<div id="data">
+									<div class="content default" style="text-align:center;">Seleccione un nodo desde el arbol.</div>
+								</div>
+
 							</div>
-
-
-							
-
-							<div id="tree" nombre="<?php echo $nombre;?>">  </div>
-
-
-							<div id="data">
-								<div class="content default" style="text-align:center;">Seleccione un nodo desde el arbol.</div>
-							</div>
-
-
 
 
 						</div>
