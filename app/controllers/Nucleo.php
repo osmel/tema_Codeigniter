@@ -152,6 +152,10 @@ function dashboard() {
 			            case 3: //
 			            case 4: //
 
+			            	 $dato['proyecto'] = $data['datos']['proyectos'];
+			            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
+			            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
+			            	 $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
 			                $this->load->view( 'principal/home',$data);
 			              break;
 			          

@@ -28,6 +28,41 @@ class Catalogos extends CI_Controller {
   }
 
 
+  public function validar_registro_usuario(){
+    //$data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
+    
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+
+
+        $data['fechapaginador']    = $this->input->post('fechapaginador');
+          
+
+         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
+         if ( $existe !== TRUE ){
+
+            $data         =   $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_proyecto->anadir_proyecto( $data );
+            if ( $guardar !== FALSE ){
+              $this->session->set_userdata('creando_proyecto', "0");   //listo para crear otro proyecto
+              echo true;
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+            }
+          } else {
+            echo '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
+          }  
+
+    }
+
+
+
+
+  }  
+  
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -10,11 +10,9 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
 
 */
 
+            var fechapaginador = new Date();
 
-
-    var fechapaginador = new Date();
-
-    $('#fecha_paginador').datepaginator({
+            $('#datepaginator_sample_1').datepaginator({
                 
             
             //dias que aparecerán en gris
@@ -57,41 +55,95 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
             onSelectedDateChanged: function(event, date) {
 
                  fechapaginador = moment(date).format("YYYY-MM-DD");
-                 //console.log(fechapaginador);
-                 //alert(fechapaginador);
+                 console.log(fechapaginador);
+  /*    
+                  console.log(moment(date).format("YYYY-MM-DD"));
+                    console.log($('#datepaginator_sample_1 > ul > li > a > .dp-selected'));
+                  console.log($('#datepaginator_sample_1 > ul > li > a > .dp-selected').attr('data-moment'));
+*/
+                  
+                    //fecha anterior de donde viene
+                  //console.log($('#datepaginator_sample_1 .dp-selected').attr('data-moment'));
+
+                  //console.log($('#datepaginator_sample_1').selectedDate);
+
+                  /*
+                 
+                 https://github.com/jonmiles/bootstrap-datepaginator/issues/7
+
+                 $('#datepaginator_sample_1 ul > li > a > ').dp-item dp-selected dp-off dp-item-sm
+                           .dp-item dp-selected dp-item-sm
+                           data-moment="2017-02-04"
+                           */
+                  /*
+                  //alert("Selected date: " + moment(date).format("Do, MMM YYYY"));
+                  var d = new Date(date);
+                  console.log(moment(date).format("Do, MMM YYYY"));
+                  console.log(date);
+                  console.log(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate());
+                  */
+
+
             }
 
-    });
 
-    fechapaginador = moment( $.now()).format("YYYY-MM-DD");
+             /*
+             selectedDate:moment.locale('es'),
+             onSelectedDateChanged: function(event, date) {
+                        var d = new Date(date);
+                        $('.loader').show();
+                        $.get('date-paginator.php?date='+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),function(data){
+                            $('.response').html(data);
+                            $('.loader').hide();
+                        });
+            }
+            */
 
-    //$('#fecha_paginador').trigger( "onSelectedDateChanged" );
 
-/////////////////////////Submit nuevo proyecto
-    jQuery('body').on('submit','#form_registro_usuario', function (e) {
-            
-      
+            //hint: "dddd, Do MMMM YYYY", hint cuando estas encima de una fecha
 
-            jQuery(this).ajaxSubmit({
-                data: {
-                     fechapaginador: fechapaginador //.toString() 
-                 },
-                success: function(data){
-                    
-                    if(data != true){
-                        jQuery('#foo').css('display','none');
-                        jQuery('#messages').css('display','block');
-                        jQuery('#messages').addClass('alert-danger');
-                        jQuery('#messages').html(data);
-                    }else{
-                            $catalogo = e.target.name;
-                            window.location.href = '/'+$catalogo;   
-                    }
-                } 
+            /*
+                "Establece la fecha seleccionada inicial", proporcionada, ya sea a traves de un objeto moment(Moment.js) o cadena.    
+            selectedDate: 
+                        //"2017-02-13",
+                        //moment().clone().startOf("day"), 
+            */
+
+
+                /*
+
+           //fecha más temprana
+           startDateFormat //formato de fecha utilizado para "startDate"
+           startDate //fecha más temprana que puede seleccionarse, se desactivarán todas las fechas anteriores.
+    
+            //fecha más tardes
+            endDateFormat //formato de fecha utilizado para  endDate
+            endDate //fecha más reciente que puede seleccionarse, se desactivarán todas las fechas posteriores.
+            */ 
+
             });
-            return false;
-    }); 
 
+
+
+/*
+            $('#datepaginator_sample_1').datepaginator();
+        //sample #2
+            $('#datepaginator_sample_2').datepaginator({
+                size: "large"
+            });
+
+            //sample #3
+            $('#datepaginator_sample_3').datepaginator({
+                size: "small"
+            });
+
+            //sample #3
+            $('#datepaginator_sample_4').datepaginator({
+                onSelectedDateChanged: function(event, date) {
+                  alert("Selected date: " + moment(date).format("Do, MMM YYYY"));
+                }
+            });
+*/
 
 /////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {

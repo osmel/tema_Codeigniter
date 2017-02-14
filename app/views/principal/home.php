@@ -23,10 +23,10 @@
 
 			<?php 
 			 	if (!isset($retorno)) {
-			      	$retorno ="entornos";
+			      	$retorno ="";
 			    }
-			    $funcion ="validar_nuevo_entorno";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			    $funcion ="validar_registro_usuario";
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_registro_usuario','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 
@@ -38,12 +38,16 @@
 				<div class="container row" style="background-entorno:transparent !important">
 					<div class="panel panel-primary">
 						<div class="panel-heading">Datos de entorno</div>
-						
+							
+
 						<div class="panel-body">
 
 
 								<div class="row">
 									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->								
+											
+				                            <div id="fecha_paginador"> </div>
+
 											<div class="col-sm-3 col-md-3">
 									             <h3>Proyectos</h3>
 											</div>
@@ -75,22 +79,24 @@
 											</div>
 
 											<div class="col-sm-2 col-md-2">
-												<div class="col-sm-12 col-md-12">
-													<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hr_anterior" name="hr_anterior" placeholder="">
-													<!--<em>Anterior.</em>-->
-												</div>
+											   <fieldset disabled>
+													<div class="col-sm-12 col-md-12">
+														<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hr_anterior" name="hr_anterior" placeholder=""  value="<?php echo ( ( isset($proyecto->anterior->hr_anterior)) ? $proyecto->anterior->hr_anterior : '0') ; ?>">
+														<!--<em>Anterior.</em>-->
+													</div>
+												</fieldset>
 											</div>
 
 											<div class="col-sm-2 col-md-2">
 												<div class="col-sm-12 col-md-12">
-													<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hora" name="hora" placeholder="">
+													<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hora" name="hora" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
 													<!-- <em>Horas.</em> -->
 												</div>
 											</div>
 
 											<div class="col-sm-5 col-md-5">
 												<div class="col-sm-12 col-md-12">
-													<textarea id="descripcion" name="descripcion" class="form-control" rows="1"></textarea>
+													<textarea id="descripcion" name="descripcion" class="form-control" rows="1"><?php echo ( ( isset($proyecto->reg_user->descripcion)) ? $proyecto->reg_user->descripcion : '') ; ?></textarea>
 													<!-- <em>Nota actual para el proyecto.</em> -->
 												</div>
 											</div>

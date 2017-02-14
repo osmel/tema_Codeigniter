@@ -42,6 +42,12 @@ License: You must have a valid license purchased only from themeforest(the above
 	        <link href="<?php echo base_url(); ?>js/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
         <!-- Fin de estilo de plugin a nivel de pagina --> 
 
+
+        <!--paginacion de fecha--> 
+         <link href="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.min.css" rel="stylesheet" type="text/css" />
+
+
         <!-- COMIENZO DE ESTILO GLOBAL DE TEMA -->
               <!-- maqueta para el perfil de Usuario-->  
             <link href="<?php echo base_url(); ?>js/assets/pages/css/profile.min.css" rel="stylesheet" type="text/css" />
@@ -57,6 +63,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
              <link href="<?php echo base_url(); ?>js/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css" />
              <link href="<?php echo base_url(); ?>js/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+
 
 
             <!-- componente fecha simple -->

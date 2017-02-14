@@ -106,9 +106,17 @@
 			<script type="text/javascript" src="<?php echo base_url(); ?>js/daterangepicker.js"></script>	
 
 
-			
-			<!--<script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-bootstrap-tagsinput.min.js" type="text/javascript"></script>-->
+		<!-- paginador de fecha -->
 
+		
+        <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.min.js" type="text/javascript"></script>
+        <script src="<?php echo base_url(); ?>js/assets/pages/scripts/ui-datepaginator.min.js" type="text/javascript"></script>			
+        
+        
+
+			<!--
+					TREE
+			<script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-bootstrap-tagsinput.min.js" type="text/javascript"></script>-->
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 			<script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
 

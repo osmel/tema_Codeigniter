@@ -32,10 +32,90 @@
               $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
               $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
 
+              $this->registro_user_proy                        = $this->db->dbprefix('registro_user_proy');
+
               
               
 
 		}
+
+    //id, id_entorno, id_proyecto, descripcion, horas, fecha, id_usuario, fecha_mac
+
+  public function listado_registro_usuario($data){
+
+        $id_session = $this->session->userdata('id');
+
+        //$tmp = array();
+        //$tmp[] = (int)$id["id"];
+        foreach ($data['proyecto'] as $key => $value) {
+               
+//hoy
+               $this->db->select( 'r.id, r.id_entorno, r.id_proyecto, r.descripcion, r.horas,  r.id_usuario' );
+               $this->db->select("DATE_FORMAT((r.fecha),'%d-%m-%Y') as fecha",false);
+
+               $this->db->select("r.horas as hr_anterior",false);
+               
+               $this->db->from($this->registro_user_proy.' as r');
+
+
+              $where = '(
+
+                          (
+                            (r.id_usuario= "'.$id_session.'") AND
+                            (r.id_entorno = '.$value->id_activo.' ) AND
+                            (r.id_proyecto = '.$value->id.'  ) AND
+                            ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  =  "'.$data['fechapaginador'].'" ) 
+                           )
+              )';   
+
+              $this->db->where($where);
+               $result = $this->db->get();
+                  if ( $result->num_rows() > 0 ) {
+                    $value->reg_user = $result->row();
+                  }  else {
+                    $value->reg_user = null;
+                  }
+                $result->free_result();
+
+
+//Anterior
+
+               //$this->db->select( 'r.id, r.id_entorno, r.id_proyecto, r.descripcion, r.horas,  r.id_usuario' );
+               //$this->db->select("DATE_FORMAT((r.fecha),'%d-%m-%Y') as fecha",false);
+               $this->db->select("r.horas as hr_anterior",false);
+               
+               $this->db->from($this->registro_user_proy.' as r');
+
+
+              $where = '(
+
+                          (
+                            (r.id_usuario= "'.$id_session.'") AND
+                            (r.id_entorno = '.$value->id_activo.' ) AND
+                            (r.id_proyecto = '.$value->id.'  ) AND
+                            ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  =  "'.$data['fechaanterior'].'" ) 
+                           )
+              )';   
+
+              $this->db->where($where);
+               $result = $this->db->get();
+                  if ( $result->num_rows() > 0 ) {
+                    $value->anterior = $result->row();
+                  }  else {
+                    $value->anterior = null;
+                  }
+                $result->free_result();
+
+
+
+
+
+
+
+        }
+
+        return $data['proyecto'];
+  }    
 
       public function buscador_usuarios($data){
             $this->db->select( 'id' );
