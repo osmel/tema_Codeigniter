@@ -83,9 +83,9 @@
 									</div>	
 
 								  <div class="etiquetas_usuarios objeto_como_tags">
-								          <h3>Usuarios</h3>
+								          <h3>Participantes</h3>
 								          <p>
-								            Adjunte los usuarios
+								            Personas que participaran en el proyecto
 								          </p>
 								          <div class="bs-etiquetas_usuarios">
 								            	<input id="etiq_usuarios" type="text" />
@@ -103,13 +103,16 @@
 							<div class="col-sm-6 col-md-6">
 								
 
-									<div class="form-group">
-										<label for="fecha_creacion" class="col-sm-12 col-md-12">Fecha de creación:<span class="obligatorio"> *</span></label>
-										<div class="col-sm-12 col-md-12">
-											<input type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
-												
+										<div class="form-group">
+											<label for="fecha_creacion" class="col-sm-12 col-md-12">Fecha de creación:<span class="obligatorio"> *</span></label>
+											<div class="col-sm-12 col-md-12">
+												<fieldset disabled>
+													<input value="<?php echo date('d-m-Y', strtotime('today') ); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
+												</fieldset>	
+													
+											</div>
 										</div>
-									</div>
+									
 
 									<div class="form-group">
 										<label for="fecha_inicial" class="col-sm-12 col-md-12">Fecha Inicial:<span class="obligatorio"> *</span></label>
@@ -160,7 +163,7 @@
 
 
 							<div class="col-sm-12 col-md-12">
-								<h3>Cree su estructura</h3>
+								<h3>Defina las tareas a realizar</h3>
 								<input type="text" value=""  id="buscar" placeholder="Buscar..." />
 								<div id="tree" nombre="<?php echo $nombre;?>">  </div>
 								<div id="data">

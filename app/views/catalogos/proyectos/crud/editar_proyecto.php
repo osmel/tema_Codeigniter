@@ -107,9 +107,9 @@
 							</div>	
 
 						  <div class="etiquetas_usuarios objeto_como_tags">
-						          <h3>Usuarios</h3>
+						          <h3>Participantes</h3>
 						          <p>
-						            Adjunte los usuarios
+						            Personas que participaran en el proyecto
 						          </p>
 						          <div class="bs-etiquetas_usuarios">
 						            	
@@ -133,7 +133,9 @@
 												if (isset($proyecto ->fecha_creacion )) 
 												 {	$nomb_nom = $proyecto ->fecha_creacion ;}
 											?>
-											<input value="<?php echo  set_value('fecha_creacion',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
+											<fieldset disabled>
+												<input value="<?php echo  set_value('fecha_creacion',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
+											<fieldset disabled>	
 												
 										</div>
 									</div>
@@ -144,7 +146,7 @@
 
 											<?php 
 												$nomb_nom='';
-												if (isset($proyecto ->fecha_inicial )) 
+												if (strtotime(($proyecto ->fecha_inicial )>0)) 
 												 {	$nomb_nom = $proyecto ->fecha_inicial ;}
 											?>
 											<input value="<?php echo  set_value('fecha_inicial',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">
@@ -157,7 +159,7 @@
 										<div class="col-sm-12 col-md-12">
 											<?php 
 												$nomb_nom='';
-												if (isset($proyecto ->fecha_final )) 
+												if (strtotime(($proyecto ->fecha_final )>0))  
 												 {	$nomb_nom = $proyecto ->fecha_final ;}
 											?>
 											<input value="<?php echo  set_value('fecha_final',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY">
@@ -206,7 +208,7 @@
 
 
 				<div class="col-sm-12 col-md-12">
-					<h3>Cambie su estructura</h3>
+					<h3>Defina las tareas a realizar</h3>
 					<input type="text" value=""  id="buscar" placeholder="Buscar..." />
 					<div id="tree" nombre="">  </div>
 					<div id="data">

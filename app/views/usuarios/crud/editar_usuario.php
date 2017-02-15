@@ -271,6 +271,7 @@
 									<div class="panel panel-primary">
 										<div class="panel-heading">Permisos de operaciones</div>
 										<div class="panel-body">
+										  <div class="col-sm-12 col-md-12">
 											<?php
 											$colab_id_array =(json_decode($usuario->coleccion_id_operaciones) );				
 											if (count($colab_id_array)==0) {  //si el valor esta vacio
@@ -287,7 +288,7 @@
 												<?php 
 
 													if ($grupo!=$operacion->grupo) {
-														echo '<hr> <b>'.$operacion->grupo.'</b><br/>'; 	
+														//echo '<hr> <b>'.$operacion->grupo.'</b><br/>'; 	
 															
 
 														$grupo=$operacion->grupo; 	
@@ -307,7 +308,7 @@
 													</label>
 												</div>
 											<?php } ?>
-
+										  </div>	
 										</div>
 									</div>
 								</div>		

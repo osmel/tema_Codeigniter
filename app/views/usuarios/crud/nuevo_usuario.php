@@ -219,15 +219,28 @@
 
 				<br/>
 				
+				
+
+			</div>
+
+
+		</div>
+
+
 				<!--SOLO LOS USUARIOS ADMINISTRADORES TENDRAN PERMISO DE OPERACIONES -->	
 				
-					<div id="rol_perfil" style="display:block;" class="col-sm-12 col-md-12">		
+					
+					<div id="rol_perfil" style="display:block;" class="container row">
 					  
 
 							<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
 								<fieldset disabled>
 							<?php } ?>	
-										<h2>Permisos de operaciones</h2>
+					  <div class="panel panel-primary">
+						 <div class="panel-heading">Permisos de operaciones</div>
+							<div class="panel-body">
+							  <div class="col-sm-12 col-md-12">
+										
 										
 										<?php $grupo='';
 											foreach ($operaciones as $operacion){ ?>
@@ -235,7 +248,7 @@
 											<?php 
 
 												if ($grupo!=$operacion->grupo) {
-													echo '<hr> <b>'.$operacion->grupo.'</b><br/>'; 	
+													//echo '<hr> <b>'.$operacion->grupo.'</b><br/>'; 	
 														
 
 													$grupo=$operacion->grupo; 	
@@ -253,15 +266,16 @@
 											</div>
 										<?php } ?>
 
+										  </div>	
+										</div>
+									</div>
+								</div>				
+
 							<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
 								</fieldset>
 							<?php } ?>			
 					   					
-					</div>
-				
-
-			</div>
-		</div>
+					</div>		
 				
 		<div class="row">	
 			<div class="col-sm-4 col-md-4"></div>
