@@ -539,6 +539,26 @@ jQuery(document).ready(function($) {
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 
+
+    jQuery('body').on('submit','#form_logueo', function (e) {
+
+            jQuery(this).ajaxSubmit({
+                success: function(data){
+                    
+                    if(data != true){
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                    }else{
+                            $catalogo = e.target.name;
+                            window.location.href = '/'+$catalogo;   
+                    }
+                } 
+            });
+            return false;
+    }); 
+
 	//logueo y recuperar contraseña
 	jQuery("#form_login1").submit(function(e){
 		jQuery('#foo').css('display','block');

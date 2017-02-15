@@ -44,12 +44,17 @@ span.osmel {
 </style>
     <body class=" login">
         <!-- BEGIN LOGO -->
-        <div class="logo">
-                <a style="float: left;height: 100%;padding: 8px;" href="/"> <!-- LOGO --> 
-                    <img  style="float: left;height: 100%; margin: 0px 0 0 !important;" src="<?php echo base_url(); ?>img/logo-menu.svg" alt="logo" class="logo-default" /> 
-                </a>
 
+
+        <div class="col-md-12 text-center"> 
+            <div class="logo">
+                    <a style="height: 100%;padding: 8px;" href="/"> <!-- LOGO --> 
+                        <img  style="height: 100%; margin: 0px 0 0 !important;" src="<?php echo base_url(); ?>img/logo-menu.svg" alt="logo" class="logo-default" /> 
+                    </a>
+
+            </div>
         </div>
+
         <!-- END LOGO -->
         <!-- BEGIN LOGIN -->
         <div class="content">
@@ -111,11 +116,14 @@ span.osmel {
                                 <button type="submit" class="btn22 btn-primary mt-ladda-btn ladda-button" data-style="expand-right">
                                       <span class="ladda-label">Ingresar</span>
                                 </button>
+                                <!--
                                 <label class="rememberme check mt-checkbox mt-checkbox-outline">
                                     <input type="checkbox" name="remember" value="1" />Recordar
                                     <span></span>
                                 </label>
-                            </div>                    
+                                -->
+                            </div>               
+
                             
                                              
 
@@ -154,7 +162,10 @@ span.osmel {
             <!-- END LOGIN FORM -->
             
             <!-- BEGIN FORGOT PASSWORD FORM -->
-            <form class="forget-form" action="index.html" method="post">
+            <!--<form class="forget-form" action="index.html" method="post"> -->
+            
+            <?php echo form_open('/', array( 'id' => 'form_login', 'name' => 'form_login', 'class' => 'forget-form', 'method' => 'POST', 'autocomplete' => 'off', 'role' => 'form' ) ); ?>
+
                 <h3 class="font-green">Recuperar contraseña?</h3>
                 <p> Introduzca su dirección de correo electrónico a continuación para restablecer su contraseña. </p>
                 <div class="form-group">
@@ -163,7 +174,8 @@ span.osmel {
                     <button type="button" id="back-btn" class="btn green btn-outline">Atraz</button>
                     <button type="submit" class="btn btn-success uppercase pull-right">Enviar</button>
                 </div>
-            </form>
+            <!--</form>-->
+            <?php echo form_close(); ?>
             <!-- END FORGOT PASSWORD FORM -->
 
             <!-- comienzo para formulario de  registrarse y crear una nueva cuenta

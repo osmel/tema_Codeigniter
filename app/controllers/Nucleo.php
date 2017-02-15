@@ -82,6 +82,36 @@ class Nucleo extends CI_Controller {
 	    $this->load->view('recuperar_password');
 	}
 
+  function validar_recuperar_password(){
+		$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
+
+		if ( $this->form_validation->run() == FALSE ){
+			echo validation_errors('<span class="error">','</span>');
+		} else {
+				$data['email']		=	$this->input->post('email');
+				$correo_enviar      =   $data['email'];
+	            $data 				= 	$this->security->xss_clean($data);  
+	    		$usuario_check 		=   $this->modelo->recuperar_contrasena($data);
+
+		        if ( $usuario_check != FALSE ){
+						$data= $usuario_check[0] ;  
+						$desde = 'contacto@estrategasdigitales.com';
+						$this->email->from($desde,'Sistema de administración Estrategas Digitales');
+						$this->email->to($correo_enviar);
+						$this->email->subject('Recuperación de contraseña del Sistema de administración Estrategas Digitales');
+						$this->email->message($this->load->view('correo/envio_contrasena', $data, true));
+						if ($this->email->send()) {
+
+				  			echo TRUE;
+						} else 
+				  			echo false;	
+	            } else {
+	            	echo '<span class="error">¡Ups! tus datos no son correctos, verificalos e intenta nuevamente por favor.</span>';
+	            }
+		}
+	}		
+	
+
 function dashboard() { 
 		
 		$id_perfil=$this->session->userdata('id_perfil');
@@ -154,7 +184,7 @@ function dashboard() {
 		            	 	$data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
 		            	 	//print_r($data['datos']['proyectos']); die;
 		            	 	$inicio='home';
-		            	 	
+
 		            	 }
 		            	 
 
