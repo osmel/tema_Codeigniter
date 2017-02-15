@@ -39,6 +39,31 @@
 
 		}
 
+    public function actualizar_reg_user_proy($data){
+        $id_session = $this->session->userdata('id');
+        for ($i=0; $i < count($data["id_user_proy"] ); $i++) { 
+          //$this->db->set( 'id', 0 );  
+          $this->db->set( 'id_entorno', $data['id_entorno'][$i] );  
+          $this->db->set( 'id_proyecto', $data['id_proyecto'][$i] );  
+          $this->db->set( 'descripcion', $data['descripcion'][$i]);  
+          $this->db->set( 'horas', $data['hora'][$i] );  
+          $this->db->set( 'id_usuario', $id_session );  
+          $this->db->set( 'fecha', $data['fechapaginador'] );  
+          if  (!($data['id_user_proy'][$i])) {
+              $this->db->insert($this->registro_user_proy );  
+              $data['id_user_proy'][$i] = $this->db->insert_id(); //obtener el id
+          } else {
+            $this->db->where('id', $data['id_user_proy'][$i]  );  
+            $this->db->update($this->registro_user_proy );  
+          }
+          
+        }  
+        return $data;
+
+    }
+      
+
+
     //id, id_entorno, id_proyecto, descripcion, horas, fecha, id_usuario, fecha_mac
 
   public function listado_registro_usuario($data){

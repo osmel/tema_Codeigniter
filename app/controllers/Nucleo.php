@@ -156,17 +156,18 @@ function dashboard() {
 			            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
 			            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
 			            	 $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
+			            	 //print_r($data['datos']['proyectos']);die;
 			                $this->load->view( 'principal/home',$data);
 			              break;
 			          
 			            default:  
-			              redirect('');
+			              redirect('/');
 			              break;
 			          }
 
 	        }
 	        else{ 
-	          redirect('');
+	          redirect('/');
 	        }	
 	        
 	}
@@ -187,7 +188,7 @@ function dashboard() {
 	       		
 
 
-	      redirect('');
+	      redirect('/');
   	  }
  }   	
 
@@ -258,11 +259,11 @@ function dashboard() {
 			if ( $data['usuario'] !== FALSE ){
 					$this->load->view('usuarios/editar_usuario',$data);
 			} else {
-						redirect('');
+						redirect('/');
 			}
 		} else
 		{
-			 redirect('');
+			 redirect('/');
 		}	
 	}
 
@@ -321,12 +322,12 @@ function dashboard() {
 
 
             default:  
-              redirect('');
+              redirect('/');
               break;
           }
         }
         else{ 
-          redirect('index');
+          redirect('/'); //index
         }
 	}
 
@@ -361,19 +362,19 @@ function dashboard() {
 
 
             default:  
-              redirect('');
+              redirect('/');
               break;
           }
         }
         else{ 
-          redirect('index');
+          redirect('/'); //index
         }    
 
 	}
 
 	function validar_nuevo_usuario(){
 		if ($this->session->userdata('session') !== TRUE) {
-			redirect('');
+			redirect('/');
 		} else {
 
 			
@@ -493,11 +494,11 @@ function actualizar_perfil( $uid = '' ){
 			if ( $data['usuario'] !== FALSE ){
 					$this->load->view('usuarios/edicion',$data);
 			} else {
-						redirect('');
+						redirect('/');
 			}*/
 		} else
 		{
-			 redirect('');
+			 redirect('/');
 		}	
 	}
 
@@ -537,18 +538,18 @@ function actualizar_perfil( $uid = '' ){
 			if ( $data['usuario'] !== FALSE ){
 					$this->load->view('usuarios/editar_usuario',$data);
 			} else {
-						redirect('');
+						redirect('/');
 			}
 		} else
 		{
-			 redirect('');
+			 redirect('/');
 		}	
 	}
 	
 	function validacion_edicion_usuario(){
 		
 		if ( $this->session->userdata('session') !== TRUE ) {
-			redirect('');
+			redirect('/');
 		} else {
 			
 			$this->form_validation->set_rules( 'nombre', 'Nombre', 'trim|required|callback_nombre_valido|min_length[3]|max_lenght[180]|xss_clean');
@@ -649,12 +650,12 @@ function actualizar_perfil( $uid = '' ){
 
 
             default:  
-              redirect('');
+              redirect('/');
               break;
           }
         }
         else{ 
-          redirect('');
+          redirect('/');
         }
 		
 	}
@@ -742,7 +743,7 @@ function actualizar_perfil( $uid = '' ){
 	//salida del sistema
 	public function logout(){
 		$this->session->sess_destroy();
-		redirect('');
+		redirect('/');
 	}		
 
 

@@ -55,10 +55,68 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
             endDate: moment().clone().startOf("day"), 
 
             onSelectedDateChanged: function(event, date) {
-
                  fechapaginador = moment(date).format("YYYY-MM-DD");
-                 //console.log(fechapaginador);
-                 //alert(fechapaginador);
+
+                   $.ajax({
+                        url: "/ajax_user_proy_json",
+                        type: 'POST',
+                        dataType: "json",
+
+                        
+                        dataType: "json",
+                        data: {
+                             fechapaginador: fechapaginador //.toString() 
+                         },
+                        success: function(data){
+                            console.log(data);
+
+                            $.each(data, function( i, value ) {
+                                //console.log(i+' '+value.reg_user.descripcion);
+                                //console.log(i+' '+value.reg_user.id);
+                                $('.id_user_proy'+(i)).val( (value.reg_user!=null) ? value.reg_user.id : null  ) ;
+
+                                $('.id_entorno'+(i)).val( value.id_activo ) ;
+                                $('.id_proyecto'+(i)).val( value.id ) ;
+
+                                $('.hr_anterior'+(i)).val( (value.anterior!=null) ? (value.anterior.hr_anterior) : 0 ) ;
+
+                                $('.hora'+(i)).val( (value.reg_user!=null) ? value.reg_user.horas : 0 ) ;
+                                $('.descripcion'+(i)).val( (value.reg_user!=null) ? value.reg_user.descripcion : null ) ;
+
+  /*
+                                
+                                $('.id_entorno'+(i)).val( value.id_activo ) ;
+                                $('.id_proyecto'+(i)).val( value.id ) ;
+
+                                $('.hr_anterior'+(i)).val( value.anterior.hr_anterior  ) ;
+
+                                $('.hora'+(i)).val( value.reg_user.hora ) ;
+                                $('.descripcion'+(i)).val( value.reg_user.descripcion ) ;
+*/
+                                    
+                            });
+                           /*total =0;   
+                            for (var i = 0; i < data.id_user_proy.length; i++) {
+                                console.log(data.id_user_proy[i]);
+                                console.log( $('.id_user_proy'+(i)).val() );
+
+                                //oculto
+                                $('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
+                                $('.id_entorno'+(i)).val( data.id_entorno[i] ) ;
+                                $('.id_proyecto'+(i)).val( data.id_proyecto[i] ) ;
+
+                                
+                                $('.hora'+(i)).val( data.hora[i] ) ;
+                                $('.descripcion'+(i)).val( data.descripcion[i] ) ;
+
+                                total=total+ parseFloat(data.hora[i]); 
+                            }
+                            $('#total').text( total );
+                             return false;  */
+                        } 
+                    });
+                                  
+                 
             }
 
     });
@@ -69,24 +127,30 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
 
 /////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_registro_usuario', function (e) {
-            
-      
-
+  
             jQuery(this).ajaxSubmit({
+                dataType: "json",
                 data: {
                      fechapaginador: fechapaginador //.toString() 
                  },
                 success: function(data){
-                    
-                    if(data != true){
-                        jQuery('#foo').css('display','none');
-                        jQuery('#messages').css('display','block');
-                        jQuery('#messages').addClass('alert-danger');
-                        jQuery('#messages').html(data);
-                    }else{
-                            $catalogo = e.target.name;
-                            window.location.href = '/'+$catalogo;   
+                   total =0;   
+                    for (var i = 0; i < data.id_user_proy.length; i++) {
+                        console.log(data.id_user_proy[i]);
+                        console.log( $('.id_user_proy'+(i)).val() );
+
+                        //oculto
+                        $('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
+                        $('.id_entorno'+(i)).val( data.id_entorno[i] ) ;
+                        $('.id_proyecto'+(i)).val( data.id_proyecto[i] ) ;
+
+                        
+                        $('.hora'+(i)).val( data.hora[i] ) ;
+                        $('.descripcion'+(i)).val( data.descripcion[i] ) ;
+
+                        total=total+ parseFloat(data.hora[i]); 
                     }
+                    $('#total').text( total );
                 } 
             });
             return false;
@@ -155,8 +219,8 @@ jQuery('#costo[restriccion="decimal"]').bind('keypress paste', function (e) {
                 success: function(data){
                     
                     if(data != false){
-                        console.log(data);
-                        console.log(data);
+                        //console.log(data);
+                        //console.log(data);
                         $.each(data, function( index, value ) {
                           elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
                         });

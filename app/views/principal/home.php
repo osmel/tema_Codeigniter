@@ -28,6 +28,7 @@
 			    $funcion ="validar_registro_usuario";
 			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_registro_usuario','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
+			 $total=0;
 			?>		
 
 			
@@ -67,46 +68,68 @@
 								</div>
 
 
-							 <?php foreach ($datos["proyectos"] as $proyecto) { ?>
+							 <?php foreach ($datos["proyectos"] as $key => $proyecto) { ?>
 								<div class="row">
-									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->								
+									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->					<!--
+									  texto+='<input restriccion="decimal" value="'+row[4]+'" identificador="'+row[0]+'" type="text" class="form-control ttip cantidad_um" title="Números y puntos decimales."  placeholder="0.00">';							
+										Proyecto con checkbox
+									  -->			
 											<div class="col-sm-3 col-md-3">
 												<label class="mt-checkbox">
-									                <input type="checkbox" value="1" name="contrato_firmado">
+									                <input class="contrato_firmado<?php echo $key; ?>" type="checkbox" value="1" name="contrato_firmado[]">
 									                	<?php echo $proyecto->proyecto?>
 									                <span></span>
 									            </label> 
 											</div>
 
+
+											<!-- id del registro_user_proy -->			
+											<input type="hidden" class="id_user_proy<?php echo $key; ?>" name="id_user_proy[]" value="<?php echo ( ( isset($proyecto->reg_user->id)) ? $proyecto->reg_user->id : null) ; ?>">
+
+											<!-- id del registro_user_proy -->			
+											<input type="hidden" class="id_proyecto<?php echo $key; ?>"  name="id_proyecto[]" value="<?php echo ( ( isset($proyecto->id)) ? $proyecto->id : null) ; ?>">
+
+											<!-- id del registro_user_proy -->			
+											<input type="hidden" class="id_entorno<?php echo $key; ?>" name="id_entorno[]" value="<?php echo ( ( isset($proyecto->id_activo)) ? $proyecto->id_activo : null) ; ?>">
+
+
+											<!-- hr_anterior -->			
 											<div class="col-sm-2 col-md-2">
 											   <fieldset disabled>
 													<div class="col-sm-12 col-md-12">
-														<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hr_anterior" name="hr_anterior" placeholder=""  value="<?php echo ( ( isset($proyecto->anterior->hr_anterior)) ? $proyecto->anterior->hr_anterior : '0') ; ?>">
+														<input type="text"  title="Ingresar un nuevo proyecto." class=" form-control ttip hr_anterior<?php echo $key; ?>" name="hr_anterior[]" placeholder=""  value="<?php echo ( ( isset($proyecto->anterior->hr_anterior)) ? $proyecto->anterior->hr_anterior : '0') ; ?>">
 														<!--<em>Anterior.</em>-->
 													</div>
 												</fieldset>
 											</div>
 
+											<!-- hora -->			
 											<div class="col-sm-2 col-md-2">
 												<div class="col-sm-12 col-md-12">
-													<input type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="hora" name="hora" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
+													<input type="text"  title="Ingresar un nuevo proyecto." class=" form-control ttip hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
 													<!-- <em>Horas.</em> -->
 												</div>
 											</div>
 
+											<!-- descripción -->			
 											<div class="col-sm-5 col-md-5">
 												<div class="col-sm-12 col-md-12">
-													<textarea id="descripcion" name="descripcion" class="form-control" rows="1"><?php echo ( ( isset($proyecto->reg_user->descripcion)) ? $proyecto->reg_user->descripcion : '') ; ?></textarea>
+													<textarea  class="descripcion<?php echo $key; ?>"  name="descripcion[]" class="form-control" rows="1"><?php echo ( ( isset($proyecto->reg_user->descripcion)) ? $proyecto->reg_user->descripcion : '') ; ?></textarea>
 													<!-- <em>Nota actual para el proyecto.</em> -->
 												</div>
 											</div>
 									</div>		
 								</div>
 								<br/>
+								
+								<?php if ( isset($proyecto->reg_user->horas)) {$total = $total+$proyecto->reg_user->horas;} ?>  	
 							   <?php } ?>  	
 
 							   <div class="col-sm-2 col-md-2 col-md-offset-4">
 												<h3>Total:</h3>
+							  </div>
+							  <div class="col-sm-1 col-md-1">
+												<h3 id="total"><?php echo $total; ?>  	</h3>
 							  </div>
 						</div>
 					</div>

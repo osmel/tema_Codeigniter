@@ -215,7 +215,7 @@
                                             <li class="divider"> </li>
                                             
                                             <li>
-                                                <a href="salir">
+                                                <a href="/salir">
                                                     <i class="icon-key"></i> Salir </a>
                                             </li>
                                         </ul>

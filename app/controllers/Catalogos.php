@@ -17,7 +17,7 @@ class Catalogos extends CI_Controller {
   public function buscador(){
 
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
       
        $data['key']=$_GET['key'];
@@ -29,39 +29,47 @@ class Catalogos extends CI_Controller {
 
 
   public function validar_registro_usuario(){
-    //$data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
-    
+
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
 
-
-        $data['fechapaginador']    = $this->input->post('fechapaginador');
+        $data = $_POST;
+        $data['fechapaginador']    = date("Y-m-d", strtotime($this->input->post('fechapaginador')) ); 
           
-
-         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
-         if ( $existe !== TRUE ){
-
-            $data         =   $this->security->xss_clean($data);  
-            $guardar            = $this->modelo_proyecto->anadir_proyecto( $data );
-            if ( $guardar !== FALSE ){
-              $this->session->set_userdata('creando_proyecto', "0");   //listo para crear otro proyecto
-              echo true;
-            } else {
-              echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
-            }
-          } else {
-            echo '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
-          }  
-
+        $data         =   $this->security->xss_clean($data);  
+        $guardar            = $this->modelo_proyecto->actualizar_reg_user_proy( $data );
+        
+        echo json_encode($guardar);
     }
-
-
-
-
   }  
-  
 
+  function ajax_user_proy_json(  ){
+
+           $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 
+           $dato['proyecto'] = $data['datos']['proyectos'];
+           $dato['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
+           $dato['fechaanterior'] = date('Y-m-d', strtotime ( '-1 day' , strtotime($this->input->post('fechapaginador')) )  ); 
+           $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
+
+           echo json_encode($data['datos']['proyectos']);
+            //$data['id']        = $this->input->post('id');
+            
+            //$usuario_json = $this->modelo_proyecto->listado_usuarios_json($data);
+
+            //echo $usuario_json;
+
+  } 
+
+  
+          //print_r($_POST);
+          //return false;
+
+/*
+$fecha = date('Y-m-j');
+$nuevafecha = strtotime ( '+2 day' , strtotime ( $fecha ) ) ;
+$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,19 +218,19 @@ public function crear_tabla_proyecto($nombre) {
 
 
 	        default:  
-	          redirect('');
+	          redirect('/');
 	          break;
 	      }
 	    }
 	    else{ 
-	      redirect('index');
+	      redirect('/');
 	    }
 	  }
 
   
   function validar_nuevo_proyecto(){
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
       $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
       
@@ -335,7 +343,7 @@ function listado_usuarios_json(  ){
                   if ( $data['proyecto'] !== FALSE ){
                       $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
                   } else {
-                        redirect('');
+                        redirect('/');
                   }       
 
           break;
@@ -347,26 +355,26 @@ function listado_usuarios_json(  ){
                   if ( $data['proyecto'] !== FALSE ){
                       $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
                   } else {
-                        redirect('');
+                        redirect('/');
                   }       
              }   
           break;
 
 
         default:  
-          redirect('');
+          redirect('/');
           break;
       }
     }
     else{ 
-      redirect('');
+      redirect('/');
     }
   }
 
 
 function validacion_edicion_proyecto(){
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
         $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
 	        
@@ -453,12 +461,12 @@ function validacion_edicion_proyecto(){
 
 
         default:  
-          redirect('');
+          redirect('/');
           break;
       }
     }
     else{ 
-      redirect('');
+      redirect('/');
     }
   }
 
@@ -554,13 +562,13 @@ function validacion_edicion_proyecto(){
 			              break;
 			          
 			            default:  
-			              redirect('');
+			              redirect('/');
 			              break;
 			          }
 
 	        }
 	        else{ 
-	          redirect('');
+	          redirect('/');
 	        }	
 	        
 	}	
@@ -717,12 +725,12 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 
 
 	        default:  
-	          redirect('');
+	          redirect('/');
 	          break;
 	      }
 	    }
 	    else{ 
-	      redirect('index');
+	      redirect('/');
 	    }
 	  }
 
@@ -730,7 +738,7 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 
   function validar_nuevo_entorno(){
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
       $this->form_validation->set_rules('entorno', 'Entorno', 'trim|required|min_length[1]|max_length[80]|xss_clean');
       
@@ -810,7 +818,7 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
                   if ( $data['entorno'] !== FALSE ){
                       $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
                   } else {
-                        redirect('');
+                        redirect('/');
                   }       
 
           break;
@@ -822,26 +830,26 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
                   if ( $data['entorno'] !== FALSE ){
                       $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
                   } else {
-                        redirect('');
+                        redirect('/');
                   }       
              }   
           break;
 
 
         default:  
-          redirect('');
+          redirect('/');
           break;
       }
     }
     else{ 
-      redirect('');
+      redirect('/');
     }
   }
 
 
 function validacion_edicion_entorno(){
     if ($this->session->userdata('session') !== TRUE) {
-      redirect('');
+      redirect('/');
     } else {
         $this->form_validation->set_rules('entorno', 'entorno', 'trim|required|min_length[1]|max_length[80]|xss_clean');
 	        
@@ -911,12 +919,12 @@ function validacion_edicion_entorno(){
 
 
         default:  
-          redirect('');
+          redirect('/');
           break;
       }
     }
     else{ 
-      redirect('');
+      redirect('/');
     }
   }
 
@@ -1396,7 +1404,7 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 	//salida del sistema
 	public function logout(){
 		$this->session->sess_destroy();
-		redirect('');
+		redirect('/');
 	}		
 
 
