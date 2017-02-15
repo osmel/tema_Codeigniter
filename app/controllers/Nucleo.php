@@ -48,21 +48,21 @@ class Nucleo extends CI_Controller {
 								$this->session->set_userdata('perfil', $login_element->perfil);
 								$this->session->set_userdata('operacion', $login_element->operacion);
 								//$this->session->set_userdata('sala', $login_element->sala);
-								$this->session->set_userdata('sala', $login_element->sala+$login_element->id_almacen);
-								$this->session->set_userdata('id_almacen', $login_element->id_almacen);
+								$this->session->set_userdata('sala', $login_element->sala+$login_element->id_cargo);
+								$this->session->set_userdata('id_cargo', $login_element->id_cargo);
 								$this->session->set_userdata('coleccion_id_operaciones', $login_element->coleccion_id_operaciones);
 								$this->session->set_userdata('nombre_completo', $login_element->nombre.' '.$login_element->apellidos);
 								$this->session->set_userdata('modulo', 'home');				
 								$this->session->set_userdata('especial', $login_element->especial);	
-								$this->session->set_userdata('id_almacen_ajuste', 1);		
+								$this->session->set_userdata('id_cargo_ajuste', 1);		
 								$this->session->set_userdata('creando_entorno', "0"); //
 								$this->session->set_userdata('creando_proyecto', "0"); //
 								$this->session->set_userdata('entorno_activo', 1);		//1 es el entorno por defecto "General"
 								$this->session->set_userdata('ambito_app', 0); //1- Entorno, 2-Proyecto	
 							}
 
-							$data['id_almacen'] = $this->session->userdata('id_almacen') ;
-			              	//$status_almacen  = $this->modelo->status_almacen($data);       
+							$data['id_cargo'] = $this->session->userdata('id_cargo') ;
+			              	//$status_cargo  = $this->modelo->status_cargo($data);       
 			              	
 			            
 			              		echo TRUE;	
@@ -143,21 +143,34 @@ function dashboard() {
 
 
 			    	$id_perfil = $this->session->userdata('id_perfil');
+			    			//esto era solo para los trabajadores "HOME"
+		    			 $dato['proyecto'] = $data['datos']['proyectos'];
+		            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
+		            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
+		            	 
+
+		            	 $inicio='dashboard';	
+		            	 if ($dato['proyecto']!=false) {
+		            	 	$data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
+		            	 	//print_r($data['datos']['proyectos']); die;
+		            	 	$inicio='home';
+		            	 	
+		            	 }
+		            	 
+
 			          switch ($id_perfil) {    
 			            case 1:		            
-			                $this->load->view( 'principal/dashboard',$data);
+
+			                $this->load->view( 'principal/'.$inicio,$data); //dashboard
 			              break;
 			            
 			            case 2: //
 			            case 3: //
 			            case 4: //
 
-			            	 $dato['proyecto'] = $data['datos']['proyectos'];
-			            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
-			            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
-			            	 $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
+			            	 
 			            	 //print_r($data['datos']['proyectos']);die;
-			                $this->load->view( 'principal/home',$data);
+			                $this->load->view( 'principal/'.$inicio,$data);
 			              break;
 			          
 			            default:  
@@ -193,145 +206,7 @@ function dashboard() {
  }   	
 
 
-  function editar_usuario( $uid = '' ){
 
-
-     	  
-
-  	 	$data['usuarios'] = $this->modelo->listado_usuarios(); 
-  	 	$data['dat_usuario']  = $this->modelo->datos_usuario( $uid );
-  	 	$data['uid'] = $uid;
-  	 	$data['dat_historico_semana']  = $this->modelo->historico_acceso_semana( $data );
-  	 	$data['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
-  	 	//print_r($data['dat_historico_mes']);
-  	 	//print date_default_timezone_get();
-  	 	//die;
-
-  	 	//$data['dat_usuario']['usuario'] =  $this->modelo->datos_usuario( $uid );
-  	 	//$data['dat_user']['dat_usuario']['usuario'] = $data['dat_usuario']['usuario'];
-
-  		$this->load->view('usuarios/editar_usuario',$data);
-  }
-
-  
-
-
-  function ajaxAgents(){
-  		$data['uid'] = 	$this->input->post('uid');
-  	 	$dato['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
-  		//$this->load->view('usuarios/editar_usuario',$data);
-  		echo json_encode($dato) ; 
-  }
-  	
-
-  function editar_usuario1( $uid = '' ){
-
-      $id=$this->session->userdata('id');
-
-	  if ($uid=='') {
-			$uid= $id;
-			$data['retorno']='';
-	  }
-
-      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
-      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
-            $coleccion_id_operaciones = array();
-      }   
-
-
-	  $id_perfil=$this->session->userdata('id_perfil');
-		
-    //Administrador con permiso a todo ($id_perfil==1)
-    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
-    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
-		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
-			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
-			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
-			$data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
-			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
-
-			
-			$data['operaciones'] = $this->modelo->listado_operaciones();
-
-
-
-	        $data['id']  = $uid;
-			if ( $data['usuario'] !== FALSE ){
-					$this->load->view('usuarios/editar_usuario',$data);
-			} else {
-						redirect('/');
-			}
-		} else
-		{
-			 redirect('/');
-		}	
-	}
-
-
-	//recuperar constraseña
-	function session(){
-		if($this->session->userdata('session') === TRUE ){
-			$data['id']=$this->session->userdata('id');
-			$data['id_perfil']=$this->session->userdata('id_perfil');
-			$data['perfil']=$this->session->userdata('perfil');
-			$data['coleccion_id_operaciones']=$this->session->userdata('coleccion_id_operaciones');
-			$data['nombre_completo']=$this->session->userdata('nombre_completo');
-			$data['sala']=$this->session->userdata('sala');
-			$data['exito']=true;
-	    }	else {
-	    	$data['exito']=false;
-	    }	
-		echo json_encode($data);
-
-	}
-
-	//lista de todos los usuarios
-	function listado_usuarios(){
-    if($this->session->userdata('session') === TRUE ){
-          $id_perfil=$this->session->userdata('id_perfil');
-
-          $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
-          if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
-                $coleccion_id_operaciones = array();
-           }   
-
-
-
-          switch ($id_perfil) {    
-            case 1:
-                  ob_start();
-                  $this->paginacion_ajax_usuario(0);
-                  $initial_content = ob_get_contents();
-                  ob_end_clean();    
-                  $data['table'] = "<div id='paginacion'>" . $initial_content . "</div>" ;
-                  $this->load->view( 'paginacion/paginacion',$data);        
-                    
-              break;
-            case 2:
-            case 3:
-            case 4:
-                 if  (in_array(5, $coleccion_id_operaciones))  { 
-                     ob_start();
-                          $this->paginacion_ajax_usuario(0);
-                          $initial_content = ob_get_contents();
-                          ob_end_clean();    
-                          $data['table'] = "<div id='paginacion'>" . $initial_content . "</div>" ;
-                          $this->load->view( 'paginacion/paginacion',$data);        
-                 }   
-              break;
-
-
-            default:  
-              redirect('/');
-              break;
-          }
-        }
-        else{ 
-          redirect('/'); //index
-        }
-	}
-
-	
  // Creación de especialista o Administrador (Nuevo Colaborador)
 	function nuevo_usuario(){
     if($this->session->userdata('session') === TRUE ){
@@ -341,46 +216,50 @@ function dashboard() {
           if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
                 $coleccion_id_operaciones = array();
            }   
+			  	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
+				  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+				  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
-            	  $data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
-            	  $data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
+
+            	  $data['clientes']   = $this->modelo->coger_catalogo_clientes(1);
+            	  $data['cargos']   = $this->modelo->coger_catalogo_cargos();
                   $data['perfiles']   = $this->modelo->coger_catalogo_perfiles();
                   $data['operaciones'] = $this->modelo->listado_operaciones();          
 
           switch ($id_perfil) {    
             case 1:
-                  $this->load->view( 'usuarios/nuevo_usuario', $data );   
+                  $this->load->view( 'usuarios/crud/nuevo_usuario', $data );   
                     
               break;
             case 2:
             case 3:
             case 4:
                  if  (in_array(5, $coleccion_id_operaciones))  { 
-                    $this->load->view( 'usuarios/nuevo_usuario', $data );   
+                    $this->load->view( 'usuarios/crud/nuevo_usuario', $data );   
                  }   
               break;
 
 
             default:  
-              redirect('/');
+              redirect('');
               break;
           }
         }
         else{ 
-          redirect('/'); //index
+          redirect('index');
         }    
 
 	}
 
 	function validar_nuevo_usuario(){
 		if ($this->session->userdata('session') !== TRUE) {
-			redirect('/');
+			redirect('');
 		} else {
 
 			
 
-			$this->form_validation->set_rules( 'nombre', 'Nombre', 'trim|required|callback_nombre_valido|min_length[3]|max_lenght[180]|xss_clean');
-			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_lenght[180]|xss_clean');
+			$this->form_validation->set_rules( 'nombre', 'Nombre', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
+			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
 			$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
 			$this->form_validation->set_rules( 'telefono', 'Teléfono', 'trim|numeric|callback_valid_phone|xss_clean');
 			$this->form_validation->set_rules('id_perfil', 'Rol de usuario', 'required|callback_valid_option|xss_clean');
@@ -412,7 +291,7 @@ function dashboard() {
 						$usuario['id_cliente']   		= $this->input->post( 'id_cliente' );
 						$usuario['coleccion_id_operaciones']	=	json_encode($this->input->post('coleccion_id_operaciones'));						
 
-						$usuario['id_almacen']   				= $this->input->post( 'id_almacen' );
+						$usuario['id_cargo']   				= $this->input->post( 'id_cargo' );
 						
 
 						$usuario 						= $this->security->xss_clean( $usuario );
@@ -420,7 +299,7 @@ function dashboard() {
 
 						if ( $guardar !== FALSE ){
 
-									/*
+									/* enviar correo
 									$dato['email']   			    = $usuario['email'];   			
 									$dato['contrasena']				= $usuario['contrasena'];				
 
@@ -457,55 +336,9 @@ function dashboard() {
 
 
 
-function actualizar_perfil( $uid = '' ){
+ function editar_usuario( $uid = '' ){
 
-      $id=$this->session->userdata('id');
-
-	  if ($uid=='') {
-			$uid= $id;
-			$data['retorno']='';
-	  }
-
-      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
-      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
-            $coleccion_id_operaciones = array();
-      }   
-
-
-	  $id_perfil=$this->session->userdata('id_perfil');
-		
-    //Administrador con permiso a todo ($id_perfil==1)
-    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
-    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
-		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
-			/*
-			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
-			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
-			$data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
-			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
-
-			
-			$data['operaciones'] = $this->modelo->listado_operaciones();
-			*/	
-
-				$this->load->view('usuarios/edicion');
-			/*
-	        $data['id']  = $uid;
-			if ( $data['usuario'] !== FALSE ){
-					$this->load->view('usuarios/edicion',$data);
-			} else {
-						redirect('/');
-			}*/
-		} else
-		{
-			 redirect('/');
-		}	
-	}
-
-	//edicion del especialista o el perfil del especialista o administrador activo
-	function actualizar_perfil111( $uid = '' ){
-
-      $id=$this->session->userdata('id');
+	  $id=$this->session->userdata('id');
 
 	  if ($uid=='') {
 			$uid= $id;
@@ -517,43 +350,58 @@ function actualizar_perfil( $uid = '' ){
             $coleccion_id_operaciones = array();
       }   
 
+      $id_perfil=$this->session->userdata('id_perfil');
 
-	  $id_perfil=$this->session->userdata('id_perfil');
-		
-    //Administrador con permiso a todo ($id_perfil==1)
-    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
-    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
+
+	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
+	  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+	  
+
+	 	$data['usuarios'] = $this->modelo->listado_usuarios(); 
+	 	$data['dat_usuario']  = $this->modelo->datos_usuario( $uid );
+	 	$data['uid'] = $uid;
+	 	$data['dat_historico_semana']  = $this->modelo->historico_acceso_semana( $data );
+	 	$data['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
+	 
+
+
 		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
-			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
-			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
-			$data['almacenes']   = $this->modelo->coger_catalogo_almacenes(2);
-			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
+				$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
+				$data['clientes']   = $this->modelo->coger_catalogo_clientes(1);
+				$data['cargos']   = $this->modelo->coger_catalogo_cargos();
+				//print_r($data['cargos']);die;
+				$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
 
-			
-			$data['operaciones'] = $this->modelo->listado_operaciones();
+				
+				$data['operaciones'] = $this->modelo->listado_operaciones();
 
 
 
-	        $data['id']  = $uid;
-			if ( $data['usuario'] !== FALSE ){
-					$this->load->view('usuarios/editar_usuario',$data);
-			} else {
-						redirect('/');
-			}
+		        $data['id']  = $uid;
+				if ( $data['usuario'] !== FALSE ){
+						$this->load->view('usuarios/crud/editar_usuario',$data);
+				} else {
+							redirect('');
+				}
 		} else
 		{
-			 redirect('/');
+			 redirect('');
 		}	
-	}
-	
-	function validacion_edicion_usuario(){
+
+  		
+  }
+
+
+
+function validacion_edicion_usuario(){
 		
 		if ( $this->session->userdata('session') !== TRUE ) {
 			redirect('/');
 		} else {
 			
-			$this->form_validation->set_rules( 'nombre', 'Nombre', 'trim|required|callback_nombre_valido|min_length[3]|max_lenght[180]|xss_clean');
-			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_lenght[180]|xss_clean');
+			$this->form_validation->set_rules( 'nombre', 'Nombre', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
+			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
 			$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
 			$this->form_validation->set_rules( 'telefono', 'Teléfono', 'trim|numeric|callback_valid_phone|xss_clean');
 			$this->form_validation->set_rules('id_perfil', 'Rol de usuario', 'required|callback_valid_option|xss_clean');
@@ -587,7 +435,7 @@ function actualizar_perfil( $uid = '' ){
 
 						$usuario['coleccion_id_operaciones']	=	json_encode($this->input->post('coleccion_id_operaciones'));						
 
-						$usuario['id_almacen']   				= $this->input->post( 'id_almacen' );
+						$usuario['id_cargo']   				= $this->input->post( 'id_cargo' );
 						
 
 						
@@ -672,6 +520,135 @@ function actualizar_perfil( $uid = '' ){
 			echo '<span class="error">No se ha podido eliminar al usuario</span>';
 		}
 	}
+
+  
+
+
+  function ajaxAgents(){
+  		$data['uid'] = 	$this->input->post('uid');
+  	 	$dato['dat_historico_mes']  = $this->modelo->historico_acceso_mes( $data );
+  		//$this->load->view('usuarios/editar_usuario',$data);
+  		echo json_encode($dato) ; 
+  }
+  	
+
+ 
+
+	//recuperar constraseña
+	function session(){
+		if($this->session->userdata('session') === TRUE ){
+			$data['id']=$this->session->userdata('id');
+			$data['id_perfil']=$this->session->userdata('id_perfil');
+			$data['perfil']=$this->session->userdata('perfil');
+			$data['coleccion_id_operaciones']=$this->session->userdata('coleccion_id_operaciones');
+			$data['nombre_completo']=$this->session->userdata('nombre_completo');
+			$data['sala']=$this->session->userdata('sala');
+			$data['exito']=true;
+	    }	else {
+	    	$data['exito']=false;
+	    }	
+		echo json_encode($data);
+
+	}
+
+	//lista de todos los usuarios
+	function listado_usuarios(){
+    if($this->session->userdata('session') === TRUE ){
+          $id_perfil=$this->session->userdata('id_perfil');
+
+          $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+          if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+                $coleccion_id_operaciones = array();
+           }   
+
+
+
+          switch ($id_perfil) {    
+            case 1:
+                  ob_start();
+                  $this->paginacion_ajax_usuario(0);
+                  $initial_content = ob_get_contents();
+                  ob_end_clean();    
+                  $data['table'] = "<div id='paginacion'>" . $initial_content . "</div>" ;
+                  $this->load->view( 'paginacion/paginacion',$data);        
+                    
+              break;
+            case 2:
+            case 3:
+            case 4:
+                 if  (in_array(5, $coleccion_id_operaciones))  { 
+                     ob_start();
+                          $this->paginacion_ajax_usuario(0);
+                          $initial_content = ob_get_contents();
+                          ob_end_clean();    
+                          $data['table'] = "<div id='paginacion'>" . $initial_content . "</div>" ;
+                          $this->load->view( 'paginacion/paginacion',$data);        
+                 }   
+              break;
+
+
+            default:  
+              redirect('/');
+              break;
+          }
+        }
+        else{ 
+          redirect('/'); //index
+        }
+	}
+
+	
+
+
+
+function actualizar_perfil( $uid = '' ){
+
+      $id=$this->session->userdata('id');
+
+	  if ($uid=='') {
+			$uid= $id;
+			$data['retorno']='';
+	  }
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+      }   
+
+
+	  $id_perfil=$this->session->userdata('id_perfil');
+		
+    //Administrador con permiso a todo ($id_perfil==1)
+    //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
+    //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
+		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
+			/*
+			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
+			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);
+			$data['cargos']   = $this->modelo->coger_catalogo_cargos(2);
+			$data['usuario'] = $this->modelo->coger_catalogo_usuario( $uid );
+
+			
+			$data['operaciones'] = $this->modelo->listado_operaciones();
+			*/	
+
+				$this->load->view('usuarios/edicion');
+			/*
+	        $data['id']  = $uid;
+			if ( $data['usuario'] !== FALSE ){
+					$this->load->view('usuarios/edicion',$data);
+			} else {
+						redirect('/');
+			}*/
+		} else
+		{
+			 redirect('/');
+		}	
+	}
+
+	
+	
+	
 
 
 

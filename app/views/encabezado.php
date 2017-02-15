@@ -6,8 +6,8 @@
                    <!-- Comienzo LOGO --> 
                         <div class="page-logo">
                              
-                            <a href="index.html"> <!-- LOGO --> 
-                                <img src="<?php echo base_url(); ?>img/logo.png" alt="logo" class="logo-default" /> 
+                            <a style="float: left;height: 100%;padding: 8px;" href="/"> <!-- LOGO --> 
+                                <img  style="float: left;height: 100%; margin: 0px 0 0 !important;" src="<?php echo base_url(); ?>img/logo-menu.svg" alt="logo" class="logo-default" /> 
                             </a>
 
                             <div class="menu-toggler sidebar-toggler"> <!-- menu toggler --> 
@@ -31,33 +31,36 @@
 
 
                                 <!-- (Entornos)  -->
-                                    <li class="dropdown dropdown-user">
-                                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                            <span class="badge badge-danger">  <?php echo $entornos[0]->profundidad_activo; ?> </span>
-                                            <span class="username username-hide-on-mobile"> <?php echo $entornos[0]->nombre_activo; ?> </span>
-                                            <i class="fa fa-angle-down"></i>
+                                    <?php if ($entornos!=false) { ?>
+                                        <li class="dropdown dropdown-user">
+                                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <span class="badge badge-danger">  <?php echo $entornos[0]->profundidad_activo; ?> </span>
+                                                <span class="username username-hide-on-mobile"> <?php echo $entornos[0]->nombre_activo; ?> </span>
+                                                <i class="fa fa-angle-down"></i>
 
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-default">
-                                           
-                                            <?php foreach ($entornos as $entorno) { ?>
-                                                <li>
-                                                    <a href="<?php echo base_url(); ?>cambio_entorno/<?php echo base64_encode($entorno->id); ?>" >
-                                                        <?php echo $entorno->entorno; ?>
-                                                        <span class="badge badge-success"> <?php echo $entorno->profundidad; ?> </span>
-                                                    </a>
-                                                </li>
-                                            <?php } ?>    
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-default">
+                                               
+                                                <?php foreach ($entornos as $entorno) { ?>
+                                                    <li>
+                                                        <a href="<?php echo base_url(); ?>cambio_entorno/<?php echo base64_encode($entorno->id); ?>" >
+                                                            <?php echo $entorno->entorno; ?>
+                                                            <span class="badge badge-success"> <?php echo $entorno->profundidad; ?> </span>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>    
 
-                                        </ul>
-                                    </li>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>   
                                <!-- (Fin de Entornos)  -->
 
 
                                 
                                 <!--(2) Comienzo DROPDOWN(desplegables) -->
                                
-                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte 
+
                                     <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                             <i class="icon-bell"></i>
@@ -97,11 +100,11 @@
                                         </ul>
                                     </li>
 
-                                <!-- Fin NOTIFICATION desplegables(DROPDOWN) -->
+                                 Fin NOTIFICATION desplegables(DROPDOWN) -->
 
 
                                 <!-- (3) COmienzo mensajeria desplegable(DROPDOWN) -->
-                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte 
                                     <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                             <i class="icon-envelope-open"></i>
@@ -132,12 +135,12 @@
                                             </li>
                                         </ul>
                                     </li>
-                                <!-- END INBOX DROPDOWN -->
+                                END INBOX DROPDOWN -->
 
 
 
                                 <!-- (3)  Comienzo tarea desplegable(DROPDOWN) -->
-                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte
                                     <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
                                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                             <i class="icon-calendar"></i>
@@ -183,7 +186,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                <!-- END TODO DROPDOWN -->
+                                END TODO DROPDOWN -->
 
 
                                 <!-- (Usuarios) BEGIN USER LOGIN DROPDOWN -->
@@ -191,15 +194,17 @@
                                     <li class="dropdown dropdown-user">
                                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                             <img alt="" class="img-circle" src="<?php echo base_url(); ?>js/assets/layouts/layout/img/avatar3_small.jpg" />
-                                            <span class="username username-hide-on-mobile"> Nick </span>
+                                            <span class="username username-hide-on-mobile"> <?php echo $this->session->userdata('nombre_completo') ?> </span>
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-default">
                                             <li>
-                                                <a href="page_user_profile_1.html">
-                                                    <i class="icon-user"></i> Mi perfil </a>
+                                                <a href="<?php echo base_url(); ?>editar_usuario/<?php echo $this->session->userdata('id'); ?>" >
+                                                    <i class="icon-user"></i> Mi perfil 
+                                                </a>
                                             </li>
                                             
+                                          <!--
                                             <li>
                                                 <a href="app_inbox.html">
                                                     <i class="icon-envelope-open"></i> Mis Mensajes
@@ -213,6 +218,7 @@
                                                 </a>
                                             </li>
                                             <li class="divider"> </li>
+                                            -->
                                             
                                             <li>
                                                 <a href="/salir">
@@ -224,13 +230,13 @@
 
 
                                 <!--(resumen de derecha) BEGIN QUICK SIDEBAR TOGGLER -->
-                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte 
                                     <li class="dropdown dropdown-quick-sidebar-toggler">
                                         <a href="javascript:;" class="dropdown-toggle">
                                             <i class="icon-logout"></i>
                                         </a>
                                     </li>
-                                <!-- END QUICK SIDEBAR TOGGLER -->
+                                 END QUICK SIDEBAR TOGGLER -->
                             </ul>
                             
                         </div>

@@ -45,8 +45,10 @@ span.osmel {
     <body class=" login">
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <a href="index.html">
-                <img src="<?php echo base_url(); ?>/img/logo.png" alt="" /> </a>
+                <a style="float: left;height: 100%;padding: 8px;" href="/"> <!-- LOGO --> 
+                    <img  style="float: left;height: 100%; margin: 0px 0 0 !important;" src="<?php echo base_url(); ?>img/logo-menu.svg" alt="logo" class="logo-default" /> 
+                </a>
+
         </div>
         <!-- END LOGO -->
         <!-- BEGIN LOGIN -->

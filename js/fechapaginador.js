@@ -62,7 +62,7 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                   console.log($('#datepaginator_sample_1 > ul > li > a > .dp-selected').attr('data-moment'));
 */
                   
-                    //fecha anterior de donde viene
+                  //fecha anterior de donde viene
                   //console.log($('#datepaginator_sample_1 .dp-selected').attr('data-moment'));
 
                   //console.log($('#datepaginator_sample_1').selectedDate);

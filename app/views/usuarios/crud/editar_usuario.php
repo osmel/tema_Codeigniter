@@ -28,7 +28,7 @@
 					<?php 
 					 	
 					 	if (!isset($retorno)) {
-					      	$retorno ="usuarios";
+					      	$retorno ="";
 					    }
 
 					  $hidden = array('id_p'=>$id);
@@ -181,7 +181,7 @@
 
 										<!--Cliente Asociado -->
 										<div class="form-group">
-											<label for="id_cliente" class="col-sm-3 col-md-2 control-label">Sucursal</label>
+											<label for="id_cliente" class="col-sm-3 col-md-2 control-label">Áreas</label>
 											<div class="col-sm-9 col-md-10">
 											<?php  if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>											
 												<fieldset disabled>
@@ -233,23 +233,23 @@
 
 
 
-										<!--almacen Asociado -->
-										<div id="rol_almacen" style="display:block;" class="form-group">
-											<label for="id_almacen" class="col-sm-3 col-md-2 control-label">Almacén</label>
+										<!--cargo Asociado -->
+										<div id="rol_cargo" style="display:block;" class="form-group">
+											<label for="id_cargo" class="col-sm-3 col-md-2 control-label">Almacén</label>
 											<div class="col-sm-9 col-md-10">
 
 											    <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(5, $coleccion_id_operaciones)) ) { ?>
-														<select name="id_almacen" id="id_almacen" class="form-control">
+														<select name="id_cargo" id="id_cargo" class="form-control">
 												<?php } else { ?>	
-													    <select disabled="disabled" name="id_almacen" id="id_almacen" class="form-control">
+													    <select disabled="disabled" name="id_cargo" id="id_cargo" class="form-control">
 												<?php } ?>	
 															<!--<option value="0">Selecciona una opción</option>-->
-																<?php foreach ( $almacenes as $almacen ){ ?>
+																<?php foreach ( $cargos as $cargo ){ ?>
 																		<?php 
-																		   if  ($almacen->id_almacen==$usuario->id_almacen)
+																		   if  ($cargo->id_cargo==$usuario->id_cargo)
 																			 {$seleccionado='selected';} else {$seleccionado='';}
 																		?>
-																			<option value="<?php echo $almacen->id_almacen; ?>" <?php echo $seleccionado; ?> ><?php echo $almacen->almacen; ?></option>
+																			<option value="<?php echo $cargo->id_cargo; ?>" <?php echo $seleccionado; ?> ><?php echo $cargo->cargo; ?></option>
 																<?php } ?>
 															<!--rol de usuario -->
 														</select>

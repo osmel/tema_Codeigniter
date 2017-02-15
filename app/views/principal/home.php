@@ -106,8 +106,12 @@
 											<!-- hora -->			
 											<div class="col-sm-2 col-md-2">
 												<div class="col-sm-12 col-md-12">
-													<input type="text"  title="Ingresar un nuevo proyecto." class=" form-control ttip hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
-													<!-- <em>Horas.</em> -->
+													<input restriccion="decimal" type="text" id="hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>" title="Números y puntos decimales." class=" form-control ttip hora_decimal hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
+													<!-- <em>Horas.</em> 
+													<input restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
+
+
+													-->
 												</div>
 											</div>
 
@@ -129,7 +133,7 @@
 												<h3>Total:</h3>
 							  </div>
 							  <div class="col-sm-1 col-md-1">
-												<h3 id="total"><?php echo $total; ?>  	</h3>
+												<h3 id="total"><?php echo number_format($total, 2, '.', ','); ?>  	</h3>
 							  </div>
 						</div>
 					</div>

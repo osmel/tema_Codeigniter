@@ -44,7 +44,14 @@ class Catalogos extends CI_Controller {
     }
   }  
 
+function ajax_user_proy_json1(  ){
+
+          return json_encode("asdsaasd");
+}  
+
   function ajax_user_proy_json(  ){
+
+          
 
            $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 
            $dato['proyecto'] = $data['datos']['proyectos'];

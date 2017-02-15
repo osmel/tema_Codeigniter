@@ -25,7 +25,7 @@
 
       
             
-               $this->almacenes                         = $this->db->dbprefix('catalogo_almacenes');
+               $this->cargos                         = $this->db->dbprefix('catalogo_cargos');
 
               $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
               $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
@@ -36,6 +36,190 @@
 
 
 
+    public function check_correo_existente($data){
+      $this->db->select("AES_DECRYPT(email,'{$this->key_hash}') AS email", FALSE);      
+      $this->db->from($this->usuarios);
+      $this->db->where('email',"AES_ENCRYPT('{$data['email']}','{$this->key_hash}')",FALSE);
+      $login = $this->db->get();
+      if ($login->num_rows() > 0)
+        return FALSE;
+      else
+        return TRUE;
+      $login->free_result();
+    }
+
+    public function check_usuario_existente($data){
+      
+      $this->db->select("AES_DECRYPT(email,'{$this->key_hash}') AS email", FALSE);      
+      $this->db->from($this->usuarios);
+      $this->db->where('email',"AES_ENCRYPT('{$data['email']}','{$this->key_hash}')",FALSE);
+      $this->db->where('id !=',$data['id']);
+      $login = $this->db->get();
+      if ($login->num_rows() > 0)
+        return FALSE;
+      else
+        return TRUE;
+      $login->free_result();
+    }        
+
+
+    public function anadir_usuario( $data ){
+            $timestamp = time();
+
+            $id_session = $this->session->userdata('id');
+            $this->db->set( 'fecha_pc',  gmt_to_local( $timestamp, $this->timezone, TRUE) );
+            $this->db->set( 'id_usuario',  $id_session );
+
+            $this->db->set( 'id', "UUID()", FALSE);
+      $this->db->set( 'nombre', $data['nombre'] );
+            $this->db->set( 'apellidos', $data['apellidos'] );
+            $this->db->set( 'email', "AES_ENCRYPT('{$data['email']}','{$this->key_hash}')", FALSE );
+            $this->db->set( 'telefono', "AES_ENCRYPT('{$data['telefono']}','{$this->key_hash}')", FALSE );
+            $this->db->set( 'id_perfil', $data['id_perfil']);
+            $this->db->set( 'id_cliente', $data['id_cliente']);
+            
+            $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
+
+            if  ($data['id_perfil']==2) {
+                $this->db->set( 'id_cargo', $data['id_cargo']);    
+            } else {
+                $this->db->set( 'id_cargo', 0);    
+            }
+            
+
+
+            $this->db->set( 'contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE );
+            $this->db->set( 'creacion',  gmt_to_local( $timestamp, $this->timezone, TRUE) );
+            $this->db->insert($this->usuarios );
+
+            if ($this->db->affected_rows() > 0){
+                return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+            
+        }
+
+
+        public function edicion_usuario( $data ){
+
+            $timestamp = time();
+
+            $id_session = $this->session->userdata('id');
+            $this->db->set( 'fecha_pc',  gmt_to_local( $timestamp, $this->timezone, TRUE) );
+            $this->db->set( 'id_usuario',  $id_session );
+
+            $this->db->set( 'nombre', $data['nombre'] );
+            $this->db->set( 'apellidos', $data['apellidos'] );
+            $this->db->set( 'email', "AES_ENCRYPT('{$data['email']}','{$this->key_hash}')", FALSE );
+            $this->db->set( 'telefono', "AES_ENCRYPT('{$data['telefono']}','{$this->key_hash}')", FALSE );
+            $this->db->set( 'id_perfil', $data['id_perfil']);
+            $this->db->set( 'id_cliente', $data['id_cliente']);
+            
+            $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
+
+            if  ($data['id_perfil']==2) {
+                $this->db->set( 'id_cargo', $data['id_cargo']);    
+            } else {
+                $this->db->set( 'id_cargo', 0);    
+            }
+
+            
+            $this->db->set( 'contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE );
+            $this->db->where('id', $data['id'] );
+            $this->db->update($this->usuarios );
+            if ($this->db->affected_rows() > 0) {
+        return TRUE;
+      }  else
+         return FALSE;
+        }   
+
+//----------------**************catalogos-------------------************------------------
+        public function coger_catalogo_perfiles(){
+            $this->db->select( 'id_perfil, perfil, operacion' );
+            $perfiles = $this->db->get($this->perfiles );
+            if ($perfiles->num_rows() > 0 )
+               return $perfiles->result();
+            else
+               return FALSE;
+            $perfiles->free_result();
+        }       
+
+
+//----------------**************clientes_asociados-------------------************------------------
+        public function coger_catalogo_clientes( $id_actividad){
+
+              $this->db->select('p.id id_cliente, p.nombre cliente'); 
+              $this->db->from($this->proveedores.' as p');
+
+             
+              $this->db->where('(LOCATE("'.$id_actividad.'", p.coleccion_id_actividad) >0)' );
+
+              $result = $this->db->get();
+
+                if ( $result->num_rows() > 0 )
+                   return $result->result();
+                else
+                   return False;
+                $result->free_result();
+        }  
+
+
+        public function coger_catalogo_cargos( ){
+
+              $this->db->select('a.id id_cargo, a.cargo cargo'); 
+              $this->db->from($this->cargos.' as a');
+
+              $this->db->where('a.activo', 1);
+
+              $result = $this->db->get();
+
+                if ( $result->num_rows() > 0 )
+                   return $result->result();
+                else
+                   return False;
+                $result->free_result();
+        } 
+
+
+
+       //editar 
+        public function coger_catalogo_usuario( $uid ){
+            $this->db->select('id, nombre, apellidos, id_perfil,  coleccion_id_operaciones, id_cliente,id_cargo');
+            $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
+            $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
+            $this->db->select( "AES_DECRYPT( contrasena,'{$this->key_hash}') AS contrasena", FALSE );
+            $this->db->where('id', $uid);
+            $result = $this->db->get($this->usuarios );
+            if ($result->num_rows() > 0)
+              return $result->row();
+            else 
+              return FALSE;
+            $result->free_result();
+        }  
+
+
+        //Lista de todas las operaciones
+
+        public function listado_operaciones(  ){
+
+            $this->db->select('id, operacion, tooltip, grupo');
+            $this->db->from($this->catalogo_operaciones);
+
+            $this->db->order_by('orden', 'asc'); 
+
+            $result = $this->db->get();
+            
+            if ( $result->num_rows() > 0 )
+               return $result->result();
+            else
+               return False;
+            $result->free_result();
+        }    
+
+
+//----------------*****************-------------------************------------------
 
 
 		//login
@@ -48,7 +232,7 @@
             $this->db->select($this->usuarios.'.id_cliente');         
             $this->db->select($this->usuarios.'.sala');         
             $this->db->select($this->usuarios.'.especial');      
-            $this->db->select($this->usuarios.'.id_almacen');         
+            $this->db->select($this->usuarios.'.id_cargo');         
 
                 
 			$this->db->from($this->usuarios);
@@ -73,11 +257,18 @@
 
         public function listado_usuarios(  ){
 
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id=$this->session->userdata('id');
+
             $this->db->select('u.id, nombre,  apellidos');
 
             $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
             $this->db->select('p.id_perfil,p.perfil,p.operacion');
+
+            if ($id_perfil!=1) {
+               $this->db->where('u.id', $id);   
+            }
             
             $this->db->from($this->usuarios.' as u');
             $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');
@@ -93,7 +284,7 @@
    
 
      public function datos_usuario( $uid ){
-            $this->db->select('u.id, nombre, apellidos, u.id_perfil,  coleccion_id_operaciones, id_cliente,id_almacen');
+            $this->db->select('u.id, nombre, apellidos, u.id_perfil,  coleccion_id_operaciones, id_cliente,id_cargo');
             $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
             $this->db->select( "AES_DECRYPT( contrasena,'{$this->key_hash}') AS contrasena", FALSE );
@@ -229,7 +420,7 @@ WHERE 1
                             );
           }
 
-          //copiar a tabla "historico_conteo_almacen"
+          //copiar a tabla "historico_conteo_cargo"
           foreach ($objeto as $key => $value) {
              $dia1 = date('w',  mktime(0, 0, 0, date("m",strtotime($value->fecha) )  , date("d",strtotime($value->fecha)), date("Y",strtotime($value->fecha)))  );  
                 $dia[$dia1] = $value;
@@ -279,7 +470,7 @@ WHERE 1
                             );
           }
           
-          //copiar a tabla "historico_conteo_almacen"
+          //copiar a tabla "historico_conteo_cargo"
           foreach ($objeto as $key => $value) {
                 $dia[date('j', strtotime($value->fecha) )] =$value; //j: dia sin ceros
           }

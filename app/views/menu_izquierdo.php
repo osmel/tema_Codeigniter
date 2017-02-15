@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 
-
+<?php $id_perfil=$this->session->userdata('id_perfil');  ?>
                 <!-- BEGIN SIDEBAR -->
                 <div class="page-sidebar-wrapper">
                     <!-- BEGIN SIDEBAR -->
@@ -25,12 +25,10 @@
                                 <!-- END SIDEBAR TOGGLER BUTTON -->
                                 <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
                         
-                        <!-- Buscador -->
+                        <!-- Buscador 
                                 <li class="sidebar-search-wrapper">
-                                    <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-                                    <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
-                                    <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
-                                    <form class="sidebar-search" action="page_general_search_3.html" method="POST">
+                                 
+                                      <form class="sidebar-search" action="page_general_search_3.html" method="POST">
                                         <a href="javascript:;" class="remove">
                                             <i class="icon-close"></i>
                                         </a>
@@ -43,11 +41,11 @@
                                             </span>
                                         </div>
                                     </form>
-                                    <!-- END RESPONSIVE QUICK SEARCH FORM -->
+                                    
                                 </li>
-                        <!-- Fin del buscador -->        
+                       Fin del buscador -->        
 
-                        <!-- Dashboard -->       
+                        <!-- Dashboard       
                                 <li class="nav-item start active open">
                                     <a href="javascript:;" class="nav-link nav-toggle">
                                         <i class="icon-home"></i>
@@ -57,7 +55,7 @@
                                     </a>
                                     <ul class="sub-menu">
                                         <li class="nav-item start active open">
-                                            <a href="index.html" class="nav-link ">
+                                            <a href="/" class="nav-link ">
                                                 <i class="icon-bar-chart"></i>
                                                 <span class="title">Inicio</span>
                                                 <span class="selected"></span>
@@ -66,9 +64,9 @@
                                         
                                     </ul>
                                 </li>
-                        <!-- Fin del dashboard-->        
+                         Fin del dashboard-->        
 
-                        <!-- encabezado Caracteristicas -->        
+                        <!-- encabezado Caracteristicas       
                                 <li class="heading">
                                     <h3 class="uppercase">Caracteristicas</h3>
                                 </li>
@@ -104,7 +102,62 @@
                                         
                                     </ul>
                                 </li>
-                             <!-- Fin Caracteristicas -->     
+                             Fin Caracteristicas -->     
+                            <?php if ($id_perfil==1) { ?>    
+                                <!-- encabezado Caracteristicas -->        
+                                <li class="heading">
+                                        <h3 class="uppercase">Proyectos</h3>
+                                    </li>
+
+                                
+                                    
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>crear_proyecto" class="nav-link nav-toggle">
+                                            <i class="fa fa-history"></i>
+                                            <span class="title">Crear</span>
+                                            <span class="badge badge-warning">+</span>
+                                        </a>
+                                    </li>
+
+        
+                                    <li class="nav-item">
+                                        <a href="javascript:;" class="nav-link nav-toggle">
+                                            <i class="icon-user"></i>
+                                            <span class="title">Detalles</span>
+                                            <span class="arrow"></span>
+                                        </a>
+                                        
+                                            <ul class="sub-menu">
+                                                <?php if ($proyectos) { ?>
+                                                    <?php foreach ($proyectos as $proyecto) { ?>
+                                                        <li nombre="<?php echo base64_encode($proyecto->proyecto); ?>" 
+                                                     identificador="<?php echo base64_encode($proyecto->id); ?>" 
+
+                                                     class="nav-item context"  data-toggle="context" data-target="#context-menu">
+                                                            <a href="<?php echo base_url(); ?>editar_proyecto/<?php echo base64_encode($proyecto->id); ?>" class="nav-link ">
+                                                                <i class="icon-user"></i>
+                                                                <span class="title"><?php echo $proyecto->proyecto; ?></span>
+                                                                <span class="badge badge-success">6</span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>    
+                                                <?php } ?>    
+                                            </ul>
+
+                                                <!--menu contextual-->
+                                                <div id="context-menu" style="position: absolute; z-index: 9999; top: 423px; left: 350px;" class="">
+                                                    <ul class="dropdown-menu" role="menu">
+                                                       <li><a tabindex="-1" href="">Modificar</a></li>
+                                                       <li class="divider"></li>
+                                                       <li><a tabindex="-1" href="">Eliminar</a></li>
+                                                    </ul>
+                                                </div>        
+
+
+
+                                    </li>
+
+                            <?php } ?>     
                                 
                                 
                                 <!-- encabezado Caracteristicas -->        
@@ -133,136 +186,90 @@
 
                                 </li>
 
+                                <!--
                                 <li class="nav-item  ">
                                     <a href="#" class="nav-link nav-toggle">
                                         <i class="icon-users"></i>
                                         <span class="title">Perfiles</span>                                        
                                     </a>
-                                </li>
+                                </li>-->
                                 
                                 <!-- http://keenthemes.com/preview/metronic/theme/admin_4/ui_icons.html-->
-                                <li class="nav-item  ">
-                                    <a href="#" class="nav-link nav-toggle">
-                                        <i class="fa fa-user-plus" ></i>
-                                        <span class="title">Agregar nuevo</span>                                        
-                                    </a>
-                                </li>
 
+                                <?php if ($id_perfil==1) { ?>
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>nuevo_usuario" class="nav-link nav-toggle">
+                                                <i class="fa fa-user-plus" ></i>
+                                                <span class="title">Agregar nuevo</span>   
+                                        </a>
+                                    </li>
+                                <?php } ?>    
+
+                               <!--
                                <li class="nav-item  ">
                                     <a href="#" class="nav-link nav-toggle">
                                         <i class="fa fa-history"></i>
                                         <span class="title">Histórico de accesos</span>
                                     </a>
                                 </li>
+                                -->
                                 
                                 
                              <!-- Fin Caracteristicas --> 
 
 
-                                <!-- encabezado Caracteristicas -->        
-                                <li class="heading">
-                                    <h3 class="uppercase">Entornos</h3>
-                                </li>
-                                
-
-                                <li class="nav-item  ">
-                                    <a href="<?php echo base_url(); ?>entornos" class="nav-link nav-toggle">
-                                        <i class="fa fa-history"></i>
-                                        <span class="title">Listado</span>
-                                        <span class="badge badge-warning">*</span>
-                                    </a>
-                                </li>
-                           
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="icon-user"></i>
-                                        <span class="title">Detalles</span>
-                                        <span class="arrow"></span>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <?php if ($entornos) { ?>
-                                            <?php foreach ($entornos as $entorno) { ?>
-                                                <li >
-                                                <li nombre="<?php echo base64_encode($entorno->entorno); ?>" 
-                                                 identificador="<?php echo base64_encode($entorno->id); ?>" 
-                                                 class="nav-item contexto_entorno"  data-toggle="contexto_entorno" data-target="#context-menu_entorno">                                                
-                                                    <a href="<?php echo base_url(); ?>editar_entorno/<?php echo base64_encode($entorno->id); ?>" class="nav-link ">
-                                                        <i class="icon-user"></i>
-                                                        <span class="title"><?php echo $entorno->entorno; ?></span>
-                                                        <span class="badge badge-success"><?php echo $entorno->profundidad; ?></span>
-                                                    </a>
-                                                </li>
-                                            <?php } ?>    
-                                        <?php } ?>        
-                                    </ul>
-
-                                <!--menu contextual entorno-->
-                                <div id="context-menu_entorno" style="position: absolute; z-index: 9999; top: 423px; left: 350px;" class="">
-                                    <ul class="dropdown-menu" role="menu">
-                                       <li><a tabindex="-1" href="">Modificar</a></li>
-                                       <li class="divider"></li>
-                                       <li><a tabindex="-1" href="">Eliminar</a></li>
-                                    </ul>
-                                </div>      
-
-
-                                </li>
-
-
-
-                            <!-- encabezado Caracteristicas -->        
-                            <li class="heading">
-                                    <h3 class="uppercase">Proyectos</h3>
-                                </li>
-
-                            
-                                
-                                <li class="nav-item  ">
-                                    <a href="<?php echo base_url(); ?>crear_proyecto" class="nav-link nav-toggle">
-                                        <i class="fa fa-history"></i>
-                                        <span class="title">Crear</span>
-                                        <span class="badge badge-warning">+</span>
-                                    </a>
-                                </li>
-
-    
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="icon-user"></i>
-                                        <span class="title">Detalles</span>
-                                        <span class="arrow"></span>
-                                    </a>
+                                <!-- encabezado Caracteristicas -->     
+                            <?php if ($id_perfil==1) { ?>    
+                                    <li class="heading">
+                                        <h3 class="uppercase">Entornos</h3>
+                                    </li>
                                     
-                                        <ul class="sub-menu">
-                                            <?php if ($proyectos) { ?>
-                                                <?php foreach ($proyectos as $proyecto) { ?>
-                                                    <li nombre="<?php echo base64_encode($proyecto->proyecto); ?>" 
-                                                 identificador="<?php echo base64_encode($proyecto->id); ?>" 
 
-                                                 class="nav-item context"  data-toggle="context" data-target="#context-menu">
-                                                        <a href="<?php echo base_url(); ?>editar_proyecto/<?php echo base64_encode($proyecto->id); ?>" class="nav-link ">
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>entornos" class="nav-link nav-toggle">
+                                            <i class="fa fa-history"></i>
+                                            <span class="title">Listado</span>
+                                            <span class="badge badge-warning">*</span>
+                                        </a>
+                                    </li>
+                               
+                                    <li class="nav-item">
+                                        <a href="javascript:;" class="nav-link nav-toggle">
+                                            <i class="icon-user"></i>
+                                            <span class="title">Detalles</span>
+                                            <span class="arrow"></span>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <?php if ($entornos) { ?>
+                                                <?php foreach ($entornos as $entorno) { ?>
+                                                    <li >
+                                                    <li nombre="<?php echo base64_encode($entorno->entorno); ?>" 
+                                                     identificador="<?php echo base64_encode($entorno->id); ?>" 
+                                                     class="nav-item contexto_entorno"  data-toggle="contexto_entorno" data-target="#context-menu_entorno">                                                
+                                                        <a href="<?php echo base_url(); ?>editar_entorno/<?php echo base64_encode($entorno->id); ?>" class="nav-link ">
                                                             <i class="icon-user"></i>
-                                                            <span class="title"><?php echo $proyecto->proyecto; ?></span>
-                                                            <span class="badge badge-success">6</span>
+                                                            <span class="title"><?php echo $entorno->entorno; ?></span>
+                                                            <span class="badge badge-success"><?php echo $entorno->profundidad; ?></span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>    
-                                            <?php } ?>    
+                                            <?php } ?>        
                                         </ul>
 
-                                            <!--menu contextual-->
-                                            <div id="context-menu" style="position: absolute; z-index: 9999; top: 423px; left: 350px;" class="">
-                                                <ul class="dropdown-menu" role="menu">
-                                                   <li><a tabindex="-1" href="">Modificar</a></li>
-                                                   <li class="divider"></li>
-                                                   <li><a tabindex="-1" href="">Eliminar</a></li>
-                                                </ul>
-                                            </div>        
+                                    <!--menu contextual entorno-->
+                                    <div id="context-menu_entorno" style="position: absolute; z-index: 9999; top: 423px; left: 350px;" class="">
+                                        <ul class="dropdown-menu" role="menu">
+                                           <li><a tabindex="-1" href="">Modificar</a></li>
+                                           <li class="divider"></li>
+                                           <li><a tabindex="-1" href="">Eliminar</a></li>
+                                        </ul>
+                                    </div>      
 
 
+                                    </li>
+                            <?php } ?>            
 
-                                </li>
-
+                               
 
 
                             </ul>
