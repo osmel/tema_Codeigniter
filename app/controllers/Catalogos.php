@@ -216,7 +216,7 @@ class Catalogos extends CI_Controller {
 
 
 
-    // crear
+    // crear cargo
   function nuevo_cargo(){
 	if($this->session->userdata('session') === TRUE ){
 	      $id_perfil=$this->session->userdata('id_perfil');
@@ -254,6 +254,324 @@ class Catalogos extends CI_Controller {
 	      redirect('/');
 	    }
 	  }
+
+
+
+    // crear area
+  function nuevo_area(){
+	if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+	      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+
+	      
+	       
+       
+	      switch ($id_perfil) {    
+	        case 1:
+	            $this->load->view( 'catalogos/areas/crud/nuevo_area',$data);
+	          break;
+	        case 2:
+	        case 3:
+	        case 4:
+	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	                $this->load->view( 'catalogos/areas/crud/nuevo_area',$data);
+	              }   
+	          break;
+
+
+	        default:  
+	          redirect('/');
+	          break;
+	      }
+	    }
+	    else{ 
+	      redirect('/');
+	    }
+	  }
+
+
+
+
+ // editar
+  function editar_cargo( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                
+                      $this->load->view( 'catalogos/cargos/crud/editar_cargo', $data );
+                
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                
+                      $this->load->view( 'catalogos/cargos/crud/editar_cargo', $data );
+                
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+  // editar
+  function editar_area( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                 
+                      $this->load->view( 'catalogos/areas/crud/editar_area', $data );
+                 
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                      $this->load->view( 'catalogos/areas/crud/editar_area', $data );
+                 
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+
+  // editar
+  function editar_perfil( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios();  
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();   
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();   
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                 
+                      $this->load->view( 'catalogos/perfiles/crud/editar_perfil', $data );
+                 
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                      $this->load->view( 'catalogos/perfiles/crud/editar_perfil', $data );
+                 
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+
+
+
+  // editar
+  function editar_configuracion( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios();  
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();   
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();   
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                 
+                      $this->load->view( 'catalogos/configuraciones/crud/editar_configuracion', $data );
+                 
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+                  
+                      $this->load->view( 'catalogos/configuraciones/crud/editar_configuracion', $data );
+                 
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+
+    // crear perfil
+  function nuevo_perfil(){
+	if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+	      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+
+	      
+	       
+       
+	      switch ($id_perfil) {    
+	        case 1:
+	            $this->load->view( 'catalogos/perfiles/crud/nuevo_perfil',$data);
+	          break;
+	        case 2:
+	        case 3:
+	        case 4:
+	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	                $this->load->view( 'catalogos/perfiles/crud/nuevo_perfil',$data);
+	              }   
+	          break;
+
+
+	        default:  
+	          redirect('/');
+	          break;
+	      }
+	    }
+	    else{ 
+	      redirect('/');
+	    }
+	  }
+
+
+
+    // crear configuracion
+  function nuevo_configuracion(){
+	if($this->session->userdata('session') === TRUE ){
+	      $id_perfil=$this->session->userdata('id_perfil');
+	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
+	      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+	      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+
+	      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+	      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+	            $coleccion_id_operaciones = array();
+	       }   
+       
+       
+	      switch ($id_perfil) {    
+	        case 1:
+	            $this->load->view( 'catalogos/configuraciones/crud/nuevo_configuracion',$data);
+	          break;
+	        case 2:
+	        case 3:
+	        case 4:
+	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	                $this->load->view( 'catalogos/configuraciones/crud/nuevo_configuracion',$data);
+	              }   
+	          break;
+
+
+	        default:  
+	          redirect('/');
+	          break;
+	      }
+	    }
+	    else{ 
+	      redirect('/');
+	    }
+	  }
+
+
+/////////
 
 
 

@@ -16,53 +16,61 @@
 	        	<div class="page-content">
 						<?php $this->load->view( 'navegacion' ); ?>
 
-						<?php //$this->load->view( 'catalogos/entornos/detalle_entorno'); ?>
+						<?php //$this->load->view( 'catalogos/cargos/detalle_cargo'); ?>
 			 
 			 
 
 			<?php 
 			 	if (!isset($retorno)) {
-			      	$retorno ="entornos";
+			      	$retorno ="cargos";
 			    }
-			    $funcion ="validar_nuevo_entorno";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			    $funcion ="validar_nuevo_cargo";
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_cargos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 
-<input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
-<input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
-<input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 			
-			<div class="" style="background-entorno:transparent !important">
+			<div class="" style="background-cargo:transparent !important">
 					<br>	
 				
-				<div class="col-md-10 col-md-offset-1 row" style="background-entorno:transparent !important">
+				<div class="col-md-10 col-md-offset-1 row" style="background-cargo:transparent !important">
 					<div class="panel panel-primary">
-						<div class="panel-heading">Datos de entorno</div>
+						<div class="panel-heading">Datos de cargo</div>
 						
 						<div class="panel-body">
-							<div class="col-sm-6 col-md-6">
-								<div class="form-group">
-									<label for="entorno" class="col-sm-3 col-md-2 control-label">Nombre</label>
-									<div class="col-sm-9 col-md-10">
-										<input type="text" class="form-control ttip" title="Ingresar un nuevo entorno." id="entorno" name="entorno" placeholder="Nombre del entorno">
-										<em>Nombre personalizado del entorno.</em>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-6">
-								<input type="text" value=""  id="buscar" placeholder="Buscar..." />
-							</div>
-
-
 							
 
-							<div id="tree" nombre="<?php echo $nombre;?>">  </div>
+							<div class="col-sm-6 col-md-6">
+								<div class="form-group">
+									<label for="cargo" class="col-sm-3 col-md-2 control-label">Cargo</label>
+									<div class="col-sm-9 col-md-10">
+										<input type="text" class="form-control ttip" title="Ingresar un nuevo cargo." id="cargo" name="cargo" placeholder="Nombre del cargo">
+										<em>Nombre personalizado del cargo.</em>
+									</div>
+								</div>
+
+									<!--Checkbox -->	
+										
+										<div class="mt-checkbox-list">
+											<label class="mt-checkbox">
+								                <input type="checkbox" value="1" name="lider"> Lider
+								                <span></span>
+								            </label> 
+											<label class="mt-checkbox">
+								                <input type="checkbox" value="1" name="activo"> Activo
+								                <span></span>
+								            </label> 
+
+										</div>
+								
 
 
-							<div id="data">
-								<div class="content default" style="text-align:center;">Select a node from the tree.</div>
 							</div>
+							
+
+
+								
+
 
 
 

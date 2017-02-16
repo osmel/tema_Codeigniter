@@ -92,12 +92,12 @@ jQuery('#tabla_cat_areas').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                        texto='<td><fieldset disabled>';
+                        texto='<td>';
                             texto+='<a href="editar_area/'+jQuery.base64.encode(row[0])+'" type="button"'; 
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto+='</fieldset></td>';
+                        texto+=' </td>';
 
                         
 
@@ -110,12 +110,12 @@ jQuery('#tabla_cat_areas').dataTable( {
                         "render": function ( data, type, row ) {
 
                             
-                                texto=' <td><fieldset disabled>';                              
+                                texto=' <td>';                              
                                     texto+=' <a href="eliminar_area/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto+='</fieldset></td>';
+                                texto+=' </td>';
                             return texto;   
                         },
                         "targets": 4
@@ -171,7 +171,7 @@ jQuery('#tabla_cat_cargos').dataTable( {
                             var checado = ((row[2] == 1) ? "checked" : ""); 
                             texto='<td><fieldset disabled>';
                                 texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[2]+' style="margin: 33px 33px 0px;" name="lider[]" value="1">'; 
-                            texto+='</fieldset></td>';                         
+                            texto+=' </td>';                         
                             return texto;                                   
 
                         },
@@ -182,7 +182,7 @@ jQuery('#tabla_cat_cargos').dataTable( {
                             var checado = ((row[3] == 1) ? "checked" : ""); 
                             texto='<td><fieldset disabled>';
                                 texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[3]+' style="margin: 33px 33px 0px;" name="activo[]" value="1">'; 
-                            texto+='</fieldset></td>';                         
+                            texto+=' </td>';                         
                             return texto;                                   
 
                         },
@@ -191,12 +191,12 @@ jQuery('#tabla_cat_cargos').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                        texto=' <td><fieldset disabled>'; 
+                        texto=' <td>'; 
                             texto+='<a href="editar_cargo/'+jQuery.base64.encode(row[0])+'" type="button"'; 
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto+='</fieldset></td>';
+                        texto+=' </td>';
 
 
 
@@ -209,12 +209,12 @@ jQuery('#tabla_cat_cargos').dataTable( {
                         "render": function ( data, type, row ) {
 
                             
-                                texto=' <td><fieldset disabled>';                              
+                                texto=' <td>';                              
                                     texto+=' <a href="eliminar_cargo/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto+='</fieldset></td>';
+                                texto+=' </td>';
                             return texto;   
                         },
                         "targets": 4
@@ -277,12 +277,12 @@ jQuery('#tabla_cat_perfiles').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                        texto=' <td><fieldset disabled>';  
+                        texto=' <td>';  
                             texto+='<a href="editar_perfil/'+jQuery.base64.encode(row[0])+'" type="button"'; 
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                       texto+='</fieldset></td>';
+                       texto+=' </td>';
 
                         
 
@@ -295,12 +295,12 @@ jQuery('#tabla_cat_perfiles').dataTable( {
                         "render": function ( data, type, row ) {
 
                             
-                                texto=' <td><fieldset disabled>';                              
+                                texto=' <td>';                              
                                     texto+=' <a href="eliminar_perfil/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto+='</fieldset></td>';
+                                texto+=' </td>';
                             return texto;   
                         },
                         "targets": 3
@@ -366,7 +366,7 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                             var checado = ((row[3] == 1) ? "checked" : ""); 
                             texto='<td><fieldset disabled>';
                                 texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[3]+' style="margin: 33px 33px 0px;" name="lider[]" value="1">'; 
-                            texto+='</fieldset></td>';                         
+                            texto+=' </td>';                         
                             return texto;   
 
                         },
@@ -376,12 +376,12 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                        texto=' <td><fieldset disabled>'; 
+                        texto=' <td>'; 
                             texto+='<a href="editar_configuracion/'+jQuery.base64.encode(row[0])+'" type="button"'; 
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto+='</fieldset></td>';
+                        texto+=' </td>';
 
                         
 
@@ -394,12 +394,12 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                         "render": function ( data, type, row ) {
 
                             
-                                texto=' <td><fieldset disabled>';                              
+                                texto=' <td>';                              
                                     texto+=' <a href="eliminar_configuracion/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto+='</fieldset></td>';
+                                texto+=' </td>';
                             return texto;   
                         },
                         "targets": 4

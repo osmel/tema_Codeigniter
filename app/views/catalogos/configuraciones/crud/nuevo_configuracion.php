@@ -16,58 +16,65 @@
 	        	<div class="page-content">
 						<?php $this->load->view( 'navegacion' ); ?>
 
-						<?php //$this->load->view( 'catalogos/entornos/detalle_entorno'); ?>
+						<?php //$this->load->view( 'catalogos/configuraciones/detalle_configuracion'); ?>
 			 
 			 
 
 			<?php 
 			 	if (!isset($retorno)) {
-			      	$retorno ="entornos";
+			      	$retorno ="configuraciones";
 			    }
-			    $funcion ="validar_nuevo_entorno";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			    $funcion ="validar_nuevo_configuracion";
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_configuraciones','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 
-<input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
-<input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
-<input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 			
-<div class="" style="background-entorno:transparent !important">
+<div class="" style="background-configuracion:transparent !important">
 					<br>	
 				
-				<div class="col-md-10 col-md-offset-1 row" style="background-entorno:transparent !important">
+				<div class="col-md-10 col-md-offset-1 row" style="background-configuracion:transparent !important">
 					<div class="panel panel-primary">
-						<div class="panel-heading">Datos de entorno</div>
+						<div class="panel-heading">Datos de configuracion</div>
 						
 						<div class="panel-body">
 							<div class="col-sm-6 col-md-6">
 								<div class="form-group">
-									<label for="entorno" class="col-sm-3 col-md-2 control-label">Nombre</label>
+									<label for="configuracion" class="col-sm-3 col-md-2 control-label">Nombre</label>
 									<div class="col-sm-9 col-md-10">
-										<input type="text" class="form-control ttip" title="Ingresar un nuevo entorno." id="entorno" name="entorno" placeholder="Nombre del entorno">
-										<em>Nombre personalizado del entorno.</em>
+										<input type="text" class="form-control ttip" title="Ingresar un nuevo configuración." id="configuracion" name="configuracion" placeholder="Nombre del configuración">
+										<em>Nombre personalizado del configuración.</em>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-6 col-md-6">
-								<input type="text" value=""  id="buscar" placeholder="Buscar..." />
-							</div>
 
+	 						<div class="col-sm-6 col-md-6">
+									<div class="form-group">
+										<label for="valor" class="col-sm-3 col-md-2 control-label">Valor</label>
+										<div class="col-sm-9 col-md-10">
+											<input type="text" class="form-control ttip" title="Valor config" id="valor" name="valor" placeholder="Valor config">
+											<em>Valor de configuración para ajustes generales.</em>
+										</div>
+									</div>
 
 							
+								<!--Checkbox -->	
+										
+										<div class="mt-checkbox-list">
+											<label class="mt-checkbox">
+								                <input type="checkbox" value="1" name="activo"> Activo
+								                <span></span>
+								            </label> 
 
-							<div id="tree" nombre="<?php echo $nombre;?>">  </div>
+										</div>
 
-
-							<div id="data">
-								<div class="content default" style="text-align:center;">Select a node from the tree.</div>
-							</div>
-
-
-
+							</div>	
 
 						</div>
+
+
+
+
 					</div>
 
 					<div class="row">

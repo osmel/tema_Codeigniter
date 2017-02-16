@@ -80,11 +80,15 @@
             
             $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
 
+            $this->db->set( 'id_cargo', $data['id_cargo']);    
+
+            /*
             if  ($data['id_perfil']==2) {
                 $this->db->set( 'id_cargo', $data['id_cargo']);    
             } else {
                 $this->db->set( 'id_cargo', 0);    
             }
+            */
             
 
 
@@ -119,11 +123,13 @@
             
             $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
 
+            $this->db->set( 'id_cargo', $data['id_cargo']);    
+            /*
             if  ($data['id_perfil']==2) {
                 $this->db->set( 'id_cargo', $data['id_cargo']);    
             } else {
                 $this->db->set( 'id_cargo', 0);    
-            }
+            }*/
 
             
             $this->db->set( 'contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE );

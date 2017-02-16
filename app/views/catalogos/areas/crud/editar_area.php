@@ -16,62 +16,68 @@
 	        	<div class="page-content">
 						<?php $this->load->view( 'navegacion' ); ?>
 
-						<?php //$this->load->view( 'catalogos/entornos/detalle_entorno'); ?>
 			 
 			 
 <?php 
 
  	if (!isset($retorno)) {
-      	$retorno ="entornos";
+      	$retorno ="areas";
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_entornos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
-  echo form_open('validacion_edicion_entorno', $attr,$hidden);
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_areas','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  echo form_open('validacion_edicion_area', $attr,$hidden);
 ?>	
 
-<input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
-<input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
-<input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 
 <div class="container">
 		<br>
 	<div class="row">
-		<div class="col-sm-8 col-md-8"><h4>Edición de entorno</h4></div>
+		<div class="col-sm-8 col-md-8"><h4>Edición de area</h4></div>
 	</div>
 	<br>
 	<div class="container row">
 		<div class="panel panel-primary">
-			<div class="panel-heading">Datos de entorno</div>
+			<div class="panel-heading">Datos de area</div>
 			<div class="panel-body">
 				<div class="col-sm-6 col-md-6">
 					<div class="form-group">
-						<label for="entorno" class="col-sm-3 col-md-2 control-label">entorno</label>
+						<label for="area" class="col-sm-3 col-md-2 control-label">area</label>
 						<div class="col-sm-9 col-md-10">
 							<?php 
 								$nomb_nom='';
-								if (isset($entorno ->entorno )) 
-								 {	$nomb_nom = $entorno ->entorno ;}
+								if (isset($area ->area )) 
+								 {	$nomb_nom = $area ->area ;}
 							?>
-							<input value="<?php echo  set_value('entorno',$nomb_nom); ?>" type="text" class="form-control ttip" title="Ingresar un nuevo entorno." name="entorno" placeholder="entorno">
+							<input value="<?php echo  set_value('area',$nomb_nom); ?>" type="text" class="form-control ttip" title="Ingresar un nuevo area." name="area" placeholder="area">
 						</div>
 					</div>
 
 				</div>
 
-				<div class="col-sm-6 col-md-6">
-					<input type="text" value=""  id="buscar" placeholder="Buscar..." />
-				</div>
 
 
-				
+			    <div class="col-sm-6 col-md-6">
+					<div class="form-group">
+						<label for="monto" class="col-sm-3 col-md-2 control-label">Monto</label>
+						<div class="col-sm-9 col-md-10">
+							<input type="text" class="form-control ttip" title="Monto de área." id="monto" name="monto" placeholder="Monto de área">
+							<em>Monto total del área.</em>
+						</div>
+					</div>
 
-				<div id="tree" nombre="">  </div> <!--<?php echo $entorno->tabla;?> -->
+					<div class="form-group">
+						<label for="telefono" class="col-sm-3 col-md-2 control-label">Télefono</label>
+						<div class="col-sm-9 col-md-10">
+							<input type="text" class="form-control ttip" title="telefono de teléfono." id="telefono" name="telefono" placeholder="Teléfono de teléfono">
+							<em>Teléfono total del teléfono.</em>
+						</div>
+					</div>
 
 
-				<div id="data">
-					<div class="content default" style="text-align:center;">Select a node from the tree.</div>
-				</div>
+
+				</div>					
+
 
 			</div>
 		</div>
