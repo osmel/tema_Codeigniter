@@ -97,7 +97,7 @@ jQuery('#tabla_cat_areas').dataTable( {
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto+='<fieldset></td>';
+                        texto+='</fieldset></td>';
 
                         
 
@@ -115,7 +115,7 @@ jQuery('#tabla_cat_areas').dataTable( {
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto='</fieldset><td>';  
+                                texto+='</fieldset></td>';
                             return texto;   
                         },
                         "targets": 4
@@ -196,7 +196,7 @@ jQuery('#tabla_cat_cargos').dataTable( {
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto='</fieldset><td>';  
+                        texto+='</fieldset></td>';
 
 
 
@@ -214,7 +214,7 @@ jQuery('#tabla_cat_cargos').dataTable( {
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto='</fieldset><td>';  
+                                texto+='</fieldset></td>';
                             return texto;   
                         },
                         "targets": 4
@@ -282,7 +282,7 @@ jQuery('#tabla_cat_perfiles').dataTable( {
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                       texto='</fieldset><td>'; 
+                       texto+='</fieldset></td>';
 
                         
 
@@ -300,7 +300,7 @@ jQuery('#tabla_cat_perfiles').dataTable( {
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto='</fieldset><td>';  
+                                texto+='</fieldset></td>';
                             return texto;   
                         },
                         "targets": 3
@@ -362,7 +362,13 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                     },
                     { 
                         "render": function ( data, type, row ) { //activo
-                                return row[2];
+                                
+                            var checado = ((row[3] == 1) ? "checked" : ""); 
+                            texto='<td><fieldset disabled>';
+                                texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[3]+' style="margin: 33px 33px 0px;" name="lider[]" value="1">'; 
+                            texto+='</fieldset></td>';                         
+                            return texto;   
+
                         },
                         "targets": [2] 
                     },
@@ -375,7 +381,7 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                             texto+=' class="btn btn-warning btn-sm btn-block" >';
                                 texto+=' <span class="glyphicon glyphicon-edit"></span>';
                             texto+=' </a>';
-                        texto='</fieldset><td>'; 
+                        texto+='</fieldset></td>';
 
                         
 
@@ -393,7 +399,7 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
-                                texto='</fieldset><td>';  
+                                texto+='</fieldset></td>';
                             return texto;   
                         },
                         "targets": 4

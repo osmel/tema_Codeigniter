@@ -34,8 +34,8 @@
 						<table id="tabla_cat_configuraciones" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 							<thead>
 								<tr>
-									<th class="text-center cursora" width="10%">configuracion</th>
-									<th class="text-center cursora" width="10%">Lider</th>
+									<th class="text-center cursora" width="10%">Configuracion</th>
+									<th class="text-center cursora" width="10%">Valor</th>
 									<th class="text-center cursora" width="10%">Activo</th>
 									<th class="text-center " width="10%"><strong>Editar</strong></th>
 									<th class="text-center " width="10%"><strong>Eliminar</strong></th>

@@ -82,7 +82,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
         <!-- FIN DE DISEÑO DE ESTILO DE TEMA  -->
-        <link rel="shortcut icon" href="favicon.ico" /> </head>
+        <link rel="shortcut icon" href="<?php echo base_url(); ?>img/favicon.png" /> </head>
 
     <!-- END HEAD -->
 
