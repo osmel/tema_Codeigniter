@@ -33,7 +33,7 @@
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
 <input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 			
-<div class="" style="background-entorno:transparent !important">
+			<div class="" style="background-entorno:transparent !important">
 					<br>	
 				
 				<div class="col-md-10 col-md-offset-1 row" style="background-entorno:transparent !important">

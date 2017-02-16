@@ -235,7 +235,7 @@
 
 										<!--cargo Asociado -->
 										<div id="rol_cargo" style="display:block;" class="form-group">
-											<label for="id_cargo" class="col-sm-3 col-md-2 control-label">Almacén</label>
+											<label for="id_cargo" class="col-sm-3 col-md-2 control-label">Cargo</label>
 											<div class="col-sm-9 col-md-10">
 
 											    <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(5, $coleccion_id_operaciones)) ) { ?>

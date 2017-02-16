@@ -33,10 +33,10 @@
 
 			
 						
-			<div class="container" style="background-entorno:transparent !important">
+<div class="" style="background-entorno:transparent !important">
 					<br>	
 				
-				<div class="container row" style="background-entorno:transparent !important">
+				<div class="col-md-10 col-md-offset-1 row" style="background-entorno:transparent !important">
 					<div class="panel panel-primary">
 						<div class="panel-heading">Datos de entorno</div>
 							

@@ -6,7 +6,7 @@ class Nucleo extends CI_Controller {
     public function __construct(){ 
 		parent::__construct();
 		$this->load->model('Modelo_nucleo', 'modelo'); 
-		$this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
+		$this->load->model('Modelo_administracion', 'modelo_administracion'); 
 		$this->load->model('Modelo_proyecto', 'modelo_proyecto'); 
 	}
 
@@ -120,7 +120,7 @@ function dashboard() {
 	          
 
 	    	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
-	    	  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	    	  $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
 	    	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
 	    	  //print_r($data['datos']['entornos']);
@@ -131,7 +131,7 @@ function dashboard() {
 		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
 		 			  
 		 			  $data['tabla'] =  $this->session->userdata('creando_entorno');
-					  $existe            =  $this->modelo_catalogo->check_existente_entorno_tabla( $data );
+					  $existe            =  $this->modelo_administracion->check_existente_entorno_tabla( $data );
 		         	  if ( $existe !== TRUE ){	//esto significa que salio de un nuevo que no tiene "NOMBRE" 			 
 		         	  		$this->load->dbforge();
 		         	  		$tabla_struct  = 'struct_'.$this->session->userdata('creando_entorno');	
@@ -247,7 +247,7 @@ function dashboard() {
                 $coleccion_id_operaciones = array();
            }   
 			  	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
-				  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+				  $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
 				  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
 
@@ -384,7 +384,7 @@ function dashboard() {
 
 
 	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
-	  $data['datos']['entornos'] = $this->modelo_catalogo->listado_entornos(); 	
+	  $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
 	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 	  
 

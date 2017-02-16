@@ -74,104 +74,134 @@ $route['validar_recuperar_password']	= 'nucleo/validar_recuperar_password';
 $route['ajaxAgents']	= 'nucleo/ajaxAgents';
 
 
-/////////////////////////////////catalogos///////////////////////////////////////////////
+/////////////////////////////////administracion///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-$route['crear_proyecto']						= 'catalogos/crear_proyecto';
+$route['crear_proyecto']						= 'administracion/crear_proyecto';
 
 
-$route['get_node']				= 'catalogos/get_node';
+$route['get_node']				= 'administracion/get_node';
 
 //
-$route['obtener_nodo']							= 'catalogos/obtener_nodo';
-$route['obtener_contenido']						= 'catalogos/obtener_contenido';
-$route['renombrar_nodo']						= 'catalogos/renombrar_nodo';
-$route['eliminar_nodo']							= 'catalogos/eliminar_nodo';
-$route['crear_nodo']							= 'catalogos/crear_nodo';
-$route['mover_nodo']							= 'catalogos/mover_nodo';
-
-//Creacion de tablas
+$route['obtener_nodo']							= 'administracion/obtener_nodo';
+$route['obtener_contenido']						= 'administracion/obtener_contenido';
+$route['renombrar_nodo']						= 'administracion/renombrar_nodo';
+$route['eliminar_nodo']							= 'administracion/eliminar_nodo';
+$route['crear_nodo']							= 'administracion/crear_nodo';
+$route['mover_nodo']							= 'administracion/mover_nodo';
 
 
-
-
-
-
-
-$route['cambio_entorno/(:any)']			 = 'nucleo/cambio_entorno/$1';
-
-//$route['get_node/(:any)/(:any)']				= 'catalogos/get_node/$1/$2';
 
 
 
 //Entornos
-$route['entornos']					     = 'catalogos/listado_entornos';
+$route['entornos']					     = 'administracion/listado_entornos';
 
-$route['nuevo_entorno']                  = 'catalogos/nuevo_entorno';
-$route['crear_tabla/(:any)']			 = 'catalogos/crear_tabla/$1';
+$route['nuevo_entorno']                  = 'administracion/nuevo_entorno';
+$route['crear_tabla/(:any)']			 = 'administracion/crear_tabla/$1';
 
-$route['procesando_cat_entornos']        = 'catalogos/procesando_cat_entornos';
+$route['procesando_cat_entornos']        = 'administracion/procesando_cat_entornos';
 
-$route['validar_nuevo_entorno']          = 'catalogos/validar_nuevo_entorno';
+$route['validar_nuevo_entorno']          = 'administracion/validar_nuevo_entorno';
 
-$route['editar_entorno/(:any)']			 = 'catalogos/editar_entorno/$1';
-$route['validacion_edicion_entorno']     = 'catalogos/validacion_edicion_entorno';
+$route['editar_entorno/(:any)']			 = 'administracion/editar_entorno/$1';
+$route['validacion_edicion_entorno']     = 'administracion/validacion_edicion_entorno';
 
-$route['eliminar_entorno/(:any)/(:any)'] = 'catalogos/eliminar_entorno/$1/$2';
-$route['validar_eliminar_entorno']    	 = 'catalogos/validar_eliminar_entorno';
+$route['eliminar_entorno/(:any)/(:any)'] = 'administracion/eliminar_entorno/$1/$2';
+$route['validar_eliminar_entorno']    	 = 'administracion/validar_eliminar_entorno';
+//Cambio de entorno
+$route['cambio_entorno/(:any)']			 = 'nucleo/cambio_entorno/$1';
 
 
 
 //Proyectos
-$route['proyectos']					     = 'catalogos/listado_proyectos';
+$route['proyectos']					     = 'administracion/listado_proyectos';
 
-$route['nuevo_proyecto']                  = 'catalogos/nuevo_proyecto';
-$route['crear_tabla/(:any)']			 = 'catalogos/crear_tabla/$1';
+$route['nuevo_proyecto']                  = 'administracion/nuevo_proyecto';
+$route['crear_tabla/(:any)']			 = 'administracion/crear_tabla/$1';
 
-$route['procesando_cat_proyectos']        = 'catalogos/procesando_cat_proyectos';
+$route['procesando_cat_proyectos']        = 'administracion/procesando_cat_proyectos';
 
-$route['validar_nuevo_proyecto']          = 'catalogos/validar_nuevo_proyecto';
+$route['validar_nuevo_proyecto']          = 'administracion/validar_nuevo_proyecto';
 
-$route['editar_proyecto/(:any)']			 = 'catalogos/editar_proyecto/$1';
-$route['validacion_edicion_proyecto']     = 'catalogos/validacion_edicion_proyecto';
+$route['editar_proyecto/(:any)']			 = 'administracion/editar_proyecto/$1';
+$route['validacion_edicion_proyecto']     = 'administracion/validacion_edicion_proyecto';
 
-$route['eliminar_proyecto/(:any)/(:any)'] = 'catalogos/eliminar_proyecto/$1/$2';
-$route['validar_eliminar_proyecto']    	 = 'catalogos/validar_eliminar_proyecto';
+$route['eliminar_proyecto/(:any)/(:any)'] = 'administracion/eliminar_proyecto/$1/$2';
+$route['validar_eliminar_proyecto']    	 = 'administracion/validar_eliminar_proyecto';
 
 
 
 
 //buscador
-$route['buscador']						     = 'catalogos/buscador';
-$route['listado_usuarios_json']			     = 'catalogos/listado_usuarios_json';
+$route['buscador']						     = 'administracion/buscador';
+$route['listado_usuarios_json']			     = 'administracion/listado_usuarios_json';
 
 
 //registro usuario
-$route['validar_registro_usuario']    	 = 'catalogos/validar_registro_usuario';
-$route['ajax_user_proy_json']    	 = 'catalogos/ajax_user_proy_json';
+$route['validar_registro_usuario']    	 = 'administracion/validar_registro_usuario';
+$route['ajax_user_proy_json']    	 = 'administracion/ajax_user_proy_json';
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////Catalogos/////////////////
 
-// $route['historicoaccesos']                 = 'nucleo/historicoaccesos';  //falta por actualizar 
-/*
-$route['establecer_modulo']				= 'nucleo/establecer_modulo';
+//Cargos
+$route['cargos']					     = 'catalogos/listado_cargos';
+$route['procesando_cat_cargos']        = 'catalogos/procesando_cat_cargos';
 
-/////////////////////////////////////////HOME///////////////////
-$route['procesando_home']    		= 'nucleo/procesando_home';
-$route['procesando_inicio']    		= 'nucleo/procesando_inicio';
-$route['detalles_grupo/(:any)/(:any)']   = 'nucleo/detalles_grupo/$1/$2';
-$route['marcando_apartado']    		= 'nucleo/marcando_apartado';
-$route['procesar_apartados']    		    = 'nucleo/procesar_apartados';
-$route['tabla_apartado_vendedores']    		= 'nucleo/tabla_apartado_vendedores';
-$route['eliminar_apartado_vendedores/(:any)/(:any)'] = 'nucleo/eliminar_apartado_vendedores/$1/$2';
-$route['validar_eliminar_apartado_vendedores']    			= 'nucleo/validar_eliminar_apartado_vendedores';
-$route['apartado_definitivo']    		= 'nucleo/apartado_definitivo';
-$route['procesando_producto_color']    		= 'nucleo/procesando_producto_color';
-$route['procesando_producto_color2']    		= 'nucleo/procesando_producto_color2';
-$route['imprimir_reportes_apartado']    		= 'nucleo/imprimir_reportes_apartado';
-$route['detalles_imagen/(:any)/(:any)']    		= 'nucleo/detalles_imagen/$1/$2';
+$route['nuevo_cargo']                  = 'catalogos/nuevo_cargo';
+$route['validar_nuevo_cargo']          = 'catalogos/validar_nuevo_cargo';
 
-*/
+$route['editar_cargo/(:any)']			 = 'catalogos/editar_cargo/$1';
+$route['validacion_edicion_cargo']     = 'catalogos/validacion_edicion_cargo';
+
+$route['eliminar_cargo/(:any)/(:any)'] = 'catalogos/eliminar_cargo/$1/$2';
+$route['validar_eliminar_cargo']    	 = 'catalogos/validar_eliminar_cargo';
+
+
+
+//areas
+$route['areas']					     = 'catalogos/listado_areas';
+$route['procesando_cat_areas']        = 'catalogos/procesando_cat_areas';
+
+$route['nuevo_area']                  = 'catalogos/nuevo_area';
+$route['validar_nuevo_area']          = 'catalogos/validar_nuevo_area';
+
+$route['editar_area/(:any)']			 = 'catalogos/editar_area/$1';
+$route['validacion_edicion_area']     = 'catalogos/validacion_edicion_area';
+
+$route['eliminar_area/(:any)/(:any)'] = 'catalogos/eliminar_area/$1/$2';
+$route['validar_eliminar_area']    	 = 'catalogos/validar_eliminar_area';
+
+
+
+
+//perfiles
+$route['perfiles']					     = 'catalogos/listado_perfiles';
+$route['procesando_cat_perfiles']        = 'catalogos/procesando_cat_perfiles';
+
+$route['nuevo_perfil']                  = 'catalogos/nuevo_perfil';
+$route['validar_nuevo_perfil']          = 'catalogos/validar_nuevo_perfil';
+
+$route['editar_perfil/(:any)']			 = 'catalogos/editar_perfil/$1';
+$route['validacion_edicion_perfil']     = 'catalogos/validacion_edicion_perfil';
+
+$route['eliminar_perfil/(:any)/(:any)'] = 'catalogos/eliminar_perfil/$1/$2';
+$route['validar_eliminar_perfil']    	 = 'catalogos/validar_eliminar_perfil';
+
+
+
+//configuraciones
+$route['configuraciones']					     = 'catalogos/listado_configuraciones';
+$route['procesando_cat_configuraciones']        = 'catalogos/procesando_cat_configuraciones';
+
+$route['nuevo_configuracion']                  = 'catalogos/nuevo_configuracion';
+$route['validar_nuevo_configuracion']          = 'catalogos/validar_nuevo_configuracion';
+
+$route['editar_configuracion/(:any)']			 = 'catalogos/editar_configuracion/$1';
+$route['validacion_edicion_configuracion']     = 'catalogos/validacion_edicion_configuracion';
+
+$route['eliminar_configuracion/(:any)/(:any)'] = 'catalogos/eliminar_configuracion/$1/$2';
+$route['validar_eliminar_configuracion']    	 = 'catalogos/validar_eliminar_configuracion';
+

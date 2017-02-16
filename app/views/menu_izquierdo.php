@@ -113,16 +113,16 @@
                                     
                                     <li class="nav-item  ">
                                         <a href="<?php echo base_url(); ?>crear_proyecto" class="nav-link nav-toggle">
-                                            <i class="fa fa-history"></i>
+                                            <i class="fa fa-building"></i>
                                             <span class="title">Crear</span>
-                                            <span class="badge badge-warning">+</span>
+                                            <span class="badge badge-danger"><i class="fa fa-plus"></i></span>
                                         </a>
                                     </li>
 
         
                                     <li class="nav-item">
                                         <a href="javascript:;" class="nav-link nav-toggle">
-                                            <i class="icon-user"></i>
+                                            <i class="fa fa-newspaper-o"></i>
                                             <span class="title">Detalles</span>
                                             <span class="arrow"></span>
                                         </a>
@@ -218,7 +218,7 @@
                              <!-- Fin Caracteristicas --> 
 
 
-                                <!-- encabezado Caracteristicas -->     
+                                <!-- encabezado Entornos -->     
                             <?php if ($id_perfil==1) { ?>    
                                     <li class="heading">
                                         <h3 class="uppercase">Entornos</h3>
@@ -227,15 +227,15 @@
 
                                     <li class="nav-item  ">
                                         <a href="<?php echo base_url(); ?>entornos" class="nav-link nav-toggle">
-                                            <i class="fa fa-history"></i>
+                                            <i class="fa fa-server"></i>
                                             <span class="title">Listado</span>
-                                            <span class="badge badge-warning">*</span>
+                                            <span class="badge badge-success"><i class="fa fa-eye"></i></span>
                                         </a>
                                     </li>
                                
                                     <li class="nav-item">
                                         <a href="javascript:;" class="nav-link nav-toggle">
-                                            <i class="icon-user"></i>
+                                            <i class="fa fa-newspaper-o"></i>
                                             <span class="title">Detalles</span>
                                             <span class="arrow"></span>
                                         </a>
@@ -270,6 +270,53 @@
                             <?php } ?>            
 
                                
+                                <!-- encabezado Catalogos --> 
+
+                            <?php if ($id_perfil==1) { ?>    
+                                    <li class="heading">
+
+                                        <h3 class="uppercase">Catálogos</h3>
+                                    </li>
+                                    
+
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>areas" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">Áreas</span>
+                                            <span class="badge"><i class="fa fa-eye"></i></span>
+                                            
+                                        </a>
+                                    </li>                                    
+
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>cargos" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">Cargos</span>
+                                            <span class="badge"><i class="fa fa-eye"></i></span>
+                                            
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="<?php echo base_url(); ?>perfiles" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">Roles</span>
+                                            <span class="badge"><i class="fa fa-eye"></i></span>
+                                            
+                                        </a>
+                                    </li>              
+
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>configuraciones" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">Configuraciones</span>
+                                            <span class="badge"><i class="fa fa-eye"></i></span>
+                                            
+                                        </a>
+                                    </li>
+                                    
+                            <?php } ?>            
+
 
 
                             </ul>
