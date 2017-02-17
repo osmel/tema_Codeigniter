@@ -24,9 +24,7 @@
             $this->historico_acceso    = $this->db->dbprefix('historico_acceso');
             $this->configuraciones    = $this->db->dbprefix('catalogo_configuraciones');
       
-            //usuarios
-            $this->usuarios    = $this->db->dbprefix('usuarios');
-      
+            
               
                $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
               $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
@@ -146,6 +144,7 @@
             $this->db->select( 'id' );
             $this->db->select("nombre", FALSE);  
             $this->db->from($this->usuarios);
+            $this->db->where("activo" ,1);
             $this->db->like("nombre" ,$data['key'],FALSE);
 
               $result = $this->db->get();

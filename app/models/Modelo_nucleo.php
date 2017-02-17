@@ -71,7 +71,7 @@
             $this->db->set( 'id_usuario',  $id_session );
 
             $this->db->set( 'id', "UUID()", FALSE);
-      $this->db->set( 'nombre', $data['nombre'] );
+            $this->db->set( 'nombre', $data['nombre'] );
             $this->db->set( 'apellidos', $data['apellidos'] );
             $this->db->set( 'email', "AES_ENCRYPT('{$data['email']}','{$this->key_hash}')", FALSE );
             $this->db->set( 'telefono', "AES_ENCRYPT('{$data['telefono']}','{$this->key_hash}')", FALSE );
@@ -81,16 +81,7 @@
             $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
 
             $this->db->set( 'id_cargo', $data['id_cargo']);    
-
-            /*
-            if  ($data['id_perfil']==2) {
-                $this->db->set( 'id_cargo', $data['id_cargo']);    
-            } else {
-                $this->db->set( 'id_cargo', 0);    
-            }
-            */
-            
-
+            $this->db->set( 'activo', $data['activo']);    
 
             $this->db->set( 'contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE );
             $this->db->set( 'creacion',  gmt_to_local( $timestamp, $this->timezone, TRUE) );
@@ -124,14 +115,8 @@
             $this->db->set( 'coleccion_id_operaciones', $data['coleccion_id_operaciones']);
 
             $this->db->set( 'id_cargo', $data['id_cargo']);    
-            /*
-            if  ($data['id_perfil']==2) {
-                $this->db->set( 'id_cargo', $data['id_cargo']);    
-            } else {
-                $this->db->set( 'id_cargo', 0);    
-            }*/
-
-            
+            $this->db->set( 'activo', $data['activo']);    
+                      
             $this->db->set( 'contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE );
             $this->db->where('id', $data['id'] );
             $this->db->update($this->usuarios );
@@ -156,7 +141,7 @@
 //----------------**************clientes_asociados-------------------************------------------
         public function coger_catalogo_clientes( $id_actividad){
 
-              $this->db->select('p.id id_cliente, p.nombre cliente'); 
+              $this->db->select('p.id id_cliente, p.area cliente'); 
               $this->db->from($this->proveedores.' as p');
 
              
@@ -192,7 +177,7 @@
 
        //editar 
         public function coger_catalogo_usuario( $uid ){
-            $this->db->select('id, nombre, apellidos, id_perfil,  coleccion_id_operaciones, id_cliente,id_cargo');
+            $this->db->select('id, nombre, apellidos, id_perfil,  coleccion_id_operaciones, id_cliente,id_cargo,activo');
             $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
             $this->db->select( "AES_DECRYPT( contrasena,'{$this->key_hash}') AS contrasena", FALSE );
@@ -239,6 +224,7 @@
             $this->db->select($this->usuarios.'.sala');         
             $this->db->select($this->usuarios.'.especial');      
             $this->db->select($this->usuarios.'.id_cargo');         
+            $this->db->select($this->usuarios.'.activo');         
 
                 
 			$this->db->from($this->usuarios);
@@ -248,6 +234,7 @@
 
 			$this->db->where('contrasena', "AES_ENCRYPT('{$data['contrasena']}','{$this->key_hash}')", FALSE);
 			$this->db->where('email',"AES_ENCRYPT('{$data['email']}','{$this->key_hash}')",FALSE);
+      $this->db->where('activo',1,FALSE);
 
 
 			$login = $this->db->get();
@@ -266,7 +253,7 @@
             $id_perfil=$this->session->userdata('id_perfil');
             $id=$this->session->userdata('id');
 
-            $this->db->select('u.id, nombre,  apellidos');
+            $this->db->select('u.id, nombre,  apellidos,activo');
 
             $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
@@ -295,7 +282,7 @@
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
             $this->db->select( "AES_DECRYPT( contrasena,'{$this->key_hash}') AS contrasena", FALSE );
 
-            $this->db->select( "p.perfil", FALSE );
+            $this->db->select( "p.perfil, activo", FALSE );
             
             $this->db->from($this->usuarios.' as u');
             $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');

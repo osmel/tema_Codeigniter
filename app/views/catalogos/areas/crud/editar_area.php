@@ -25,7 +25,7 @@
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_areas','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
   echo form_open('validacion_edicion_area', $attr,$hidden);
 ?>	
 
@@ -61,7 +61,12 @@
 					<div class="form-group">
 						<label for="monto" class="col-sm-3 col-md-2 control-label">Monto</label>
 						<div class="col-sm-9 col-md-10">
-							<input type="text" class="form-control ttip" title="Monto de área." id="monto" name="monto" placeholder="Monto de área">
+							<?php 
+								$nomb_nom='';
+								if (isset($area->monto )) 
+								 {	$nomb_nom = $area->monto ;}
+							?>
+							<input value="<?php echo  set_value('monto',$nomb_nom); ?>" type="text" class="form-control ttip" title="Monto de área." id="monto" name="monto" placeholder="Monto de área">
 							<em>Monto total del área.</em>
 						</div>
 					</div>
@@ -69,7 +74,12 @@
 					<div class="form-group">
 						<label for="telefono" class="col-sm-3 col-md-2 control-label">Télefono</label>
 						<div class="col-sm-9 col-md-10">
-							<input type="text" class="form-control ttip" title="telefono de teléfono." id="telefono" name="telefono" placeholder="Teléfono de teléfono">
+							<?php 
+								$nomb_nom='';
+								if (isset($area->telefono )) 
+								 {	$nomb_nom = $area->telefono ;}
+							?>
+							<input value="<?php echo  set_value('telefono',$nomb_nom); ?>" type="text" class="form-control ttip" title="telefono de teléfono." id="telefono" name="telefono" placeholder="Teléfono de teléfono">
 							<em>Teléfono total del teléfono.</em>
 						</div>
 					</div>

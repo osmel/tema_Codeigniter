@@ -104,6 +104,21 @@
 												<input value="<?php echo  set_value('telefono',$nomb_nom); ?>" type="text" class="form-control" name="telefono" placeholder="Número Teléfono">
 											</div>
 										</div>
+									
+
+									<div class="mt-checkbox-list">
+									
+										<label class="mt-checkbox">
+											  <?php   
+					                                if ($usuario->activo==1) {$marca='checked';} else {$marca='';}
+					                          ?>
+							                <input <?php echo $marca; ?> type="checkbox" value="1" name="activo"> Activar/Desactivar
+							                <span></span>
+							            </label> 
+
+									</div>
+
+
 									</div>
 									<div class="col-sm-6 col-md-6">
 										<div class="form-group">

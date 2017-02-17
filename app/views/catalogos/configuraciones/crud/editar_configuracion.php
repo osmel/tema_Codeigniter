@@ -25,7 +25,7 @@
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_configuraciones','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
   echo form_open('validacion_edicion_configuracion', $attr,$hidden);
 ?>	
 
@@ -60,7 +60,12 @@
 					<div class="form-group">
 						<label for="valor" class="col-sm-3 col-md-2 control-label">Valor</label>
 						<div class="col-sm-9 col-md-10">
-							<input type="text" class="form-control ttip" title="Valor config" id="valor" name="valor" placeholder="Valor config">
+							<?php 
+								$nomb_nom='';
+								if (isset($configuracion->valor )) 
+								 {	$nomb_nom = $configuracion->valor ;}
+							?>
+							<input value="<?php echo  set_value('valor',$nomb_nom); ?>"  type="text" class="form-control ttip" title="Valor config" id="valor" name="valor" placeholder="Valor config">
 							<em>Valor de configuración para ajustes generales.</em>
 						</div>
 					</div>
@@ -70,7 +75,10 @@
 						
 						<div class="mt-checkbox-list">
 							<label class="mt-checkbox">
-				                <input type="checkbox" value="1" name="activo"> Activo
+				                  <?php   
+			                                if ($configuracion->activo==1) {$marca='checked';} else {$marca='';}
+			                          ?>
+					                <input <?php echo $marca; ?> type="checkbox" value="1" name="activo"> Activo
 				                <span></span>
 				            </label> 
 

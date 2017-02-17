@@ -24,7 +24,7 @@
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_perfiles','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
   echo form_open('validacion_edicion_perfil', $attr,$hidden);
 ?>	
 
@@ -58,7 +58,12 @@
 					<div class="form-group">
 						<label for="operacion" class="col-sm-3 col-md-2 control-label">Operación</label>
 						<div class="col-sm-9 col-md-10">
-							<input type="text" class="form-control ttip" title="Ingresar claves." id="operacion" name="operacion" placeholder="Claves de operación">
+							<?php 
+								$nomb_nom='';
+								if (isset($perfil ->operacion )) 
+								 {	$nomb_nom = $perfil ->operacion ;}
+							?>
+							<input value="<?php echo  set_value('operacion',$nomb_nom); ?>"  type="text" class="form-control ttip" title="Ingresar claves." id="operacion" name="operacion" placeholder="Claves de operación">
 							<em>Claves de operaciones para usuarios.</em>
 						</div>
 					</div>

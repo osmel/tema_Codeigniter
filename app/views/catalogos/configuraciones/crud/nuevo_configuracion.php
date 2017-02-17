@@ -25,7 +25,7 @@
 			      	$retorno ="configuraciones";
 			    }
 			    $funcion ="validar_nuevo_configuracion";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_configuraciones','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 

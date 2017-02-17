@@ -31,7 +31,7 @@
               $this->catalogo_cargos                        = $this->db->dbprefix('catalogo_cargos');
               $this->catalogo_configuraciones               = $this->db->dbprefix('catalogo_configuraciones');
               $this->catalogo_areas                         = $this->db->dbprefix('catalogo_empresas');
-              $this->catalogo_perfiles                      = $this->db->dbprefix('perfiles');
+              
               
 
               $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
@@ -41,6 +41,42 @@
               
 
 		}
+
+
+ //determina si areas, cargos o perfiles estan ocupados por algún usuario
+
+      public function en_uso($data) {
+
+          $this->db->select("id", FALSE);         
+          $this->db->from($this->usuarios);
+          
+           switch ($data['campo']) {    
+                case 'area':                 
+                    $campo = 'id_cliente';
+                  break;
+                case 'cargo':                 
+                    $campo = 'id_cargo';
+                  break;
+                case 'perfil':                 
+                    $campo = 'id_perfil';
+                  break;
+              
+                default:  
+                  $campo = 'id_perfil';
+                  break;
+            }
+
+          $this->db->where($campo,$data['id']);  
+            
+          $result = $this->db->get();          
+
+           if ( $result->num_rows() > 0 ) {
+                  return 1;
+              } else 
+                  return 0;
+            $result->free_result();                 
+
+    }    
 
 
 //////////areas/////////
@@ -64,7 +100,7 @@
 
           switch ($columa_order) {
                    case '0':
-                        $columna = 'c.nombre';
+                        $columna = 'c.area';
                      break;
                    case '1':
                         $columna = 'c.monto'; //, tabla
@@ -83,7 +119,7 @@
 
           $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
           
-          $this->db->select('c.id, c.nombre, c.monto, c.telefono');
+          $this->db->select('c.id, c.area, c.monto, c.telefono');
 
           $this->db->from($this->catalogo_areas.' as c');
           
@@ -93,7 +129,7 @@
 
                       (
                         ( c.id LIKE  "%'.$cadena.'%" ) OR 
-                        ( c.nombre LIKE  "%'.$cadena.'%" ) OR
+                        ( c.area LIKE  "%'.$cadena.'%" ) OR
                         ( c.monto LIKE  "%'.$cadena.'%" ) OR
                         ( c.telefono LIKE  "%'.$cadena.'%" ) 
 
@@ -123,11 +159,15 @@
 
                   $retorno= " ";  
                   foreach ($result->result() as $row) {
+                               $dato_uso["campo"] = "area";
+                                  $dato_uso["id"] = $row->id;
+                               $uso = self::en_uso($dato_uso);
                                $dato[]= array(
                                       0=>$row->id,
-                                      1=>$row->nombre,
+                                      1=>$row->area,
                                       2=>$row->monto,
                                       3=>$row->telefono,
+                                      4=>$uso,
                                     );
                       }
 
@@ -166,6 +206,92 @@
            $areas = $this->db->get();            
            return $areas->num_rows();
         }
+
+
+
+
+
+
+
+ //checar si el composicion ya existe
+    public function check_existente_area($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_areas);
+            $this->db->where('area',$data['area']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_area( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'area', $data['area'] );  
+          $this->db->set( 'monto', $data['monto'] );  
+          $this->db->set( 'telefono', $data['telefono'] );  
+
+            $this->db->insert($this->catalogo_areas );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_area( $data ){
+              
+            $this->db->select("c.id, c.area, c.monto, c.telefono");         
+            $this->db->from($this->catalogo_areas.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_area( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'area', $data['area'] );  
+          $this->db->set( 'monto', $data['monto'] );  
+          $this->db->set( 'telefono', $data['telefono'] );  
+
+          
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_areas );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return FALSE;
+                $result->free_result();
+        } 
+
+
+
+        //eliminar area
+        public function eliminar_area( $data ){
+            $this->db->delete( $this->catalogo_areas, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
+
+
 
 //////////cargos/////////
     
@@ -244,11 +370,15 @@
 
                   $retorno= " ";  
                   foreach ($result->result() as $row) {
+                               $dato_uso["campo"] = "cargo";
+                                  $dato_uso["id"] = $row->id;
+                               $uso = self::en_uso($dato_uso);
                                $dato[]= array(
                                       0=>$row->id,
                                       1=>$row->cargo,
                                       2=>$row->lider,
                                       3=>$row->activo,
+                                      4=>$uso
                                     );
                       }
 
@@ -291,6 +421,84 @@
 
 
 
+ //checar si el composicion ya existe
+    public function check_existente_cargo($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_cargos);
+            $this->db->where('cargo',$data['cargo']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_cargo( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'cargo', $data['cargo'] );  
+          $this->db->set( 'lider', $data['lider'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+            $this->db->insert($this->catalogo_cargos );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_cargo( $data ){
+              
+            $this->db->select("c.id, c.cargo, c.lider, c.activo");         
+            $this->db->from($this->catalogo_cargos.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_cargo( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'cargo', $data['cargo'] );  
+          $this->db->set( 'lider', $data['lider'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_cargos );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return FALSE;
+                $result->free_result();
+        }   
+
+
+        //eliminar cargo
+        public function eliminar_cargo( $data ){
+            $this->db->delete( $this->catalogo_cargos, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
+
+
 //////////perfiles/////////
     
       public function buscador_cat_perfiles($data){
@@ -330,7 +538,7 @@
           
           $this->db->select('c.id_perfil, c.perfil, c.operacion');
 
-          $this->db->from($this->catalogo_perfiles.' as c');
+          $this->db->from($this->perfiles.' as c');
           
           //filtro de busqueda
        
@@ -367,10 +575,14 @@
 
                   $retorno= " ";  
                   foreach ($result->result() as $row) {
+                               $dato_uso["campo"] = "perfil";
+                                  $dato_uso["id"] = $row->id_perfil;
+                               $uso = self::en_uso($dato_uso);
                                $dato[]= array(
                                       0=>$row->id_perfil,
                                       1=>$row->perfil,
                                       2=>$row->operacion,
+                                      3=>$uso
                                       
                                     );
                       }
@@ -406,12 +618,93 @@
       }  
       
         public function total_cat_perfiles(){
-           $this->db->from($this->catalogo_perfiles);
+           $this->db->from($this->perfiles);
            $perfiles = $this->db->get();            
            return $perfiles->num_rows();
         }
 
   
+
+
+
+ //checar si el composicion ya existe
+    public function check_existente_perfil($data){
+            $this->db->select("id_perfil", FALSE);         
+            $this->db->from($this->perfiles);
+            $this->db->where('perfil',$data['perfil']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_perfil( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'perfil', $data['perfil'] );  
+          $this->db->set( 'operacion', $data['operacion'] );  
+          
+
+            $this->db->insert($this->perfiles );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_perfil( $data ){
+              
+            $this->db->select("c.id_perfil, c.perfil, c.operacion");         
+            $this->db->from($this->perfiles.' As c');
+            $this->db->where('c.id_perfil',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_perfil( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'perfil', $data['perfil'] );  
+          $this->db->set( 'operacion', $data['operacion'] );  
+          
+
+          
+          $this->db->where('id_perfil', $data['id'] );
+          $this->db->update($this->perfiles );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return FALSE;
+                $result->free_result();
+        } 
+
+
+        //eliminar perfil
+        public function eliminar_perfil( $data ){
+            $this->db->delete( $this->perfiles, array( 'id_perfil' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
+
+
 
 //////////configuraciones/////////
     
@@ -492,11 +785,14 @@
 
                   $retorno= " ";  
                   foreach ($result->result() as $row) {
+
+                               
                                $dato[]= array(
                                       0=>$row->id,
                                       1=>$row->configuracion,
                                       2=>$row->valor,
                                       3=>$row->activo,
+                                      4=>1, //para que aparezcan desactivado 0
                                     );
                       }
 
@@ -539,6 +835,83 @@
 
 
 
+
+
+ //checar si el composicion ya existe
+    public function check_existente_configuracion($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_configuraciones);
+            $this->db->where('configuracion',$data['configuracion']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_configuracion( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'configuracion', $data['configuracion'] );  
+          $this->db->set( 'valor', $data['valor'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+            $this->db->insert($this->catalogo_configuraciones );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_configuracion( $data ){
+              
+            $this->db->select("c.id, c.configuracion, c.valor, c.activo");         
+            $this->db->from($this->catalogo_configuraciones.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_configuracion( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'configuracion', $data['configuracion'] );  
+          $this->db->set( 'valor', $data['valor'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+          
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_configuraciones );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return FALSE;
+                $result->free_result();
+        } 
+
+        //eliminar configuracion
+        public function eliminar_configuracion( $data ){
+            $this->db->delete( $this->configuraciones, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
 
   
 

@@ -79,6 +79,16 @@
 							<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número Teléfono">
 						</div>
 					</div>
+					<div class="mt-checkbox-list">
+						<label class="mt-checkbox">
+							  
+			                <input checked type="checkbox" value="1" name="activo"> Activar/Desactivar
+			                <span></span>
+			            </label> 
+
+					</div>
+
+
 				</div>
 				<div class="col-sm-6 col-md-6">
 					<div class="form-group">

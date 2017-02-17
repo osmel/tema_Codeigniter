@@ -23,7 +23,7 @@
 			      	$retorno ="areas";
 			    }
 			    $funcion ="validar_nuevo_area";
-			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_areas','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr);
 			?>		
 

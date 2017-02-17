@@ -24,7 +24,7 @@
     }
 
   $hidden = array('id'=>$id);
-  $attr = array('class' => 'form-horizontal', 'id'=>'form_cargos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
+  $attr = array('class' => 'form-horizontal', 'id'=>'form_catalogos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
   echo form_open('validacion_edicion_cargo', $attr,$hidden);
 ?>	
 
@@ -53,15 +53,23 @@
 					</div>
 
 
+
+
 						<!--Checkbox -->	
 							
 							<div class="mt-checkbox-list">
 								<label class="mt-checkbox">
-					                <input type="checkbox" value="1" name="lider"> Lider
+									  <?php   
+			                                if ($cargo->lider==1) {$marca='checked';} else {$marca='';}
+			                          ?>
+					                <input <?php echo $marca; ?> type="checkbox" value="1" name="contrato_firmado">Lider
 					                <span></span>
 					            </label> 
 								<label class="mt-checkbox">
-					                <input type="checkbox" value="1" name="activo"> Activo
+									  <?php   
+			                                if ($cargo->activo==1) {$marca='checked';} else {$marca='';}
+			                          ?>
+					                <input <?php echo $marca; ?> type="checkbox" value="1" name="activo"> Activo
 					                <span></span>
 					            </label> 
 

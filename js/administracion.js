@@ -1,6 +1,8 @@
 jQuery(document).ready(function($) {
 submit_forzado =false;
 
+
+
 /////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_usuarios', function (e) {
 

@@ -1,5 +1,27 @@
 jQuery(document).ready(function($) {
 
+
+/////////////////////////Submit nuevo proyecto
+    jQuery('body').on('submit','#form_catalogos', function (e) {
+
+            jQuery(this).ajaxSubmit({
+                success: function(data){
+                    
+                    if(data != true){
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                    }else{
+                            $catalogo = e.target.name;
+                            window.location.href = '/'+$catalogo;   
+                    }
+                } 
+            });
+            return false;
+    }); 
+
+
 /*
 var comenzar = false;
 //jQuery('input[type="checkbox"][class="check_activo"]').click(function(e) {
@@ -109,13 +131,27 @@ jQuery('#tabla_cat_areas').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                            
+                            if (row[4]==0) {
                                 texto=' <td>';                              
                                     texto+=' <a href="eliminar_area/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
                                 texto+=' </td>';
+
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+
+                            }
+                                    
+ 
+
+
                             return texto;   
                         },
                         "targets": 4
@@ -208,13 +244,24 @@ jQuery('#tabla_cat_cargos').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                            
+                            if (row[4]==0) {                           
                                 texto=' <td>';                              
                                     texto+=' <a href="eliminar_cargo/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
                                 texto+=' </td>';
+ 
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+
+                            }
+
                             return texto;   
                         },
                         "targets": 4
@@ -295,12 +342,25 @@ jQuery('#tabla_cat_perfiles').dataTable( {
                         "render": function ( data, type, row ) {
 
                             
+
+                            if (row[3]==0) {
+
                                 texto=' <td>';                              
                                     texto+=' <a href="eliminar_perfil/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
                                 texto+=' </td>';
+
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+
+                            }                                
                             return texto;   
                         },
                         "targets": 3
@@ -393,13 +453,25 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                            
+                                                       
+                            if (row[4]==0) {    
                                 texto=' <td>';                              
                                     texto+=' <a href="eliminar_configuracion/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
                                     texto+=' <span class="glyphicon glyphicon-remove"></span>';
                                     texto+=' </a>';
                                 texto+=' </td>';
+ 
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+
+                            }    
+
                             return texto;   
                         },
                         "targets": 4

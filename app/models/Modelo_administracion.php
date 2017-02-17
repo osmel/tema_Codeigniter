@@ -51,15 +51,7 @@
        }  
 
         public function insertar_registro_nuevas_tablas($data) {
-                /*
-
-                INSERT INTO `tree_struct` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
-                (1, 1, 2, 0, 0, 0);
-
-                INSERT INTO `tree_data` (`id`, `nm`) VALUES
-                (1, 'Proyecto');
-
-                */
+                
           $this->db->set( 'id', 1 );  
           $this->db->set( 'lft', 1 );  
           $this->db->set( 'rgt', 2 );  

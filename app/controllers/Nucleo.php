@@ -319,6 +319,7 @@ function dashboard() {
 						$usuario['telefono']   		= $this->input->post( 'telefono' );
 						$usuario['id_perfil']   		= $this->input->post( 'id_perfil' );
 						$usuario['id_cliente']   		= $this->input->post( 'id_cliente' );
+						$usuario['activo']   		= $this->input->post( 'activo' );
 						$usuario['coleccion_id_operaciones']	=	json_encode($this->input->post('coleccion_id_operaciones'));						
 
 						$usuario['id_cargo']   				= $this->input->post( 'id_cargo' );
@@ -462,6 +463,7 @@ function validacion_edicion_usuario(){
 						$usuario['telefono']   				= $this->input->post( 'telefono' );
 						$usuario['id_perfil']   				= $this->input->post( 'id_perfil' );
 						$usuario['id_cliente']   				= $this->input->post( 'id_cliente' );
+						$usuario['activo']   		= $this->input->post( 'activo' );
 
 						$usuario['coleccion_id_operaciones']	=	json_encode($this->input->post('coleccion_id_operaciones'));						
 

@@ -177,7 +177,7 @@
                                             <li class="nav-item  ">
                                                 <a href="<?php echo base_url(); ?>editar_usuario/<?php echo $usuario->id; ?>" class="nav-link ">
                                                     <i class="icon-user"></i>
-                                                    <span class="title"><?php echo $usuario->nombre.' '.$usuario->apellidos; ?></span>
+                                                    <span style="<?php echo 'text-decoration:'.(($usuario->activo==0) ? 'line-through' : 'none');?>" class="title"><?php echo $usuario->nombre.' '.$usuario->apellidos; ?></span>
                                                     <span class="badge badge-success">6</span>
                                                 </a>
                                             </li>
