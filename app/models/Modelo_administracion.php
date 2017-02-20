@@ -165,6 +165,7 @@
         public function anadir_entorno( $data ){
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'entorno', $data['entorno'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );  
 
@@ -224,25 +225,58 @@
 
                                       
 
-          $id_session = $this->db->escape($this->session->userdata('id'));
+          //$id_session = $this->db->escape($this->session->userdata('id'));
+
+          $id_session = $this->session->userdata('id');      
+          $id_perfil=$this->session->userdata('id_perfil');
 
           $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
           
           $this->db->select('c.id, c.entorno, c.tabla, c.profundidad, c.ruta');
+          $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno',false);              
 
           $this->db->from($this->catalogo_entornos.' as c');
+          $this->db->join($this->registro_proyecto.' As r', 'r.id_entorno = c.id', 'LEFT');
           
           //filtro de busqueda
        
-          $where = '(
+        
+
+
+            switch ($id_perfil) {
+                case 1: //super
+                case 2: //Admin
+                      $cond_user ='';
+                  break;
+                case 3: //lider
+                      $cond_user = ' AND (
+                        (c.id_usuario= "'.$id_session.'") OR
+                        (LOCATE("'.$id_session.'",r.id_val)>0) 
+                      )'; 
+                    
+                  break;
+
+                  case 4: //trabajadores
+                      $cond_user = ' AND (
+                                  (LOCATE("'.$id_session.'",r.id_val)>0) 
+                                )'; 
+                     
+                  break;              
+
+                default:
+                     $cond_user ='';
+                  break;
+            }        
+
+
+            $where = '(
 
                       (
                         ( c.id LIKE  "%'.$cadena.'%" ) OR 
                         ( c.ruta LIKE  "%'.$cadena.'%" ) OR (c.entorno LIKE  "%'.$cadena.'%") OR (c.tabla LIKE  "%'.$cadena.'%") 
                         
-                       )
-            )';   
-
+                       )'.$cond_user.'
+            )';    
 
 
   
@@ -271,6 +305,7 @@
                                       2=>$row->tabla,
                                       3=>$row->profundidad,
                                       4=>$row->ruta,
+                                      5=>$row->dueno,
 
                                       //4=>self::entornos_en_uso($row->id),
                                     );
@@ -316,7 +351,9 @@
 
      public function coger_entorno( $data ){
               
-            $this->db->select("c.id, c.entorno, c.tabla,c.profundidad");         
+            $id_session = $this->session->userdata('id');
+            $this->db->select("c.id, c.entorno, c.tabla,c.profundidad");    
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno',false);              
             $this->db->from($this->catalogo_entornos.' As c');
             $this->db->where('c.id',$data['id']);
             $result = $this->db->get(  );
@@ -332,6 +369,7 @@
 
 
     public function listado_entornos(  ){
+            $id_perfil=$this->session->userdata('id_perfil');
             $id_session = $this->session->userdata('id');
             $data["id"] = $this->session->userdata('entorno_activo');
             $nombre_activo = self::coger_entorno($data)->entorno;
@@ -340,18 +378,48 @@
 
             $this->db->select("c.id, c.entorno, c.tabla, c.profundidad");         
             $this->db->select($data["id"]." as id_activo",false);         
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno',false);         
+
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
             $this->db->from($this->catalogo_entornos.' As c');
             $this->db->join($this->registro_proyecto.' As r', 'r.id_entorno = c.id', 'LEFT');
             
-            
-            $where ='(
+
+            switch ($id_perfil) {
+              case 1: //super
+              case 2: //Admin
+                              // todos los usuarios
+               /*
+               $where ='(
                         (c.id_usuario= "'.$id_session.'") OR
-                        (LOCATE("'.$id_session.'",r.id_val)>0)
+                        (LOCATE("'.$id_session.'",r.id_val)>0) 
                       )'; 
+               */           
+
+                break;
+              case 3: //lider
+                    $where ='(
+                      (c.id_usuario= "'.$id_session.'") OR
+                      (LOCATE("'.$id_session.'",r.id_val)>0) 
+                    )'; 
+                    $this->db->where($where);
+                break;
+
+                case 4: //trabajadores
+                    $where ='(
+                                (LOCATE("'.$id_session.'",r.id_val)>0) 
+                              )'; 
+                    $this->db->where($where);          
+                break;              
+
+              default:
+                   //nada
+                break;
+            }            
+            
                           
-             $this->db->where($where);
+             
 
              $this->db->group_by("c.id");
 
@@ -377,7 +445,8 @@
         public function editar_entorno( $data ){
 
           $id_session = $this->session->userdata('id');
-          $this->db->set( 'id_usuario',  $id_session );
+          //$this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'entorno', $data['entorno'] );  
           //$this->db->set( 'tabla', $data['tabla'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_entorno') );

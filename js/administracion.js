@@ -488,7 +488,8 @@ jQuery('#tabla_cat_entornos').dataTable( {
                     {
                         "render": function ( data, type, row ) {
 
-                            if (row[0]!=1) {
+                            //si no es general y (super_admin o dueño) row[5]=dueno
+                            if ((row[0]!=1)  &&  ( ($("#perfil_activo").val() ==1) || (row[5] ==1) )  ) {
                                 texto=' <td>';                              
                                     texto+=' <a href="eliminar_entorno/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
                                     texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';

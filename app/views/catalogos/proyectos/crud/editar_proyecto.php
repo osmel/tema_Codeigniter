@@ -34,6 +34,7 @@
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
 <input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 <input type="hidden" id="id_proy" name="id_proy" value="<?php echo $proyecto->id_proy; ?>">
+<input type="hidden" id="dueno" name="dueno" value="<?php echo $proyecto->dueno; ?>">
 
 
 <div class="container">

@@ -32,6 +32,7 @@
 <input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
 <input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
+<input type="hidden" id="dueno" name="dueno" value="1">
 			
 			<div class="container" style="background-proyecto:transparent !important">
 					<br>	

@@ -59,6 +59,8 @@ class Nucleo extends CI_Controller {
 								$this->session->set_userdata('creando_proyecto', "0"); //
 								$this->session->set_userdata('entorno_activo', 1);		//1 es el entorno por defecto "General"
 								$this->session->set_userdata('ambito_app', 0); //1- Entorno, 2-Proyecto	
+
+								$this->session->set_userdata('id_area', $login_element->id_cliente); //1- Entorno, 2-Proyecto	
 							}
 
 							$data['id_cargo'] = $this->session->userdata('id_cargo') ;
@@ -121,12 +123,12 @@ function dashboard() {
 
 	    	  $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 
 	    	  $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
+	    	  //print_r($data['datos']['entornos']); die;
+
 	    	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
-	    	  //print_r($data['datos']['entornos']);
-	    	  //die;
 
-			//comienzo "cancelaciones" para Entorno			  
+			//comienzo "cancelaciones" para ENTORNO			  
 			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
 		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
 		 			  
@@ -148,7 +150,7 @@ function dashboard() {
 
 
 
-			//comienzo "cancelaciones" para proyecto			  
+			//comienzo "cancelaciones" para PROYECTOS			  
 			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
 		 		if ($this->session->userdata('creando_proyecto') != "0") { //significa que cancelo en nuevo o editar
 		 			  
@@ -173,40 +175,40 @@ function dashboard() {
 
 
 			    	$id_perfil = $this->session->userdata('id_perfil');
-			    			//esto era solo para los trabajadores "HOME"
-		    			 $dato['proyecto'] = $data['datos']['proyectos'];
-		            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
-		            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
+		    			//esto era solo para los trabajadores "HOME"
+	    			 $dato['proyecto'] = $data['datos']['proyectos'];
+	            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
+	            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
+	            	 
+
+	            	 $inicio='dashboard';	
+	            	 if ($dato['proyecto']!=false) {
+	            	 	$data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
+	            	 	//print_r($data['datos']['proyectos']); die;
+	            	 	$inicio='home';
+
+	            	 }
+	            	 
+
+		          switch ($id_perfil) {    
+		            case 1:		            
+		            case 2:
+		                $this->load->view( 'principal/'.$inicio,$data); //dashboard
+		              break;
+		            
+		             //
+		            case 3: //
+		            case 4: //
+
 		            	 
-
-		            	 $inicio='dashboard';	
-		            	 if ($dato['proyecto']!=false) {
-		            	 	$data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
-		            	 	//print_r($data['datos']['proyectos']); die;
-		            	 	$inicio='home';
-
-		            	 }
-		            	 
-
-			          switch ($id_perfil) {    
-			            case 1:		            
-
-			                $this->load->view( 'principal/'.$inicio,$data); //dashboard
-			              break;
-			            
-			            case 2: //
-			            case 3: //
-			            case 4: //
-
-			            	 
-			            	 //print_r($data['datos']['proyectos']);die;
-			                $this->load->view( 'principal/'.$inicio,$data);
-			              break;
-			          
-			            default:  
-			              redirect('/');
-			              break;
-			          }
+		            	 //print_r($data['datos']['proyectos']);die;
+		                $this->load->view( 'principal/'.$inicio,$data);
+		              break;
+		          
+		            default:  
+		              redirect('/');
+		              break;
+		          }
 
 	        }
 	        else{ 

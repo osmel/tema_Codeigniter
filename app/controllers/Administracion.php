@@ -213,10 +213,11 @@ public function crear_tabla_proyecto($nombre) {
         
 	      switch ($id_perfil) {    
 	        case 1:
+          case 2:
+          case 3:
+
 	            $this->load->view( 'catalogos/proyectos/crud/nuevo_proyecto',$data);
 	          break;
-	        case 2:
-	        case 3:
 	        case 4:
 	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
 	                $this->load->view( 'catalogos/proyectos/crud/nuevo_proyecto',$data);
@@ -346,6 +347,8 @@ function listado_usuarios_json(  ){
 
       switch ($id_perfil) {    
         case 1:
+        case 2:
+        case 3:        
                   
                   if ( $data['proyecto'] !== FALSE ){
                       $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
@@ -354,8 +357,7 @@ function listado_usuarios_json(  ){
                   }       
 
           break;
-        case 2:
-        case 3:
+
         case 4:
                if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
                   
@@ -720,10 +722,10 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
         
 	      switch ($id_perfil) {    
 	        case 1:
+          case 2:
+          case 3: //fa-expeditedssl
 	            $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
 	          break;
-	        case 2:
-	        case 3:
 	        case 4:
 	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
 	                $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
@@ -821,6 +823,9 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 
       switch ($id_perfil) {    
         case 1:
+        case 2:
+        case 3:
+
                   
                   if ( $data['entorno'] !== FALSE ){
                       $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
@@ -829,8 +834,6 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
                   }       
 
           break;
-        case 2:
-        case 3:
         case 4:
                if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
                   

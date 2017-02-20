@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <!-- Comienzo de HEADER --> 
+
+<input type="hidden" id="perfil_activo" name="perfil_activo" value="<?php echo $this->session->userdata('id_perfil'); ?>">
+
         <div class="page-header navbar navbar-fixed-top">
             <!-- Comienzo de HEADER interno--> 
                 <div class="page-header-inner ">

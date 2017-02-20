@@ -252,6 +252,7 @@
 
             $id_perfil=$this->session->userdata('id_perfil');
             $id=$this->session->userdata('id');
+            $id_area=$this->session->userdata('id_area');
 
             $this->db->select('u.id, nombre,  apellidos,activo');
 
@@ -259,9 +260,21 @@
             $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
             $this->db->select('p.id_perfil,p.perfil,p.operacion');
 
-            if ($id_perfil!=1) {
-               $this->db->where('u.id', $id);   
+            
+            switch ($id_perfil) {
+              case 1: //super
+              case 2: //Admin
+                              // todos los usuarios
+                break;
+              case 3:
+                    $this->db->where('u.id_cliente', $id_area);   
+                break;
+
+              default:
+                   $this->db->where('u.id', $id);   
+                break;
             }
+            
             
             $this->db->from($this->usuarios.' as u');
             $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');

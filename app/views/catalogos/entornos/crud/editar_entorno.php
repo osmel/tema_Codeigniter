@@ -33,6 +33,7 @@
 <input type="hidden" id="crea_multiple_simple" name="crea_multiple_simple" value="<?php echo $crea_multiple_simple; ?>">
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
 <input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
+<input type="hidden" id="dueno" name="dueno" value="<?php echo $entorno ->dueno; ?>">
 
 <div class="container">
 		<br>
@@ -45,6 +46,7 @@
 			<div class="panel-heading">Datos de entorno</div>
 			<div class="panel-body">
 				<div class="col-sm-6 col-md-6">
+					<fieldset <?php echo ($entorno->dueno!=1) ? 'disabled' : ''; ?> >
 					<div class="form-group">
 						<label for="entorno" class="col-sm-3 col-md-2 control-label">entorno</label>
 						<div class="col-sm-9 col-md-10">
@@ -56,6 +58,7 @@
 							<input value="<?php echo  set_value('entorno',$nomb_nom); ?>" type="text" class="form-control ttip" title="Ingresar un nuevo entorno." name="entorno" placeholder="entorno">
 						</div>
 					</div>
+					</fieldset>
 
 				</div>
 

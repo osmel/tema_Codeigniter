@@ -42,9 +42,21 @@ jQuery(document).ready(function($) {
                             console.log(elemento); 
                             */   
                             
-                            
-                            if ( parseInt($("#crea_multiple_simple").val())==0)    { //entornos es simple
-                                if (obj.children.length==0)    { //pueda crear nodo solo si no tiene hijos
+                       //eliminar: solo el dueno o el super_administrador aunque no sea el dueno        
+                        if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {
+                            //alert('as');
+                                if ( parseInt($("#crea_multiple_simple").val())==0)    { //entornos es simple
+                                    if (obj.children.length==0)    { //pueda crear nodo solo si no tiene hijos
+                                            inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
+                                                function (new_node) {
+                                                    //console.log(new_node);
+                                                    new_node.icon = "fa fa-coffee";
+                                                    new_node.text = "nuevo Nombre";
+                                                    inst.edit(new_node);
+                                                }
+                                            );
+                                    }
+                                } else {  //proyectos pueden tener multiples hijos
                                         inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
                                             function (new_node) {
                                                 //console.log(new_node);
@@ -53,19 +65,11 @@ jQuery(document).ready(function($) {
                                                 inst.edit(new_node);
                                             }
                                         );
-                                }
-                            } else {  //proyectos pueden tener multiples hijos
-                                    inst.create_node(sel, {"text": "osmel", "data" : {  } }, "last", //"file" : false
-                                        function (new_node) {
-                                            //console.log(new_node);
-                                            new_node.icon = "fa fa-coffee";
-                                            new_node.text = "nuevo Nombre";
-                                            inst.edit(new_node);
-                                        }
-                                    );
 
 
-                            }                          
+                                }                          
+                        }
+                                
 
                         if(sel) {
                                // inst.edit(sel);
@@ -78,7 +82,11 @@ jQuery(document).ready(function($) {
                     action: function (data) {
                         var inst = jQuery.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
-                        inst.edit(obj);
+
+                        //renombrar: solo el dueno o el super_administrador aunque no sea el dueno        
+                        if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {    
+                            inst.edit(obj);
+                        }    
                     }
                 },
                 deleteItem: { // The "delete" menu item
@@ -87,17 +95,18 @@ jQuery(document).ready(function($) {
                         var inst = jQuery.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
 
-
-                        if (obj.id!=1) { //sino es la raiz puede eliminarlo
-                            if(inst.is_selected(obj)) {
-                                inst.delete_node(inst.get_selected());
+                        //eliminar: solo el dueno o el super_administrador aunque no sea el dueno        
+                        if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {
+                            if (obj.id!=1) { //sino es la raiz puede eliminarlo
+                                if(inst.is_selected(obj)) {
+                                    inst.delete_node(inst.get_selected());
+                                }
+                                else {
+                                    inst.delete_node(obj);
+                                }
                             }
-                            else {
-                                inst.delete_node(obj);
-                            }
+                        }   
 
-
-                        }
 
                     }
                 }

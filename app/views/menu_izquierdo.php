@@ -103,7 +103,8 @@
                                     </ul>
                                 </li>
                              Fin Caracteristicas -->     
-                            <?php if ($id_perfil==1) { ?>    
+                            <?php //if ($id_perfil==1) { ?>    
+                            <?php if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
                                 <!-- encabezado Caracteristicas -->        
                                 <li class="heading">
                                         <h3 class="uppercase">Proyectos</h3>
@@ -135,7 +136,8 @@
 
                                                      class="nav-item context"  data-toggle="context" data-target="#context-menu">
                                                             <a href="<?php echo base_url(); ?>editar_proyecto/<?php echo base64_encode($proyecto->id); ?>" class="nav-link ">
-                                                                <i class="icon-user"></i>
+                                                                
+                                                                <i class="fa fa-<?php echo ($proyecto->dueno_real==1) ? 'unlock' : 'unlock-alt' ?>"></i>
                                                                 <span class="title"><?php echo $proyecto->proyecto; ?></span>
                                                                 <span class="badge badge-success">6</span>
                                                             </a>
@@ -219,7 +221,8 @@
 
 
                                 <!-- encabezado Entornos -->     
-                            <?php if ($id_perfil==1) { ?>    
+                            <?php //if ($id_perfil==1) { ?>    
+                            <?php if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
                                     <li class="heading">
                                         <h3 class="uppercase">Entornos</h3>
                                     </li>
@@ -247,7 +250,7 @@
                                                      identificador="<?php echo base64_encode($entorno->id); ?>" 
                                                      class="nav-item contexto_entorno"  data-toggle="contexto_entorno" data-target="#context-menu_entorno">                                                
                                                         <a href="<?php echo base_url(); ?>editar_entorno/<?php echo base64_encode($entorno->id); ?>" class="nav-link ">
-                                                            <i class="icon-user"></i>
+                                                            <i class="fa fa-<?php echo ($entorno->dueno==1) ? 'unlock' : 'lock' ?>"></i>
                                                             <span class="title"><?php echo $entorno->entorno; ?></span>
                                                             <span class="badge badge-success"><?php echo $entorno->profundidad; ?></span>
                                                         </a>

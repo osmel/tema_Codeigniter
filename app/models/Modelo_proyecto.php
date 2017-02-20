@@ -292,6 +292,7 @@
         public function anadir_proyecto( $data ){
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );  
 
@@ -330,6 +331,7 @@
 
           $id_session = $this->session->userdata('id');
           $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           
           
           $this->db->set( 'id_entorno', $data['id_entorno'] );
@@ -512,6 +514,9 @@
             $this->db->select("r.contrato_firmado, r.pago_anticipado, r.factura_enviada");
             $this->db->select("r.id_val, r.json_items");
 
+            //$this->db->select('(c.id_usuario= "'.$id_session.'") as dueno',false);              
+            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar             
+
 
             $this->db->from($this->catalogo_proyectos.' As c');
             $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id');
@@ -561,6 +566,7 @@
 
 
     public function listado_proyectos(  ){
+            $id_perfil=$this->session->userdata('id_perfil');
             $id_session = $this->session->userdata('id');
             $data["id"] = $this->session->userdata('entorno_activo');
             $nombre_activo = self::coger_entorno($data)->entorno;
@@ -571,16 +577,61 @@
             $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
             $this->db->select($data["id"]." as id_activo",false);         
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
-            $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
+            $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
+            
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
+            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar      
+
             $this->db->from($this->catalogo_proyectos.' As c');
             $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id', 'LEFT');
 
+            /*
             $where ='(
 
                         ( (c.id_usuario= "'.$id_session.'") OR (LOCATE("'.$id_session.'",r.id_val)>0) ) AND
                         (c.id_entorno= '.$id_entorno.')
 
-                      )'; 
+                      )'; */
+
+
+
+
+
+                switch ($id_perfil) {
+                  case 1: //super
+                  case 2: //Admin
+                                  // todos los usuarios
+                   
+                   $where ='(
+                            (c.id_entorno= '.$id_entorno.')
+                          )'; 
+                   
+
+                    break;
+                  case 3: //lider
+                        $where ='(
+                          ( (c.id_usuario = "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        )'; 
+                        
+                    break;
+
+                    case 4: //trabajadores
+                        $where ='(
+                          ( (c.id_usuario= "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        )'; 
+                        
+                    break;              
+
+                  default:
+                       //nada
+                    break;
+                }         
+
+
                           
              $this->db->where($where);
 
@@ -603,7 +654,8 @@
         public function editar_proyecto( $data ){
 
           $id_session = $this->session->userdata('id');
-          $this->db->set( 'id_usuario',  $id_session );
+          //$this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
           //$this->db->set( 'tabla', $data['tabla'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
@@ -638,7 +690,8 @@
          public function editar_registro_proyecto( $data ){
 
           $id_session = $this->session->userdata('id');
-          $this->db->set( 'id_usuario',  $id_session );
+          //$this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'id_entorno', $data['id_entorno'] );
           $this->db->set( 'id_proyecto', $data['id'] );
           $this->db->set( 'proyecto', $data['proyecto'] );  
