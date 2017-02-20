@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php $this->load->view( 'header' , $datos ); ?>
+<style type="text/css">
+	
+	.pagina-contenido{
+		min-height:  !important;
+	}
+</style>
 
             <!-- Comienzo del contenedor -->
 	            <div class="page-container">
@@ -8,9 +14,9 @@
 	            		<?php $this->load->view( 'menu_izquierdo',$datos ); ?>	
 	            	<!--Fin menu Izquierdo-->	
 
-	                <!--Contenido de la pagina -->
+	                <!--Contenido de la pagina osmel-->
 		                <div class="page-content-wrapper">
-		                	<div class="page-content">
+		                	<div class="page-content" >
 									<?php $this->load->view( 'navegacion' ); ?>
 
 
@@ -35,8 +41,8 @@
 						
 <div class="" style="background-entorno:transparent !important">
 					<br>	
-				
-				<div class="col-md-10 col-md-offset-1 row" style="background-entorno:transparent !important">
+				<div class="row">
+				<div class="col-md-10 col-md-offset-1" style="background-color:transparent !important">
 					<div class="panel panel-primary">
 						<div class="panel-heading">Datos de entorno</div>
 							
@@ -136,6 +142,7 @@
 												<h3 id="total"><?php echo number_format($total, 2, '.', ','); ?>  	</h3>
 							  </div>
 						</div>
+					</div>
 					</div>
 
 					<div class="row">

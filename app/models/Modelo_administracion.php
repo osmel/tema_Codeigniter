@@ -28,6 +28,7 @@
               $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
               $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
               $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
+              $this->bitacora_entornos                         = $this->db->dbprefix('bitacora_entornos');
 
 
               
@@ -178,6 +179,9 @@
 
           $this->db->insert($this->catalogo_entornos );
             if ($this->db->affected_rows() > 0){
+                    $data['fila_insertada'] = $this->db->insert_id();
+                    $data['operacion'] = 'c';
+                    self::bitacora_entorno($data);
                     return TRUE;
                 } else {
                     return FALSE;
@@ -186,6 +190,24 @@
         }    
 
 
+        public function bitacora_entorno($data){
+          $id_session = $this->session->userdata('id');
+
+          $this->db->select('"'.$id_session.'"'.' as id_user', false);
+          $this->db->select('"'.$data['operacion'].'"'.' as operacion', false);
+          $this->db->select('id as id_entorno, entorno, tabla, profundidad, ruta, tooltip, id_usuario, id_user_cambio');
+          $this->db->from($this->catalogo_entornos);
+          $this->db->where('id',$data['fila_insertada']);
+          $result = $this->db->get();
+
+          $objeto = $result->result();
+          //copiar a tabla "registros_cambios"
+          foreach ($objeto as $key => $value) {
+            $this->db->insert($this->bitacora_entornos, $value); 
+          }    
+
+
+        } 
 
 
       public function buscador_cat_entornos($data){
@@ -458,13 +480,14 @@
 
           $this->db->where('id', $data['id'] );
           $this->db->update($this->catalogo_entornos );
-            
-            return TRUE;
 
             if ($this->db->affected_rows() > 0) {
-                return TRUE;
+                    $data['fila_insertada'] = $data['id'];
+                    $data['operacion'] = 'm';
+                    self::bitacora_entorno($data);          
+                    return TRUE;
             }  else
-                 return FALSE;
+                 return TRUE;
                 $result->free_result();
         }   
 
@@ -475,7 +498,13 @@
         //eliminar entorno
         public function eliminar_entorno( $data ){
             $this->db->delete( $this->catalogo_entornos, array( 'id' => $data['id'] ) );
-            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            if ( $this->db->affected_rows() > 0 ) {
+                    $data['fila_insertada'] = $data['id'];
+                    $data['operacion'] = 'e';
+                    self::bitacora_entorno($data);          
+                    return TRUE;              
+              
+            }
             else return FALSE;
         }  
        

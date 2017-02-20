@@ -874,6 +874,7 @@ function validacion_edicion_entorno(){
 	            $data               = $this->security->xss_clean($data);  
 	            $guardar            = $this->modelo_administracion->editar_entorno( $data );
 
+              //print_r($guardar); die;
 	            if ( $guardar !== FALSE ){
 	              $this->session->set_userdata('creando_entorno', "0");	 //listo para crear otro entorno
 	              echo true;

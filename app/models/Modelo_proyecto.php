@@ -32,7 +32,8 @@
 
               $this->registro_user_proy                        = $this->db->dbprefix('registro_user_proy');
 
-              
+              $this->bitacora_proyectos                         = $this->db->dbprefix('bitacora_proyectos');
+
               
 
 		}
@@ -304,27 +305,41 @@
 
           $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
 
-            
-
           $this->db->insert($this->catalogo_proyectos );
-          
-
-          
-
-
 
             if ($this->db->affected_rows() > 0){
                     $data['id_proyecto'] = $this->db->insert_id(); //obtener el id
                     $data['id_entorno'] = $this->session->userdata('entorno_activo');
                     self::anadir_registro_proyecto( $data );
 
-
+                    $data['fila_insertada'] = $data['id_proyecto'];
+                    $data['operacion'] = 'c';
+                    self::bitacora_proyecto($data);
                     return TRUE;
                 } else {
                     return FALSE;
                 }
                 $result->free_result();
         }    
+
+
+        public function bitacora_proyecto($data){
+          $id_session = $this->session->userdata('id');
+
+          $this->db->select('"'.$id_session.'"'.' as id_user', false);
+          $this->db->select('"'.$data['operacion'].'"'.' as operacion', false);
+          $this->db->select('id as id_proyecto, id_entorno, Proyecto, tabla, profundidad, ruta, tooltip, id_usuario, id_user_cambio');
+
+          $this->db->from($this->catalogo_proyectos);
+          $this->db->where('id',$data['fila_insertada']);
+          $result = $this->db->get();
+
+          $objeto = $result->result();
+          //copiar a tabla "registros_cambios"
+          foreach ($objeto as $key => $value) {
+            $this->db->insert($this->bitacora_proyectos, $value); 
+          }    
+        }         
 
 
          public function anadir_registro_proyecto( $data ){
@@ -670,14 +685,15 @@
           $this->db->update($this->catalogo_proyectos );
             
             
-              $data['id_entorno'] = $this->session->userdata('entorno_activo');
-              self::editar_registro_proyecto( $data );
-
-              return TRUE;
+              
+              
 
            if ($this->db->affected_rows() > 0){
-                    
-
+                   $data['id_entorno'] = $this->session->userdata('entorno_activo');
+                    self::editar_registro_proyecto( $data );
+                    $data['fila_insertada'] = $data['id'];
+                    $data['operacion'] = 'm';
+                    self::bitacora_proyecto($data);   
 
                     return TRUE;
                 } else {
@@ -740,8 +756,18 @@
         //eliminar proyecto
         public function eliminar_proyecto( $data ){
             $this->db->delete( $this->catalogo_proyectos, array( 'id' => $data['id'] ) );
-            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            
+            if ( $this->db->affected_rows() > 0 ) {
+                    $data['fila_insertada'] = $data['id'];
+                    $data['operacion'] = 'e';
+                    self::bitacora_proyecto($data);          
+                    return TRUE;              
+              
+            }
             else return FALSE;
+
+
+
         }  
        
           

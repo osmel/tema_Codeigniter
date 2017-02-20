@@ -1,6 +1,12 @@
 jQuery(document).ready(function($) {
 submit_forzado =false;
 
+   jQuery('body').on('click','.eliminar', function (e) { 
+      e.preventDefault(); //
+      jQuery(this).parent().parent().parent().parent().css('display','none');    
+      jQuery(this).parent().parent().parent().parent().siblings().removeClass( "col-sm-6 col-md-6" );
+      jQuery(this).parent().parent().parent().parent().siblings().addClass( "col-sm-12 col-md-12" );
+   }); 
 
 
 /////////////////////////Submit nuevo proyecto

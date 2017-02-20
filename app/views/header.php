@@ -75,6 +75,9 @@ License: You must have a valid license purchased only from themeforest(the above
              <!-- tags input -->   
             <?php echo link_tag('css/tagsinput_app.css'); ?>
 
+            <!-- todo lo que voy poniendo yo -->   
+            <?php echo link_tag('css/mio.css'); ?>
+
             
 
             <link href="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />

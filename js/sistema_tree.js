@@ -207,9 +207,17 @@ jQuery(document).ready(function($) {
 
                             //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
+                            console.log( jQuery(this).parent().parent().parent().attr('class') );
+                            jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
+                            jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
+                            jQuery(this).parent().parent().parent().siblings().css('display','block');   
+                         
+
                             if(data && data.selected && data.selected.length) {
+
                                 $.get('/obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
                                     $('#data .default').text(d.content).show();
+
                                 });
                             }
                             else {
