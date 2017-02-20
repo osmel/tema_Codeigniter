@@ -37,7 +37,11 @@
         <!-- END CORE PLUGINS -->
        
         <!-- BEGIN PAGE LEVEL PLUGINS -->
-	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/moment.min.js" type="text/javascript"></script>
+	        <!--<script src="<?php echo base_url(); ?>js/assets/global/plugins/moment.min.js" type="text/javascript"></script>-->
+
+	        <script src="<?php echo base_url(); ?>js/moment/moment.js" type="text/javascript"></script>
+	        <script src="<?php echo base_url(); ?>js/moment/locale/es.js" type="text/javascript"></script>
+
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 	        <script src="<?php echo base_url(); ?>js/assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>

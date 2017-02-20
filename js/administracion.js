@@ -44,7 +44,7 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
             //dias que aparecerán en gris
             showOffDays: true, //!0,    activa o desactiva el "offDays"
             offDaysFormat: "ddd",  //formato utilizado para que se evalue "offDays" -> "ddd"=dia de la semana Sat,Sun,Wed
-            offDays: "Sat,Sun", //estos días apareceran en gris porque estan como "DESCANSO"
+            offDays: "sáb.,dom.", //estos días apareceran en gris porque estan como "DESCANSO"
     
             showCalendar: true, //!0,        
 
@@ -52,7 +52,7 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
             //Inicio de semana "línea divisoria"
             showStartOfWeek: true, //!0, //Activar "startOfWeek"
             startOfWeekFormat: "ddd", //formato utilizado en la evaluación de startOfWeek
-            startOfWeek: "Mon", //Marca el "comienzo de la semana", por una línea divisoria más gruesa entre fechas.
+            startOfWeek: "lun.", //Marca el "comienzo de la semana", por una línea divisoria más gruesa entre fechas.
 
             
             //formato para "todos los elementos" y para "texto seleccionado"
