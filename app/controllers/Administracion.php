@@ -183,6 +183,7 @@ public function crear_tabla_proyecto($nombre) {
     // crear
   function crear_proyecto(){
 	if($this->session->userdata('session') === TRUE ){
+
 	      $id_perfil=$this->session->userdata('id_perfil');
 	      $data['datos']['usuarios'] = $this->modelo->listado_usuarios(); 	
 	      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos(); 	
@@ -193,7 +194,7 @@ public function crear_tabla_proyecto($nombre) {
 	            $coleccion_id_operaciones = array();
 	       }   
 
-	      
+	      //$this->session->set_userdata('creando_proyecto', "20170220080309SdRV410"); 
 	      //crear la tabla	
 	      if ($this->session->userdata('creando_proyecto') == "0") {
 	      			   $data['nombre'] = date('Y').date('m').date('d').date('H').date('i').date('s').random_string('alpha',4).random_string('numeric',3);

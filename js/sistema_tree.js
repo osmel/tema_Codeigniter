@@ -42,6 +42,8 @@ jQuery(document).ready(function($) {
                             console.log(elemento); 
                             */   
                             
+                         alert($("#ambito_app").val());   
+
                        //eliminar: solo el dueno o el super_administrador aunque no sea el dueno        
                         if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {
                             //alert('as');

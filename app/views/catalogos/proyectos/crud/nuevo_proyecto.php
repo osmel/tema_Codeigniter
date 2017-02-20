@@ -66,8 +66,13 @@
 					                                    <div class="portlet-title">
 					                                        <div class="caption">
 					                                            <i class="icon-equalizer font-dark hide"></i>
-					                                            <span class="caption-subject font-dark bold uppercase">Proyecto</span>
-					                                            <span class="caption-helper">xxxx...</span>
+					                                            <span class="caption-subject font-dark bold uppercase">Proyecto
+																	
+																			<fieldset disabled>
+																				<input value="<?php echo date('d-m-Y', strtotime('today') ); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
+																			</fieldset>	
+
+					                                            </span>
 					                                        </div>
 					                                    </div>
 
@@ -99,7 +104,7 @@
 					                                    <div class="portlet-title">
 					                                        <div class="caption">
 					                                            <i class="icon-equalizer font-dark hide"></i>
-					                                            <span class="caption-subject font-dark bold uppercase">Proyecto</span>
+					                                            <span class="caption-subject font-dark bold uppercase">Detalles</span>
 					                                            <span class="caption-helper">xxxx...</span>
 					                                        </div>
 					                                        <div class="tools">
@@ -181,15 +186,6 @@
 													<div class="col-sm-6 col-md-6">
 														
 
-																<div class="form-group">
-																	<label for="fecha_creacion" class="col-sm-12 col-md-12">Fecha de creación:<span class="obligatorio"> *</span></label>
-																	<div class="col-sm-12 col-md-12">
-																		<fieldset disabled>
-																			<input value="<?php echo date('d-m-Y', strtotime('today') ); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
-																		</fieldset>	
-																			
-																	</div>
-																</div>
 															
 
 															<div class="form-group">
