@@ -45,7 +45,7 @@ jQuery(document).ready(function($) {
                          //alert($("#ambito_app").val());   
 
 
-                        jQuery('form').trigger('submit');
+                        //jQuery('form').trigger('submit');
 
                        //crear: solo el dueno o el super_administrador aunque no sea el dueno        
                        if   ( ($('#proyecto').val() !="") || ($('#proyecto').val().length > 0) )
@@ -133,6 +133,9 @@ jQuery(document).ready(function($) {
             return items;
         }
 
+
+
+
         jQuery('#tree').jstree({
             'core': {
                 'check_callback': true, //hace posible q el menu contextual haga su tatea
@@ -213,9 +216,31 @@ jQuery(document).ready(function($) {
                         })
 
 
-                            //este es solo para obtener el recorrido seleccionado
+                        .on ('refresh_node.jstree', function (node,data) {
+                                console.log("antes  "+data.node.id);
+                           }) 
+
+                        .on ('dehover_node.jstree', function (data) {
+                                console.log("despues  "+data);
+                           }) 
+
+                        .on ('activate_node.jstree', function (node,e) {    
+                            /*
+                            console.log(jQuery('form')); //.trigger('submit');
+                            console.log(node);
+                            //console.log(sel);
+                            console.log(e);
+                            //console.log()
+                            */
+                        })    
+                                //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
-                            console.log( jQuery(this).parent().parent().parent().attr('class') );
+                            //console.log(());
+
+                            //console.log(jQuery('form')); //.trigger('submit');
+
+                            //console.log(data);
+                            //console.log( jQuery(this).parent().parent().parent().attr('class') );
                             jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
                             jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
                             jQuery(this).parent().parent().parent().siblings().css('display','block');   
@@ -228,7 +253,10 @@ jQuery(document).ready(function($) {
 
                                 
 
-                            //niveles la raiz = proyecto = 1        
+                                //alert('asasd');
+
+                                //niveles la raiz = proyecto = 1        
+                                if ($("#ambito_app").val()==2)  //if estamos en proyectos
                                 switch (data.node.parents.length) {
                                     /*case 1:
                                         console.log('1');
@@ -393,11 +421,14 @@ jQuery(document).ready(function($) {
 
 
                                                                          if(data.datos != false){
-                                                                            console.log(jQuery.parseJSON(data.datos.json_items));
+                                                                            if (data.datos.json_items!='') {
+                                                                                //console.log(jQuery.parseJSON(data.datos.json_items));
+                                                                               
                                                                                 $.each((jQuery.parseJSON(data.datos.json_items)), function( index, value ) {
                                                                                   elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
-                                                                                  //console.log(value);
                                                                                 });
+                                                                               
+                                                                             }   
                                                                           }
 
 
@@ -426,11 +457,11 @@ jQuery(document).ready(function($) {
                                         
   
                                    default:
-                                        console.log('nose');
+                                        //console.log('nose');
                                 }
 
-                                console.log(data.node.id);
-                                console.log(data.selected);
+                                //console.log(data.node.id);
+                                //console.log(data.selected);
 
 
 
@@ -454,7 +485,7 @@ jQuery(document).ready(function($) {
 
                                 //cuando refresca y solo esta seleccionado el root
                                 $('#data .content').hide();
-                                $('#data .default').text('Seleccione un nodo desde el arbol.').show();
+                                //$('#data .default').text('Seleccione un nodo desde el arbol.').show();
                             }
                         });
                         
