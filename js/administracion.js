@@ -216,9 +216,10 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                         jQuery('#messages').css('display','block');
                         jQuery('#messages').addClass('alert-danger');
                         jQuery('#messages').html(data);
+                        return "error";
                     }else{
                             $catalogo = e.target.name;
-                            window.location.href = '/'+$catalogo;   
+                            //window.location.href = '/'+$catalogo;   
                     }
                 } 
             });

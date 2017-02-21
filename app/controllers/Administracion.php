@@ -44,9 +44,45 @@ class Administracion extends CI_Controller {
     }
   }  
 
-function ajax_user_proy_json1(  ){
 
-          return json_encode("asdsaasd");
+
+/*
+function listado_usuarios_niveles(  ){
+
+                   $data['id_proyecto']     = $this->input->post('id_cat_proy');
+                   $data['id_reg_proy']     = $this->input->post('id_reg_proy');
+                   $data['id_nivel']        = $this->input->post('id_nivel');
+          $data['profundidad']              = $this->input->post('profundidad');
+
+                   // $data['datos'] = $this->modelo_proyecto->listado_nivel($data); 
+
+          
+          
+          $usuario_json = $this->modelo_proyecto->listado_usuarios_niveles($data);
+
+          echo $usuario_json;
+
+} 
+*/
+
+
+function listado_niveles( ){
+                   
+                   
+                   $data['id_proyecto']     = $this->input->post('id_cat_proy');
+                   $data['id_reg_proy']     = $this->input->post('id_reg_proy');
+                   $data['id_nivel']        = $this->input->post('id_nivel');
+          $data['profundidad']              = $this->input->post('profundidad');
+
+                    if ($data['id_nivel']==1){ //root
+                      $data['datos'] = $this->modelo_proyecto->listado_nivel_proyectos($data); 
+                    } else { //niveles desde el 2-n
+                      $data['datos'] = $this->modelo_proyecto->listado_nivel($data); 
+                   }
+                    
+
+
+          echo json_encode($data);
 }  
 
   function ajax_user_proy_json(  ){
@@ -170,13 +206,46 @@ public function crear_tabla_proyecto($nombre) {
 
 		//insertar registro en cada tabla
 
-			$data["nombre"]="Proyectos";
+			$data["nombre"]="Proyectos_".$nombre;
 			$data["tabla"]=$nombre;
 			$this->modelo_proyecto->insertar_registro_nuevas_tablas($data); 	
 		 
 		//$this->dbforge->drop_table('prueba');
 
 }	
+
+
+ function crear_nuevo_proyecto($data){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('/');
+    } else {
+          //$data['id_proyecto']       = $this->input->post('id_proyecto');
+
+          $data['proyecto']         = "Proyectos_".$data['nombre'];
+          $data['descripcion']      = 'Nuevo Proyecto';
+          $data['privacidad']       = 1; //publico
+          $data['costo']            = 0;
+          $data['fecha_creacion']   = date("Y-m-d", strtotime(date("d-m-Y")) );
+          $data['fecha_inicial']    = date("Y-m-d", strtotime('') );
+          $data['fecha_final']      = date("Y-m-d", strtotime('') );
+          $data['contrato_firmado'] = 0;
+          $data['pago_anticipado']  = 0;
+          $data['factura_enviada']  = 0;
+          $data['id_val']           = '';  //no hay usuarios
+          $data['json_items']       = '';  //no hay usuarios
+
+
+         $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
+         if ( $existe !== TRUE ){
+
+            //$data               = $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_proyecto->anadir_proyecto( $data );
+           
+          }  
+
+      }
+   }
+  
 
 
 
@@ -194,14 +263,18 @@ public function crear_tabla_proyecto($nombre) {
 	            $coleccion_id_operaciones = array();
 	       }   
 
-	      //$this->session->set_userdata('creando_proyecto', "20170220080309SdRV410"); 
+	     // $this->session->set_userdata('creando_proyecto', "20170220080309SdRV410"); 
 	      //crear la tabla	
 	      if ($this->session->userdata('creando_proyecto') == "0") {
 	      			   $data['nombre'] = date('Y').date('m').date('d').date('H').date('i').date('s').random_string('alpha',4).random_string('numeric',3);
 	      			   $this->session->set_userdata('creando_proyecto', $data['nombre']);	
 				      self::crear_tabla_proyecto($data['nombre']);
+              self::crear_nuevo_proyecto($data);
+
 	      }
 	      $data['nombre'] = $this->session->userdata('creando_proyecto');
+
+        $data['proy_salvado'] = $this->modelo_proyecto->buscar_proyecto($data);
 	       
 		  $dato["id"] = $this->session->userdata('entorno_activo');
           $data['depth_arbol'] =$this->modelo_proyecto->coger_entorno($dato)->profundidad;
@@ -250,7 +323,7 @@ public function crear_tabla_proyecto($nombre) {
 		
 		 // $data['id_entorno']   		 = $this->input->post('id_entorno');
       	 //$this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
-		  $data['id_proyecto']   		 = $this->input->post('id_proyecto');
+		      $data['id_proyecto']   		 = $this->input->post('id_proyecto');
 
           $data['proyecto']   		 = $this->input->post('proyecto');
           $data['descripcion']   	 = $this->input->post('descripcion');
@@ -276,7 +349,7 @@ public function crear_tabla_proyecto($nombre) {
             $data         =   $this->security->xss_clean($data);  
             $guardar            = $this->modelo_proyecto->anadir_proyecto( $data );
             if ( $guardar !== FALSE ){
-              $this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
+              //$this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
               echo true;
             } else {
               echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
@@ -294,15 +367,16 @@ public function crear_tabla_proyecto($nombre) {
 
 
 
+
 function listado_usuarios_json(  ){
 
-          $data['id']   		 = $this->input->post('id');
+          $data['id']        = $this->input->post('id');
           
           $usuario_json = $this->modelo_proyecto->listado_usuarios_json($data);
 
           echo $usuario_json;
 
-}	
+} 
 
 
 
@@ -389,11 +463,10 @@ function validacion_edicion_proyecto(){
         $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
 	        
 	      if ($this->form_validation->run() === TRUE){
-	            $data['id']           = $this->input->post('id');
-	          $data['proyecto']         = $this->input->post('proyecto');
 
-		
-		  $data['id_proy']   		 = $this->input->post('id_proy');
+          $data['id']           = $this->input->post('id');
+          $data['proyecto']         = $this->input->post('proyecto');
+		      $data['id_proy']   		 = $this->input->post('id_proy');
           $data['descripcion']   	 = $this->input->post('descripcion');
           $data['privacidad']   	 = $this->input->post('privacidad');
           $data['costo']   			 = $this->input->post('costo');
@@ -415,9 +488,10 @@ function validacion_edicion_proyecto(){
 
 	            $data               = $this->security->xss_clean($data);  
 	            $guardar            = $this->modelo_proyecto->editar_proyecto( $data );
+              //die;
 
 	            if ( $guardar !== FALSE ){
-	              $this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
+	             // $this->session->set_userdata('creando_proyecto', "0");	 //listo para crear otro proyecto
 	              echo true;
 	            } else {
 	              echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
@@ -1267,8 +1341,9 @@ Para inicializar la clase Forge, el controlador de base de datos ya debe estar f
 
 			 //aqui se conforma el formato q voy a presentar del recorrido seleccionado
 			 $rslt = array('content' => 'Seleccionado: /' . 
-			 			implode('/',array_map(function ($v) { return $v['nm']; }, $temp['path'])).
-			 			 '/'.$temp['nm']);
+			 			                       implode('/',array_map(function ($v) { return $v['nm']; }, $temp['path'])).
+			 			                       '/'.$temp['nm']
+                    );
 			 }
 		 
 		header('Content-Type: application/json; charset=utf-8');

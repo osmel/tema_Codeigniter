@@ -35,8 +35,132 @@
               $this->bitacora_proyectos                         = $this->db->dbprefix('bitacora_proyectos');
 
               
+              $this->registro_nivel2                         = $this->db->dbprefix('registro_nivel2');
+              $this->registro_nivel3                         = $this->db->dbprefix('registro_nivel3');
+              $this->registro_nivel4                         = $this->db->dbprefix('registro_nivel4');
+              $this->registro_nivel5                         = $this->db->dbprefix('registro_nivel5');
+              $this->registro_nivel6                         = $this->db->dbprefix('registro_nivel6');
+
+              
+              
+
+              
 
 		}
+
+    /*
+        public function listado_usuarios_niveles( $data ){
+            
+            $this->db->select("r.json_items");
+            $this->db->from($this->registro_proyecto.' As r');
+            $this->db->where('r.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row()->json_items;
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+      }  */
+
+
+     public function listado_nivel_proyectos($data){
+              
+            $id_session = $this->session->userdata('id');  
+            
+            $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
+            $this->db->select("c.proyecto nombre, c.descripcion, c.costo");         
+            $this->db->select("DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
+            $this->db->select("DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
+            $this->db->select("DATE_FORMAT((c.fecha_final),'%d-%m-%Y') as fecha_final",false);
+
+            $this->db->select("c.id_val, c.json_items, c.id_usuario, c.id_user_cambio");       
+
+            $this->db->select("c.contrato_firmado, c.pago_anticipado, c.factura_enviada");  
+            $this->db->select("c.privacidad");  
+
+            $this->db->from($this->db->dbprefix('registro_proyecto').' As c');
+
+
+            $this->db->where('c.id_proyecto',$data['id_proyecto']);
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            $this->db->where('c.profundidad',$data['profundidad']);
+            $this->db->where('c.id_entorno', $this->session->userdata('entorno_activo') );
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+     }         
+
+
+
+     public function listado_nivel($data){
+              
+            $id_session = $this->session->userdata('id');  
+            
+            $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
+            $this->db->select("c.nombre, c.descripcion, c.costo");         
+            $this->db->select("DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
+            $this->db->select("DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
+            $this->db->select("DATE_FORMAT((c.fecha_final),'%d-%m-%Y') as fecha_final",false);
+
+            $this->db->select("c.id_val, c.json_items, c.id_usuario, c.id_user_cambio");         
+
+            $this->db->from($this->db->dbprefix('registro_nivel'.$data["profundidad"]).' As c');
+
+
+            $this->db->where('c.id_proyecto',$data['id_proyecto']);
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            $this->db->where('c.profundidad',$data['profundidad']);
+            $this->db->where('c.id_entorno', $this->session->userdata('entorno_activo') );
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+     }      
+
+
+
+
+     public function buscar_proyecto( $data ){
+              
+            $id_session = $this->session->userdata('id');  
+            $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
+
+            //$this->db->select("");         
+            $this->db->select("r.id id_proy, r.id_proyecto, r.id_entorno,  r.descripcion, r.privacidad, r.costo");         
+            $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
+            $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
+            $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
+            
+            $this->db->select("r.contrato_firmado, r.pago_anticipado, r.factura_enviada");
+            $this->db->select("r.id_val, r.json_items");
+
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
+            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar             
+
+
+            $this->db->from($this->catalogo_proyectos.' As c');
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id');
+            $this->db->where('c.tabla',$data['nombre']);
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+     }      
 
     public function actualizar_reg_user_proy($data){
         $id_session = $this->session->userdata('id');
@@ -664,6 +788,24 @@
 
            
 
+/*
+          $data['id']           = $this->input->post('id');
+          $data['proyecto']         = $this->input->post('proyecto');
+          $data['id_proy']       = $this->input->post('id_proy');
+          $data['descripcion']     = $this->input->post('descripcion');
+          $data['privacidad']      = $this->input->post('privacidad');
+          $data['costo']         = $this->input->post('costo');
+          $data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
+          $data['fecha_inicial']     = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
+          $data['fecha_final']     = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
+          $data['contrato_firmado']  = $this->input->post('contrato_firmado');
+          $data['pago_anticipado']   = $this->input->post('pago_anticipado');
+          $data['factura_enviada']   = $this->input->post('factura_enviada');
+          $data['id_val']        = $this->input->post('id_val');
+          $data['json_items']      = $this->input->post('json_items');
+
+
+*/
 
         //editar
         public function editar_proyecto( $data ){
@@ -686,11 +828,11 @@
             
             
               
+          $data['id_entorno'] = $this->session->userdata('entorno_activo');
+          self::editar_registro_proyecto( $data );
               
 
            if ($this->db->affected_rows() > 0){
-                   $data['id_entorno'] = $this->session->userdata('entorno_activo');
-                    self::editar_registro_proyecto( $data );
                     $data['fila_insertada'] = $data['id'];
                     $data['operacion'] = 'm';
                     self::bitacora_proyecto($data);   

@@ -138,9 +138,18 @@ $route['buscador']						     = 'administracion/buscador';
 $route['listado_usuarios_json']			     = 'administracion/listado_usuarios_json';
 
 
+
+
+
+
 //registro usuario
 $route['validar_registro_usuario']    	 = 'administracion/validar_registro_usuario';
 $route['ajax_user_proy_json']    	 = 'administracion/ajax_user_proy_json';
+$route['listado_usuarios_niveles']			     = 'administracion/listado_usuarios_niveles';
+
+
+//niveles
+$route['listado_niveles']    	 			= 'administracion/listado_niveles';
 
 
 
@@ -204,4 +213,6 @@ $route['validacion_edicion_configuracion']     = 'catalogos/validacion_edicion_c
 
 $route['eliminar_configuracion/(:any)/(:any)'] = 'catalogos/eliminar_configuracion/$1/$2';
 $route['validar_eliminar_configuracion']    	 = 'catalogos/validar_eliminar_configuracion';
+
+
 

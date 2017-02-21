@@ -147,7 +147,7 @@
 
 											<?php 
 												$nomb_nom='';
-												if (strtotime(($proyecto ->fecha_inicial )>0)) 
+												if (strtotime($proyecto ->fecha_inicial )>0)
 												 {	$nomb_nom = $proyecto ->fecha_inicial ;}
 											?>
 											<input value="<?php echo  set_value('fecha_inicial',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">
@@ -160,7 +160,7 @@
 										<div class="col-sm-12 col-md-12">
 											<?php 
 												$nomb_nom='';
-												if (strtotime(($proyecto ->fecha_final )>0))  
+												if (strtotime($proyecto ->fecha_final )>0)
 												 {	$nomb_nom = $proyecto ->fecha_final ;}
 											?>
 											<input value="<?php echo  set_value('fecha_final',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY">

@@ -205,8 +205,6 @@
           foreach ($objeto as $key => $value) {
             $this->db->insert($this->bitacora_entornos, $value); 
           }    
-
-
         } 
 
 

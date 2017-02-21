@@ -7140,6 +7140,8 @@ Portlets
         background-image: url(../img/portlet-remove-icon.png);
         background-repeat: no-repeat;
         width: 11px; }
+
+        
       .portlet > .portlet-title > .tools > a.config {
         background-image: url(../img/portlet-config-icon.png);
         background-repeat: no-repeat;

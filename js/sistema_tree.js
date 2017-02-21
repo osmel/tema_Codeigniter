@@ -42,9 +42,13 @@ jQuery(document).ready(function($) {
                             console.log(elemento); 
                             */   
                             
-                         alert($("#ambito_app").val());   
+                         //alert($("#ambito_app").val());   
 
-                       //eliminar: solo el dueno o el super_administrador aunque no sea el dueno        
+
+                        jQuery('form').trigger('submit');
+
+                       //crear: solo el dueno o el super_administrador aunque no sea el dueno        
+                       if   ( ($('#proyecto').val() !="") || ($('#proyecto').val().length > 0) )
                         if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {
                             //alert('as');
                                 if ( parseInt($("#crea_multiple_simple").val())==0)    { //entornos es simple
@@ -71,6 +75,8 @@ jQuery(document).ready(function($) {
 
                                 }                          
                         }
+
+
                                 
 
                         if(sel) {
@@ -216,13 +222,237 @@ jQuery(document).ready(function($) {
                          
 
                             if(data && data.selected && data.selected.length) {
+                                //console.log(data.node.parents.length);
+                                //console.log(data.selected);
+                                //console.log(data.selected.length);
 
+                                
+
+                            //niveles la raiz = proyecto = 1        
+                                switch (data.node.parents.length) {
+                                    /*case 1:
+                                        console.log('1');
+                                        break;*/
+                                    case 1:    
+                                    case 2:
+                                    case 3:
+                                    case 4:
+                                            $.ajax({
+                                                url: "/listado_niveles",
+                                                type: 'POST',
+                                                dataType: "json",
+                                                data: {
+                                                            id_nivel: data.node.id, 
+                                                         profundidad: data.node.parents.length,
+                                                         id_cat_proy: $("input[name=id]").val(),
+                                                         id_reg_proy: $("#id_proy").val(),
+                                                 },
+                                                success: function(data){
+
+                                                    
+
+                                                            texto= '<div class="portlet light bordered">';
+                                                                        texto+='<div class="portlet-title">';
+                                                                            texto+='<div class="caption">';
+                                                                                texto+='<i class="icon-equalizer font-dark hide"></i>';
+                                                                                texto+='<span class="caption-subject font-dark bold uppercase">Detalles</span>';
+                                                                                texto+='<span class="caption-helper">xxxx...</span>';
+                                                                            texto+='</div>';
+                                                                            texto+='<div class="tools">';
+                                                                                texto+='<a href="" class="eliminar" data-original-title="" title=""> </a>';
+                                                                            texto+='</div>';
+                                                                        texto+='</div>';
+
+                                                                         texto+='<div class="portlet-body">';
+                                                                                texto+='<div class="etiquetas_usuarios objeto_como_tags">';
+                                                                                      texto+='<h3>Participantes</h3>';
+                                                                                      texto+='<p>';
+                                                                                        texto+='Personas que participaran en el proyecto';
+                                                                                      texto+='</p>';
+                                                                                      texto+='<div class="bs-etiquetas_usuarios">';
+                                                                                            texto+='<input id="etiq_usuarios" type="text" />';
+                                                                                      texto+='</div>';
+                                                                                texto+='</div>';
+                                                                                
+                                                                                
+                                                                                texto+='<div class="form-group">';
+                                                                                    texto+='<label for="descripcion" class="col-sm-3 col-md-2 control-label">Descripción</label>';
+                                        
+                                                                                           if(data.datos != false){
+                                                                                                $descripcion=data.datos["descripcion"];
+                                                                                            } else {
+                                                                                                $descripcion='';
+                                                                                            }
+
+                                                                                       texto+='<div class="col-sm-9 col-md-10">';
+                                                                                            texto+='<textarea id="descripcion" name="descripcion" class="form-control" rows="3">'+$descripcion+'</textarea>';
+                                                                                        texto+='</div>';
+                                                                                texto+='</div>';
+                                                                                
+                                                                        texto+='</div>  ';
+                                                            texto+='</div>';   
+
+                                            
+                                                            $("#cuadrante2").html(texto);    
+
+                                                            texto='<div class="form-group">';
+                                                                texto+='<label for="costo" class="col-sm-3 col-md-2 control-label">Costo</label>';
+                                                                texto+='<div class="col-sm-9 col-md-10">';
+
+
+                                                                       if(data.datos != false){
+                                                                            $costo=data.datos["costo"];
+                                                                        } else {
+                                                                            $costo='';
+                                                                        }    
+
+                                                                    texto+='<input value="'+$costo+'" restriccion="decimal" type="text" class="form-control ttip" ';
+
+                                                                            texto+='title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00"> ';
+
+                                                                    texto+='<em>Costo del proyecto.</em> ';
+                                                                texto+='</div> ';
+                                                            texto+='</div> ';   
+
+
+                                                            $("#cuadrante3").html(texto);    
+
+
+
+
+                                                            texto= '<div class="form-group">';
+                                                                texto+='<label for="fecha_inicial" class="col-sm-12 col-md-12">Fecha Inicial:<span class="obligatorio"> *</span></label>';
+                                                                texto+='<div class="col-sm-12 col-md-12">';
+                                                                    
+                                                                      if(data.datos != false){
+                                                                            $fecha_inicial=data.datos["fecha_inicial"];
+                                                                        } else {
+                                                                            $fecha_inicial='';
+                                                                       }    
+
+
+                                                                    texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha  input-sm form-control" ';
+                                                                    texto+='id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">';
+                                                                        
+                                                                texto+='</div>';
+                                                            texto+='</div>';
+
+                                                            texto+='<div class="form-group">';
+                                                                texto+='<label for="fecha_final" class="col-sm-12 col-md-12">Fecha Final:<span class="obligatorio"> *</span></label>';
+                                                                texto+='<div class="col-sm-12 col-md-12">';
+                                                                    
+                                                                      if(data.datos != false){
+                                                                            $fecha_final=data.datos["fecha_final"];
+                                                                        } else {
+                                                                            $fecha_final='';
+                                                                       }    
+
+                                                                    texto+='<input value="'+$fecha_final+'" type="text" class="fecha  input-sm form-control" id="fecha_final" ';
+                                                                    texto+='name="fecha_final" placeholder="DD-MM-YYYY">';
+                                                                        
+                                                                texto+='</div>';
+                                                            texto+='</div>';
+
+
+                                                          $("#cuadrante4").html(texto);    
+
+
+
+                                                                        /////////////////////////buscar usuarios
+
+                                                                            var consulta_niveles = new Bloodhound({
+                                                                               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nombre'), //'text'
+                                                                               queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                                                              remote: {
+                                                                                    url:  '/buscador?key=%QUERY', 
+                                                                                    replace: function () {
+                                                                                        var q = '/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
+                                                                                            //q += '&nombre='+encodeURIComponent(jQuery('#etiq_usuarios.tt-input').attr("name"));
+                                                                                        return  q;
+                                                                                    }
+                                                                                },   
+
+                                                                            });
+
+
+                                                                           consulta_niveles.initialize();
+
+                                                                            elt = $('.objeto_como_tags > > input');
+                                                                            elt.tagsinput({
+                                                                              itemValue: 'id', //id
+                                                                              itemText: 'nombre',  //nombre
+                                                                              typeaheadjs: {
+                                                                                name: 'usuarios',
+                                                                                displayKey: 'nombre',
+                                                                                source: consulta_niveles.ttAdapter()
+                                                                              }
+                                                                            });
+
+
+
+
+
+                                                                         if(data.datos != false){
+                                                                            console.log(jQuery.parseJSON(data.datos.json_items));
+                                                                                $.each((jQuery.parseJSON(data.datos.json_items)), function( index, value ) {
+                                                                                  elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
+                                                                                  //console.log(value);
+                                                                                });
+                                                                          }
+
+
+
+
+
+
+
+
+
+
+                                                } 
+                                            });
+                                            
+
+                                        
+
+                                        
+                                        
+                                        
+
+
+                                        
+                                        break;
+                                    
+                                        
+  
+                                   default:
+                                        console.log('nose');
+                                }
+
+                                console.log(data.node.id);
+                                console.log(data.selected);
+
+
+
+
+
+
+            
+
+
+
+                                /*
                                 $.get('/obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
                                     $('#data .default').text(d.content).show();
 
-                                });
+                                });*/
+
+
                             }
                             else {
+
+
+                                //cuando refresca y solo esta seleccionado el root
                                 $('#data .content').hide();
                                 $('#data .default').text('Seleccione un nodo desde el arbol.').show();
                             }
