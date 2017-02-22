@@ -202,48 +202,22 @@ jQuery(document).ready(function($) {
                         //renombrar un único nodo
                         .on('rename_node.jstree', function (e, data) {
                             $.get('/renombrar_nodo?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+                                .done(function (d) {
+                                    if ($("#ambito_app").val()==2)  {  //si es en el proyecto
+                                        if (data.node.id==1)  //si es la raiz
+                                          $("#proyecto").val(data.text);
+                                    }  
+                                })
                                 .fail(function () {
                                     data.instance.refresh();
                                 });
                         })
 
+                       
 
-                        .on('move_node.jstree', function (e, data) {
-                            $.get('/mover_nodo?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
-                                .fail(function () {
-                                    data.instance.refresh();
-                                });
-                        })
-
-
-                        .on ('refresh_node.jstree', function (node,data) {
-                                console.log("antes  "+data.node.id);
-                           }) 
-
-                        .on ('dehover_node.jstree', function (data) {
-                                console.log("despues  "+data);
-                           }) 
-
-                        .on ('activate_node.jstree', function (node,e) {    
-                            /*
-                            console.log(jQuery('form')); //.trigger('submit');
-                            console.log(node);
-                            //console.log(sel);
-                            console.log(e);
-                            //console.log()
-                            */
-                        })    
-                                //este es solo para obtener el recorrido seleccionado
                         .on('changed.jstree', function (e, data) {
-                            //console.log(());
 
-                            //console.log(jQuery('form')); //.trigger('submit');
-
-                            //console.log(data);
-                            //console.log( jQuery(this).parent().parent().parent().attr('class') );
-                            jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
-                            jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
-                            jQuery(this).parent().parent().parent().siblings().css('display','block');   
+                       
                          
 
                             if(data && data.selected && data.selected.length) {
@@ -256,7 +230,15 @@ jQuery(document).ready(function($) {
                                 //alert('asasd');
 
                                 //niveles la raiz = proyecto = 1        
-                                if ($("#ambito_app").val()==2)  //if estamos en proyectos
+                            if ($("#ambito_app").val()==2)  { //if estamos en proyectos
+
+                                jQuery('form').submit();
+
+
+                                jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
+                                jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
+                                jQuery(this).parent().parent().parent().siblings().css('display','block');   
+
                                 switch (data.node.parents.length) {
                                     /*case 1:
                                         console.log('1');
@@ -275,9 +257,10 @@ jQuery(document).ready(function($) {
                                                          id_cat_proy: $("input[name=id]").val(),
                                                          id_reg_proy: $("#id_proy").val(),
                                                  },
-                                                success: function(data){
+                                                success: function(datum){
 
-                                                    
+                                                            $("#id_nivel").val(data.node.id);
+                                                            $("#profundidad").val(data.node.parents.length);
 
                                                             texto= '<div class="portlet light bordered">';
                                                                         texto+='<div class="portlet-title">';
@@ -306,8 +289,8 @@ jQuery(document).ready(function($) {
                                                                                 texto+='<div class="form-group">';
                                                                                     texto+='<label for="descripcion" class="col-sm-3 col-md-2 control-label">Descripción</label>';
                                         
-                                                                                           if(data.datos != false){
-                                                                                                $descripcion=data.datos["descripcion"];
+                                                                                           if(datum.datos != false){
+                                                                                                $descripcion=datum.datos["descripcion"];
                                                                                             } else {
                                                                                                 $descripcion='';
                                                                                             }
@@ -328,8 +311,8 @@ jQuery(document).ready(function($) {
                                                                 texto+='<div class="col-sm-9 col-md-10">';
 
 
-                                                                       if(data.datos != false){
-                                                                            $costo=data.datos["costo"];
+                                                                       if(datum.datos != false){
+                                                                            $costo=datum.datos["costo"];
                                                                         } else {
                                                                             $costo='';
                                                                         }    
@@ -352,8 +335,8 @@ jQuery(document).ready(function($) {
                                                                 texto+='<label for="fecha_inicial" class="col-sm-12 col-md-12">Fecha Inicial:<span class="obligatorio"> *</span></label>';
                                                                 texto+='<div class="col-sm-12 col-md-12">';
                                                                     
-                                                                      if(data.datos != false){
-                                                                            $fecha_inicial=data.datos["fecha_inicial"];
+                                                                      if(datum.datos != false){
+                                                                            $fecha_inicial=datum.datos["fecha_inicial"];
                                                                         } else {
                                                                             $fecha_inicial='';
                                                                        }    
@@ -369,8 +352,8 @@ jQuery(document).ready(function($) {
                                                                 texto+='<label for="fecha_final" class="col-sm-12 col-md-12">Fecha Final:<span class="obligatorio"> *</span></label>';
                                                                 texto+='<div class="col-sm-12 col-md-12">';
                                                                     
-                                                                      if(data.datos != false){
-                                                                            $fecha_final=data.datos["fecha_final"];
+                                                                      if(datum.datos != false){
+                                                                            $fecha_final=datum.datos["fecha_final"];
                                                                         } else {
                                                                             $fecha_final='';
                                                                        }    
@@ -420,11 +403,11 @@ jQuery(document).ready(function($) {
 
 
 
-                                                                         if(data.datos != false){
-                                                                            if (data.datos.json_items!='') {
-                                                                                //console.log(jQuery.parseJSON(data.datos.json_items));
+                                                                         if(datum.datos != false){
+                                                                            if (datum.datos.json_items!='') {
+                                                                                //console.log(jQuery.parseJSON(datum.datos.json_items));
                                                                                
-                                                                                $.each((jQuery.parseJSON(data.datos.json_items)), function( index, value ) {
+                                                                                $.each((jQuery.parseJSON(datum.datos.json_items)), function( index, value ) {
                                                                                   elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
                                                                                 });
                                                                                
@@ -459,19 +442,8 @@ jQuery(document).ready(function($) {
                                    default:
                                         //console.log('nose');
                                 }
-
-                                //console.log(data.node.id);
-                                //console.log(data.selected);
-
-
-
-
-
-
-            
-
-
-
+                            } //fin de ambito_app=2 proyecto
+                                
                                 /*
                                 $.get('/obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
                                     $('#data .default').text(d.content).show();

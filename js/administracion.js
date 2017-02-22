@@ -219,7 +219,10 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                         return "error";
                     }else{
                             $catalogo = e.target.name;
-                            //window.location.href = '/'+$catalogo;   
+
+                             if (!(e.isTrigger)) { //si fue una presion real del boton guardar
+                                window.location.href = '/'+$catalogo;   
+                             }   
                     }
                 } 
             });
@@ -317,15 +320,22 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
 
             
 
-       
-
-    //console.log(( jQuery("#json_items").val() ) );        
-    //console.log(eval( $("#json_items").val() ) );
+//jQuery('.fecha').datepicker({ dateFormat: 'dd-mm-yyyy'});
 
 
+jQuery('form').on('focusin','.fecha', function (e) {
+    jQuery(this).datepicker({ 
+        //inline: true, 
+        Format: 'dd-mm-yyyy'
+    });
+});
 
-jQuery('.fecha').datepicker({ format: 'dd-mm-yyyy'});
+/*
+jQuery('form').on('datepicker','.fecha', function (e) {
+    //format: 'dd-mm-yyyy'
+    console.log(e);
 
+});    */
 
 
 //Menu contextual de "ENTORNOS"

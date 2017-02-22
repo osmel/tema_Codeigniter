@@ -25,14 +25,10 @@
 			      	$retorno ="";
 			    }
 
-			    if (isset($proy_salvado->id_proyecto )) {
-			    	$funcion = "validacion_edicion_proyecto";	
-			    	$hidden = array('id'=>$proy_salvado->id_proyecto);
-			    } else {
-			    	$funcion = "validar_nuevo_proyecto";	
-			    	$hidden = array('id'=>0);
-			    }
-			    
+				   
+
+			 $funcion = "validacion_edicion_nivel";	
+			 $hidden = array('id'=>$proy_salvado->id_proyecto);			    
 			 				    
 			 $attr = array('funcion'=>$funcion, 'class' => 'form-horizontal', 'id'=>'form_nuevo_proyectos','name'=>$retorno,'method'=>'POST','autocomplete'=>'off','role'=>'form');
 			 echo form_open($funcion, $attr,$hidden);
@@ -43,6 +39,9 @@
 <input type="hidden" id="depth_arbol" name="depth_arbol" value="<?php echo $depth_arbol; ?>">
 <input type="hidden" id="ambito_app" name="ambito_app" value="<?php echo $ambito_app; ?>">
 <input type="hidden" id="dueno" name="dueno" value="1">
+
+<input type="hidden" id="profundidad" name="profundidad" value="1">
+<input type="hidden" id="id_nivel" name="id_nivel" value="1">
 
 <?php 
 $nomb_nom='';
@@ -188,34 +187,6 @@ if (isset($proy_salvado ->id_proy ))
                                             		<div class="col-sm-6 col-md-6" id="cuadrante3">
 
 
-															<!--Privacidad -->	
-															<div class="form-group">
-							                                    <label>Privacidad</label>
-							                                    <div class="mt-radio-list">
-								  									<label class="mt-radio mt-radio-outline"> Público
-
-								                                        <?php  
-																		  		$marca='checked';
-																		  		if (isset($proy_salvado ->privacidad )) 	 
-												                                if ($proy_salvado->privacidad==1) {$marca='checked';} else {$marca='';}
-												                          ?>
-
-														                <input <?php echo $marca; ?>  type="radio" value="1" name="privacidad">
-								                                        <span></span>
-								                                    </label>
-								                                    <label class="mt-radio mt-radio-outline"> Privado
-								                                    	<?php  
-
-																		  		$marca='';
-																		  		if (isset($proy_salvado ->privacidad )) 	 
-												                                if ($proy_salvado->privacidad==2) {$marca='checked';} 
-												                          ?>
-
-								                                        <input <?php echo $marca; ?> type="radio" value="2" name="privacidad">
-								                                        <span></span>
-								                                    </label>
-							                                    </div>
-							                                </div>
 
 															
 															<div class="form-group">
@@ -275,43 +246,7 @@ if (isset($proy_salvado ->id_proy ))
 
 															<!--Checkbox -->	
 
-														<div class="form-group">
-														    <label>Otros...</label>				
-																
-																																
-																<div class="mt-checkbox-list">
-																	<label class="mt-checkbox">
-												 						  <?php   
-												 						  		$marca='';
-												 						  		if (isset($proy_salvado ->contrato_firmado )) 	
-												                                if ($proy_salvado->contrato_firmado==1) {$marca='checked';} 
-												                          ?>
-														                <input <?php echo $marca; ?> type="checkbox" value="1" name="contrato_firmado"> Contrato firmado
-														                <span></span>
-														            </label> 
-																	<label class="mt-checkbox">
-																		  <?php  
-																		  		$marca='';
-																		  		if (isset($proy_salvado ->pago_anticipado )) 	 
-												                                if ($proy_salvado->pago_anticipado==1) {$marca='checked';} 
-												                          ?>
-
-														                <input <?php echo $marca; ?> type="checkbox" value="1" name="pago_anticipado"> Pago anticipado
-														                <span></span>
-														            </label> 
-																	<label class="mt-checkbox">
-												 						  <?php   
-												 						  		$marca='';
-												 						  		if (isset($proy_salvado ->factura_enviada )) 	 
-												                                if ($proy_salvado->factura_enviada==1) {$marca='checked';} 
-												                          ?>
-
-														                <input <?php echo $marca; ?> type="checkbox" value="1" name="factura_enviada"> Factura enviada
-														                <span></span>
-														            </label> 
-
-																</div>
-														</div>		
+														
 
 
 

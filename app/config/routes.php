@@ -131,6 +131,7 @@ $route['eliminar_proyecto/(:any)/(:any)'] = 'administracion/eliminar_proyecto/$1
 $route['validar_eliminar_proyecto']    	 = 'administracion/validar_eliminar_proyecto';
 
 
+$route['validacion_edicion_nivel']     = 'administracion/validacion_edicion_nivel';
 
 
 //buscador

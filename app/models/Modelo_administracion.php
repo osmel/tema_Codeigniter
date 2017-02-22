@@ -304,6 +304,7 @@
     
           //ordenacion
           $this->db->order_by($columna, $order); 
+          $this->db->group_by('c.id'); 
 
           //paginacion
           $this->db->limit($largo,$inicio); 
