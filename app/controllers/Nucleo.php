@@ -128,6 +128,10 @@ function dashboard() {
 	    	  $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
 
+
+	    	 // print_r( $data['datos']['proyectos'] ); die;
+
+
 			//comienzo "cancelaciones" para ENTORNO			  
 			    	//**OJO*** aqui el PROBLEMA ES QUE VA CREANDO TABLAS VACIAS CUANDO LE DA CANCELAR EN NUEVO
 		 		if ($this->session->userdata('creando_entorno') != "0") { //significa que cancelo en nuevo o editar
@@ -176,19 +180,25 @@ function dashboard() {
 
 			    	$id_perfil = $this->session->userdata('id_perfil');
 		    			//esto era solo para los trabajadores "HOME"
-	    			 $dato['proyecto'] = $data['datos']['proyectos'];
+
+			    	 $data['datos']['proyectos1'] = $this->modelo_proyecto->listado_proyectos_usuarios(); 	
+	    			 $dato['proyecto'] = $data['datos']['proyectos1'];
+	    			 //print_r($data['datos']['proyectos1']); die;
+
 	            	 $dato['fechapaginador'] = date('Y-m-d', strtotime('today') ); 
 	            	 $dato['fechaanterior'] = date('Y-m-d', strtotime('-1 day') ); 
 	            	 
 
 	            	 $inicio='dashboard';	
-	            	 if ($dato['proyecto']!=false) {
-	            	 	$data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
+	            	 if ($dato['proyecto']!=false) { //si hay proyectos
+	            	 	//print_r($dato['proyecto']); die;
+	            	 	$data['datos']['proyectos_salvado']= $this->modelo_proyecto->listado_registro_usuario($dato); 	
 	            	 	//print_r($data['datos']['proyectos']); die;
 	            	 	$inicio='home';
 
 	            	 }
 	            	 
+	            	 $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
 
 		          switch ($id_perfil) {    
 		            case 1:		            

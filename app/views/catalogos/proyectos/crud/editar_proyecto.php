@@ -49,7 +49,7 @@
 <!-- <input type="hidden" id="dueno" name="dueno" value="1"> -->
 <input type="hidden" id="id_proy" name="id_proy" value="<?php echo $proy_salvado->id_proy; ?>"> 
 
-
+<input type="hidden" id="nombre" name="nombre" value="">
 
 
 
@@ -81,35 +81,55 @@
                                             <div class="tab-pane fade active in" id="tab_1_1">
 			                                                
                                             	<div class="col-sm-6 col-md-6" id="cuadrante1">
+                                            					
 
 													<div class="portlet light bordered">
 					                                    <div class="portlet-title">
-					                                        <div class="caption">
+					                                        <div class="caption col-md-12">
 					                                            <i class="icon-equalizer font-dark hide"></i>
-					                                            <span class="caption-subject font-dark bold uppercase">
+
+
+					                                            <div class="col-md-6">	
+					                                              	<span class="caption-subject font-dark bold uppercase">Proyecto</span>
+
+					                                            </div>
+
+																<div class="col-md-6">
 																	
-																		<?php 
+																		<span class="caption-subject font-dark bold uppercase">Creación</span>
+
+					                                            </div>
+
+
+
+					                                        </div>
+					                                    </div>
+					                                     <div class="col-md-6">	
+					                                               <?php 
 																			$nomb_nom='';
 																			if (isset($proy_salvado ->proyecto )) 
 																			 {	$nomb_nom = $proy_salvado ->proyecto ;}
 																		?>
+
 																		<fieldset disabled>
-																		<input value="<?php echo  set_value('proyecto',$nomb_nom); ?>"  type="text" class="form-control ttip" title="Ingresar un nuevo proyecto." id="proyecto" name="proyecto" placeholder="Nombre del proyecto">
+																			<input value="<?php echo  set_value('proyecto',$nomb_nom); ?>"  type="text" class="form-control" title="Ingresar un nuevo proyecto." id="proyecto" name="proyecto" placeholder="Nombre del proyecto">
 																		</fieldset>	
 
-					                                            Proyecto
-																	<?php 
-																		$nomb_nom=date("d-m-Y"); 
-																		if (isset($proy_salvado ->fecha_creacion )) 
-																		 {	$nomb_nom = $proy_salvado ->fecha_creacion ;}
-																	?>
-																	<fieldset disabled>
-																		<input value="<?php echo  set_value('fecha_creacion',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
-																	</fieldset>	
+					                                            </div>
 
-					                                            </span>
-					                                        </div>
-					                                    </div>
+																<div class="col-md-6">
+																	<?php 
+																			$nomb_nom=date("d-m-Y"); 
+																			if (isset($proy_salvado ->fecha_creacion )) 
+																			 {	$nomb_nom = $proy_salvado ->fecha_creacion ;}
+																		?>
+																		<fieldset disabled>
+																			<input value="<?php echo  set_value('fecha_creacion',$nomb_nom); ?>" type="text" class="fecha  form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
+																		</fieldset>	
+					                                            </div>
+
+
+
 
 					                                    <div class="portlet-body">
 
@@ -148,7 +168,7 @@
 					                                        <div class="caption">
 					                                            <i class="icon-equalizer font-dark hide"></i>
 					                                            <span class="caption-subject font-dark bold uppercase">Detalles</span>
-					                                            <span class="caption-helper">xxxx...</span>
+					                                            <span class="caption-helper"></span>
 					                                        </div>
 					                                        <div class="tools">
 					                                            <!--
@@ -178,7 +198,7 @@
 																		if (isset($proy_salvado ->descripcion )) 
 																		 {	$nomb_nom = $proy_salvado ->descripcion ;}
 																	?>
-								                                       <div class="col-sm-9 col-md-10">
+								                                       <div class="col-sm-12 col-md-12">
 								                                            <textarea id="descripcion" name="descripcion" class="form-control" rows="3"><?php echo  set_value('descripcion',$nomb_nom); ?></textarea>
 								                                        </div>
 																</div>

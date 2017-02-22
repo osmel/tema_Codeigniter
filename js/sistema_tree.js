@@ -193,6 +193,7 @@ jQuery(document).ready(function($) {
                             $.get('/crear_nodo?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
                                 .done(function (d) {
                                     data.instance.set_id(data.node, d.id);
+                                    //$("#nombre").val(data.node.text);
                                 })
                                 .fail(function () {
                                     data.instance.refresh();
@@ -207,6 +208,8 @@ jQuery(document).ready(function($) {
                                         if (data.node.id==1)  //si es la raiz
                                           $("#proyecto").val(data.text);
                                     }  
+
+                                    $("#nombre").val(data.text);
                                 })
                                 .fail(function () {
                                     data.instance.refresh();
@@ -232,6 +235,8 @@ jQuery(document).ready(function($) {
                                 //niveles la raiz = proyecto = 1        
                             if ($("#ambito_app").val()==2)  { //if estamos en proyectos
 
+                                $("#nombre").val(data.node.text);
+                                
                                 jQuery('form').submit();
 
 
@@ -267,7 +272,7 @@ jQuery(document).ready(function($) {
                                                                             texto+='<div class="caption">';
                                                                                 texto+='<i class="icon-equalizer font-dark hide"></i>';
                                                                                 texto+='<span class="caption-subject font-dark bold uppercase">Detalles</span>';
-                                                                                texto+='<span class="caption-helper">xxxx...</span>';
+                                                                                texto+='<span class="caption-helper"></span>';
                                                                             texto+='</div>';
                                                                             texto+='<div class="tools">';
                                                                                 texto+='<a href="" class="eliminar" data-original-title="" title=""> </a>';
@@ -295,7 +300,7 @@ jQuery(document).ready(function($) {
                                                                                                 $descripcion='';
                                                                                             }
 
-                                                                                       texto+='<div class="col-sm-9 col-md-10">';
+                                                                                       texto+='<div class="col-sm-12 col-md-12">';
                                                                                             texto+='<textarea id="descripcion" name="descripcion" class="form-control" rows="3">'+$descripcion+'</textarea>';
                                                                                         texto+='</div>';
                                                                                 texto+='</div>';

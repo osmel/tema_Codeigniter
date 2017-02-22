@@ -397,6 +397,7 @@
             $profundidad_activo = self::coger_entorno($data)->profundidad;
 
 
+
             $this->db->select("c.id, c.entorno, c.tabla, c.profundidad");         
             $this->db->select($data["id"]." as id_activo",false);         
             $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno',false);         
@@ -405,31 +406,35 @@
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);         
             $this->db->from($this->catalogo_entornos.' As c');
             $this->db->join($this->registro_proyecto.' As r', 'r.id_entorno = c.id', 'LEFT');
+
+            $max_entornos = 4; //maximos entornos configurados(cantidad de tablas con nivel2..4)
+            $cond_niveles ='';
+            for ($i=2; $i <= $max_entornos; $i++) { 
+               $this->db->join($this->db->dbprefix('registro_nivel'.$i).' As n'.$i, 'n'.$i.'.id_entorno = c.id', 'LEFT');
+
+               $cond_niveles .= ' OR (LOCATE("'.$id_session.'",n'.$i.'.id_val)>0)' ;
+            }
+
+            //
             
 
+            $where ='';
             switch ($id_perfil) {
               case 1: //super
               case 2: //Admin
                               // todos los usuarios
-               /*
-               $where ='(
-                        (c.id_usuario= "'.$id_session.'") OR
-                        (LOCATE("'.$id_session.'",r.id_val)>0) 
-                      )'; 
-               */           
-
                 break;
               case 3: //lider
                     $where ='(
                       (c.id_usuario= "'.$id_session.'") OR
-                      (LOCATE("'.$id_session.'",r.id_val)>0) 
+                      (LOCATE("'.$id_session.'",r.id_val)>0) '.$cond_niveles.'
                     )'; 
                     $this->db->where($where);
                 break;
 
                 case 4: //trabajadores
                     $where ='(
-                                (LOCATE("'.$id_session.'",r.id_val)>0) 
+                                (LOCATE("'.$id_session.'",r.id_val)>0) '.$cond_niveles.'
                               )'; 
                     $this->db->where($where);          
                 break;              
@@ -439,7 +444,24 @@
                 break;
             }            
             
-                          
+                     
+/*
+SELECT `c`.`id`, `c`.`entorno`, `c`.`tabla`, `c`.`profundidad`, 1 as id_activo,
+ (c.id_usuario= "00e10de5-f491-11e6-b097-7071bce181c3") as dueno, 
+ 'General' as nombre_activo, '4' as profundidad_activo, `c`.`id`, 
+ `c`.`entorno`, `c`.`tabla`, `c`.`profundidad` 
+
+FROM (`inven_catalogo_entornos` As `c`, `inven_catalogo_entornos` As `c`)
+   LEFT JOIN `inven_registro_proyecto` As `r` ON `r`.`id_entorno` = `c`.`id` 
+   LEFT JOIN `inven_registro_nivel2` As `n2` ON `n2`.`id_entorno` = `c`.`id` 
+   LEFT JOIN `inven_registro_nivel3` As `n3` ON `n3`.`id_entorno` = `c`.`id` 
+   LEFT JOIN `inven_registro_nivel4` As `n4` ON `n4`.`id_entorno` = `c`.`id` 
+
+   WHERE `c`.`id` = 1
+
+*/
+
+                   //  return     $where; 
              
 
              $this->db->group_by("c.id");

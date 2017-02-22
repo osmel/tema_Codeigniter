@@ -42,6 +42,7 @@
 
 <input type="hidden" id="profundidad" name="profundidad" value="1">
 <input type="hidden" id="id_nivel" name="id_nivel" value="1">
+<input type="hidden" id="nombre" name="nombre" value="">
 
 <?php 
 $nomb_nom='';

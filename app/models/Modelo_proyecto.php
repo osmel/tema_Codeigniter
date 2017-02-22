@@ -173,10 +173,16 @@
           //$this->db->set( 'id', 0 );  
           $this->db->set( 'id_entorno', $data['id_entorno'][$i] );  
           $this->db->set( 'id_proyecto', $data['id_proyecto'][$i] );  
+          
+          $this->db->set( 'identificador', $data['identificador'][$i] );  
+          $this->db->set( 'id_nivel', $data['id_nivel'][$i] );  
+          $this->db->set( 'profundidad', $data['profundidad'][$i] );  
+
           $this->db->set( 'descripcion', $data['descripcion'][$i]);  
           $this->db->set( 'horas', $data['hora'][$i] );  
           $this->db->set( 'id_usuario', $id_session );  
           $this->db->set( 'fecha', $data['fechapaginador'] );  
+
           if  (!($data['id_user_proy'][$i])) {
               $this->db->insert($this->registro_user_proy );  
               $data['id_user_proy'][$i] = $this->db->insert_id(); //obtener el id
@@ -198,12 +204,24 @@
 
         $id_session = $this->session->userdata('id');
 
-        //$tmp = array();
-        //$tmp[] = (int)$id["id"];
+
+
+        foreach ($data['proyecto'] as $key => $value) {
+          if ($value->tabla !="no") {
+              
+              $cons = 'SELECT nm as nombre FROM  inven_pdata_'. $value->tabla.' where  id = '.$value->id_nivel;
+              $result = $this->db->query( $cons); 
+
+               $value->proyecto = $result->row()->nombre;
+          }
+
+        }  
+
+    
         foreach ($data['proyecto'] as $key => $value) {
                
 //hoy
-               $this->db->select( 'r.id, r.id_entorno, r.id_proyecto, r.descripcion, r.horas,  r.id_usuario' );
+               $this->db->select( 'r.id, r.id_entorno, r.id_proyecto, r.descripcion, r.horas,  r.id_usuario, r.profundidad, r.id_nivel' );
                $this->db->select("DATE_FORMAT((r.fecha),'%d-%m-%Y') as fecha",false);
 
                $this->db->select("r.horas as hr_anterior",false);
@@ -216,7 +234,10 @@
                           (
                             (r.id_usuario= "'.$id_session.'") AND
                             (r.id_entorno = '.$value->id_activo.' ) AND
-                            (r.id_proyecto = '.$value->id.'  ) AND
+                            (r.id_proyecto = '.$value->id_proyecto.'  ) AND
+                            (r.identificador = '.$value->id.'  ) AND
+                            (r.id_nivel = '.$value->id_nivel.'  ) AND
+                            (r.profundidad = '.$value->profundidad.'  ) AND
                             ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  =  "'.$data['fechapaginador'].'" ) 
                            )
               )';   
@@ -233,8 +254,7 @@
 
 //Anterior
 
-               //$this->db->select( 'r.id, r.id_entorno, r.id_proyecto, r.descripcion, r.horas,  r.id_usuario' );
-               //$this->db->select("DATE_FORMAT((r.fecha),'%d-%m-%Y') as fecha",false);
+               
                $this->db->select("r.horas as hr_anterior",false);
                
                $this->db->from($this->registro_user_proy.' as r');
@@ -245,7 +265,10 @@
                           (
                             (r.id_usuario= "'.$id_session.'") AND
                             (r.id_entorno = '.$value->id_activo.' ) AND
-                            (r.id_proyecto = '.$value->id.'  ) AND
+                            (r.id_proyecto = '.$value->id_proyecto.'  ) AND
+                            (r.identificador = '.$value->id.'  ) AND
+                            (r.id_nivel = '.$value->id_nivel.'  ) AND
+                            (r.profundidad = '.$value->profundidad.'  ) AND
                             ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  =  "'.$data['fechaanterior'].'" ) 
                            )
               )';   
@@ -268,7 +291,234 @@
         }
 
         return $data['proyecto'];
-  }    
+  }  
+
+
+/*
+
+
+SELECT id_entorno, id_proyecto, id_nivel, profundidad, d.nm nombre, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio
+FROM inven_registro_nivel2 n
+inner join inven_pdata_20170222143013ZLwX960 d on n.id_nivel= d.id
+WHERE ( ( ( n.id_usuario =  "00e10de5-f491-11e6-b097-7071bce181c3" ) OR ( LOCATE(  "00e10de5-f491-11e6-b097-7071bce181c3", n.id_val ) >0 ) ) AND ( n.id_entorno =1 ))
+
+
+
+
+
+(
+SELECT id_entorno, id_proyecto, id_nivel, profundidad, proyecto nombre, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio
+FROM inven_registro_proyecto n
+WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE(  "d86270f7-f22e-11e6-8df6-7071bce181c3", n.id_val ) >0 ) ) AND ( n.id_entorno =1 ))
+)
+UNION
+
+
+(
+SELECT id_entorno, id_proyecto, id_nivel, profundidad, nombre, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio
+FROM inven_registro_nivel2 n
+WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE(  "d86270f7-f22e-11e6-8df6-7071bce181c3", n.id_val ) >0 ) ) AND ( n.id_entorno =1 ))
+)
+UNION
+(
+SELECT id_entorno, id_proyecto, id_nivel, profundidad, nombre, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio
+FROM inven_registro_nivel3 n
+WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE(  "d86270f7-f22e-11e6-8df6-7071bce181c3", n.id_val ) >0 ) ) AND ( n.id_entorno =1 ))
+)
+
+UNION
+(
+SELECT id_entorno, id_proyecto, id_nivel, profundidad, nombre, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio
+FROM inven_registro_nivel4 n
+WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE(  "d86270f7-f22e-11e6-8df6-7071bce181c3", n.id_val ) >0 ) ) AND ( n.id_entorno =1 ))
+)
+
+
+*/
+
+
+    public function listado_proyectos_usuarios(  ){
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id_session = $this->session->userdata('id');
+            $data["id"] = $this->session->userdata('entorno_activo');
+            $nombre_activo = self::coger_entorno($data)->entorno;
+            $profundidad_activo = self::coger_entorno($data)->profundidad;
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+
+
+              switch ($id_perfil) {
+                case 1: //super
+                case 2: //Admin
+                                // todos los usuarios
+                 
+                 $where =' WHERE  (n.id_entorno= '.$id_entorno.') '; 
+                 
+
+                  break;
+                case 3: //lider
+                      
+                    $where=' WHERE (
+                                  ( (n.id_usuario = "'.$id_session.'") OR (LOCATE("'.$id_session.'",n.id_val)>0)  )
+                                    AND (n.id_entorno= '.$id_entorno.')
+                          )';
+                      
+                  break;
+
+                  case 4: //trabajadores
+                        $where=' WHERE (
+                                  ( (n.id_usuario = "'.$id_session.'") OR (LOCATE("'.$id_session.'",n.id_val)>0)  )
+                                    AND (n.id_entorno= '.$id_entorno.')
+                          )';
+                      
+                  break;              
+
+                default:
+                     //nada
+                  break;
+              }   
+
+
+                $where=' WHERE (
+                                  ( (LOCATE("'.$id_session.'",n.id_val)>0)  )
+                                    AND (n.id_entorno= '.$id_entorno.')
+                          )';
+
+
+            //$this->db->select(',false);         
+            //$this->db->select("'".$nombre_activo."' as nombre_activo",false);         
+            //$this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
+            
+            //$this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
+            //$this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar      
+
+              //$this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
+
+
+            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, id, id_entorno, id_proyecto, id_nivel, profundidad, proyecto, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio, "no" tabla';
+            
+            $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
+
+
+
+                $consulta = '(select '.$campos_proy.' from '.$this->registro_proyecto.' As n '.$where.')';
+
+                $max_entornos = $profundidad_activo; //4; //maximos entornos configurados(cantidad de tablas con nivel2..4)
+                for ($i=2; $i <= $max_entornos; $i++) { 
+                  $consulta .= ' union (select '.$campos_niveles.' from '.$this->db->dbprefix('registro_nivel'.$i).' As n 
+                      inner join '.$this->catalogo_proyectos.' As cp  on cp.id = n.id_proyecto
+                  '.$where.')';
+                   
+                }
+
+
+                /*
+                  SELECT cp.tabla FROM inven_registro_nivel2 r
+                    inner join inven_catalogo_proyectos cp  on cp.id = r.id_proyecto
+                    where r.id_proyecto=78
+                */
+
+
+             
+                     
+            $result = $this->db->query( $consulta);  
+
+             if ( $result->num_rows() > 0 ) {
+                  return $result->result();
+              } else 
+                  return false;
+            $result->free_result();   
+             
+     }  
+
+
+    public function listado_proyectos(  ){
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id_session = $this->session->userdata('id');
+            $data["id"] = $this->session->userdata('entorno_activo');
+            $nombre_activo = self::coger_entorno($data)->entorno;
+            $profundidad_activo = self::coger_entorno($data)->profundidad;
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
+            $this->db->select($data["id"]." as id_activo",false);         
+            $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
+            $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
+            
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
+            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar      
+
+            $this->db->from($this->catalogo_proyectos.' As c');
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id', 'LEFT');
+
+            $max_entornos = $profundidad_activo; //4; //maximos entornos configurados(cantidad de tablas con nivel2..4)
+            $cond_niveles ='';
+            for ($i=2; $i <= $max_entornos; $i++) { 
+               $this->db->join($this->db->dbprefix('registro_nivel'.$i).' As n'.$i, 'n'.$i.'.id_proyecto = c.id', 'LEFT');
+
+               $cond_niveles .= ' OR (LOCATE("'.$id_session.'",n'.$i.'.id_val)>0)' ;
+            }
+
+
+                switch ($id_perfil) {
+                  case 1: //super
+                  case 2: //Admin
+                                  // todos los usuarios
+                   
+                   $where ='(
+                            (c.id_entorno= '.$id_entorno.')
+                          )'; 
+                   
+
+                    break;
+                  case 3: //lider
+                        $where ='(
+                          ( (c.id_usuario = "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  '.$cond_niveles.' )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        )'; 
+                        
+                    break;
+
+                    case 4: //trabajadores
+                        $where ='(
+                          ( (c.id_usuario= "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  '.$cond_niveles.' )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        )'; 
+                        
+                    break;              
+
+                  default:
+                       //nada
+                    break;
+                }         
+
+
+                          
+             $this->db->where($where);
+
+             $this->db->group_by('c.id');
+
+             
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+     }  
+
+
+
+
+  
+
 
       public function buscador_usuarios($data){
             $this->db->select( 'id' );
@@ -709,87 +959,6 @@
      }  
 
 
-    public function listado_proyectos(  ){
-            $id_perfil=$this->session->userdata('id_perfil');
-            $id_session = $this->session->userdata('id');
-            $data["id"] = $this->session->userdata('entorno_activo');
-            $nombre_activo = self::coger_entorno($data)->entorno;
-            $profundidad_activo = self::coger_entorno($data)->profundidad;
-
-            $id_entorno = $this->session->userdata('entorno_activo');
-
-            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
-            $this->db->select($data["id"]." as id_activo",false);         
-            $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
-            $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
-            
-            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
-            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar      
-
-            $this->db->from($this->catalogo_proyectos.' As c');
-            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id', 'LEFT');
-
-            /*
-            $where ='(
-
-                        ( (c.id_usuario= "'.$id_session.'") OR (LOCATE("'.$id_session.'",r.id_val)>0) ) AND
-                        (c.id_entorno= '.$id_entorno.')
-
-                      )'; */
-
-
-
-
-
-                switch ($id_perfil) {
-                  case 1: //super
-                  case 2: //Admin
-                                  // todos los usuarios
-                   
-                   $where ='(
-                            (c.id_entorno= '.$id_entorno.')
-                          )'; 
-                   
-
-                    break;
-                  case 3: //lider
-                        $where ='(
-                          ( (c.id_usuario = "'.$id_session.'") OR
-                          (LOCATE("'.$id_session.'",r.id_val)>0)  )
-                          AND (c.id_entorno= '.$id_entorno.')
-                        )'; 
-                        
-                    break;
-
-                    case 4: //trabajadores
-                        $where ='(
-                          ( (c.id_usuario= "'.$id_session.'") OR
-                          (LOCATE("'.$id_session.'",r.id_val)>0)  )
-                          AND (c.id_entorno= '.$id_entorno.')
-                        )'; 
-                        
-                    break;              
-
-                  default:
-                       //nada
-                    break;
-                }         
-
-
-                          
-             $this->db->where($where);
-
-            $result = $this->db->get(  );
-                if ($result->num_rows() > 0){
-                   return $result->result();
-                } else {
-                   return FALSE;
-                }
-                    
-                $result->free_result();
-     }  
-
-
 
            
 
@@ -951,7 +1120,7 @@
           $this->db->set( 'id_nivel', $data['id_nivel'] );
           $this->db->set( 'profundidad', $data['profundidad'] );
 
-          $this->db->set( 'nombre', $data['proyecto'] );  
+          $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
@@ -994,7 +1163,8 @@
           $this->db->set( 'id_nivel', $data['id_nivel'] );
           $this->db->set( 'profundidad', $data['profundidad'] );
 
-          $this->db->set( 'nombre', $data['proyecto'] );  
+          //$this->db->set( 'nombre', $data['proyecto'] );  
+          $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  

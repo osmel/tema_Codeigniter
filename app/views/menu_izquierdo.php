@@ -1,6 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 
 <?php $id_perfil=$this->session->userdata('id_perfil');  ?>
+
+<?php 
+    /*
+   foreach ($proyectos as $proyecto) { 
+    print_r($proyecto->dueno_real);
+   }*/
+//print_r($proyectos);
+
+
+ //die;?>
+
                 <!-- BEGIN SIDEBAR -->
                 <div class="page-sidebar-wrapper">
                     <!-- BEGIN SIDEBAR -->
@@ -136,7 +147,9 @@
 
                                                      class="nav-item context"  data-toggle="context" data-target="#context-menu">
                                                             <a href="<?php echo base_url(); ?>editar_proyecto/<?php echo base64_encode($proyecto->id); ?>" class="nav-link ">
-                                                                
+                                                                    
+                                                                    
+
                                                                 <i class="fa fa-<?php echo ($proyecto->dueno_real==1) ? 'unlock' : 'unlock-alt' ?>"></i>
                                                                 <span class="title"><?php echo $proyecto->proyecto; ?></span>
                                                                 <span class="badge badge-success">6</span>

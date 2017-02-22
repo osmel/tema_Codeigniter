@@ -74,7 +74,7 @@
 								</div>
 
 
-							 <?php foreach ($datos["proyectos"] as $key => $proyecto) { ?>
+							 <?php foreach ($datos["proyectos_salvado"] as $key => $proyecto) { ?>
 								<div class="row">
 									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->					<!--
 									  texto+='<input restriccion="decimal" value="'+row[4]+'" identificador="'+row[0]+'" type="text" class="form-control ttip cantidad_um" title="Números y puntos decimales."  placeholder="0.00">';							
@@ -83,7 +83,7 @@
 											<div class="col-sm-3 col-md-3">
 												<label class="mt-checkbox">
 									                <input class="contrato_firmado<?php echo $key; ?>" type="checkbox" value="1" name="contrato_firmado[]">
-									                	<?php echo $proyecto->proyecto?>
+									                	<?php echo $proyecto->proyecto;?>
 									                <span></span>
 									            </label> 
 											</div>
@@ -93,7 +93,13 @@
 											<input type="hidden" class="id_user_proy<?php echo $key; ?>" name="id_user_proy[]" value="<?php echo ( ( isset($proyecto->reg_user->id)) ? $proyecto->reg_user->id : null) ; ?>">
 
 											<!-- id del registro_user_proy -->			
-											<input type="hidden" class="id_proyecto<?php echo $key; ?>"  name="id_proyecto[]" value="<?php echo ( ( isset($proyecto->id)) ? $proyecto->id : null) ; ?>">
+											<input type="hidden" class="id_proyecto<?php echo $key; ?>"  name="id_proyecto[]" value="<?php echo ( ( isset($proyecto->id_proyecto)) ? $proyecto->id_proyecto : null) ; ?>">
+
+											<input type="hidden" class="id_nivel<?php echo $key; ?>"  name="id_nivel[]" value="<?php echo ( ( isset($proyecto->id_nivel)) ? $proyecto->id_nivel : null) ; ?>">
+
+											<input type="hidden" class="profundidad<?php echo $key; ?>"  name="profundidad[]" value="<?php echo ( ( isset($proyecto->profundidad)) ? $proyecto->profundidad : null) ; ?>">
+
+											<input type="hidden" class="identificador<?php echo $key; ?>"  name="identificador[]" value="<?php echo ( ( isset($proyecto->id)) ? $proyecto->id : null) ; ?>">
 
 											<!-- id del registro_user_proy -->			
 											<input type="hidden" class="id_entorno<?php echo $key; ?>" name="id_entorno[]" value="<?php echo ( ( isset($proyecto->id_activo)) ? $proyecto->id_activo : null) ; ?>">

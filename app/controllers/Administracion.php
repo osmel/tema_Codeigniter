@@ -89,8 +89,13 @@ function listado_niveles( ){
 
           
 
-           $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 
-           $dato['proyecto'] = $data['datos']['proyectos'];
+           //$data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 
+           //$dato['proyecto'] = $data['datos']['proyectos'];
+           $data['datos']['proyectos1'] = $this->modelo_proyecto->listado_proyectos_usuarios();   
+           $dato['proyecto'] = $data['datos']['proyectos1'];
+
+
+
            $dato['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
            $dato['fechaanterior'] = date('Y-m-d', strtotime ( '-1 day' , strtotime($this->input->post('fechapaginador')) )  ); 
            $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
@@ -471,6 +476,7 @@ function validacion_edicion_nivel(){
           $data['id_nivel']       = $this->input->post('id_nivel'); //registro_proyecto
           $data['profundidad']       = $this->input->post('profundidad'); //registro_proyecto
 
+          $data['nombre']         = $this->input->post('nombre'); //nombre_proyecto o niveles
           $data['proyecto']         = $this->input->post('proyecto'); //nombre_proyecto o niveles
           $data['descripcion']     = $this->input->post('descripcion'); //descripcion_proyecto o niveles
           $data['costo']         = $this->input->post('costo'); //costo_proyecto o niveles

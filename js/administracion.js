@@ -94,9 +94,6 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                         url: "/ajax_user_proy_json",
                         type: 'POST',
                         dataType: "json",
-
-                        
-                        dataType: "json",
                         data: {
                              fechapaginador: fechapaginador //.toString() 
                          },
@@ -112,7 +109,25 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                                 $('.id_user_proy'+(i)).val( (value.reg_user!=null) ? value.reg_user.id : null  ) ;
 
                                 $('.id_entorno'+(i)).val( value.id_activo ) ;
-                                $('.id_proyecto'+(i)).val( value.id ) ;
+                                $('.id_proyecto'+(i)).val( value.id_proyecto ) ;
+
+                                $('.id_nivel'+(i)).val( value.id_nivel ) ;
+                                $('.profundidad'+(i)).val( value.profundidad ) ;
+
+
+                                //$('.identificador'+(i)).val( value.identificador[i] ) ;
+
+
+                            //$('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
+                            //$('.id_entorno'+(i)).val( data.id_entorno[i] ) ;
+                            //$('.id_proyecto'+(i)).val( data.id_proyecto[i] ) ;
+                            /*
+                            $('.identificador'+(i)).val( data.identificador[i] ) ;
+                            $('.id_nivel'+(i)).val( data.id_nivel[i] ) ;
+                            $('.profundidad'+(i)).val( data.profundidad[i] ) ;
+                            */
+
+
 
                                 $('.hr_anterior'+(i)).val( (value.anterior!=null) ? (value.anterior.hr_anterior) : 0 ) ;
 
@@ -157,13 +172,19 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                     success: function(data){
                        total =0;   
                         for (var i = 0; i < data.id_user_proy.length; i++) {
-                            console.log(data.id_user_proy[i]);
-                            console.log( $('.id_user_proy'+(i)).val() );
+                            //console.log(data.id_user_proy[i]);
+                            //console.log( $('.id_user_proy'+(i)).val() );
 
                             //oculto
+                            //alert(data.id_user_proy[i]);
                             $('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
                             $('.id_entorno'+(i)).val( data.id_entorno[i] ) ;
                             $('.id_proyecto'+(i)).val( data.id_proyecto[i] ) ;
+                            
+                            $('.identificador'+(i)).val( data.identificador[i] ) ;
+                            $('.id_nivel'+(i)).val( data.id_nivel[i] ) ;
+                            $('.profundidad'+(i)).val( data.profundidad[i] ) ;
+                            
 
                             
                             $('.hora'+(i)).val( data.hora[i] ) ;
