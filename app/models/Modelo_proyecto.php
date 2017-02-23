@@ -286,9 +286,9 @@ ORDER BY parent.lft;
 
               $data["id"] = $value->id_nivel;
               $data["tabla"] = $value->tabla;
-              $value->ruta = self::ruta_elemento($data);
+              $value->ruta = self::ruta_elemento($data); 
 
-          
+            
 
 
          
