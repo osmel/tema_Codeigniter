@@ -83,7 +83,7 @@
 											<div class="col-sm-3 col-md-3">
 												<label class="mt-checkbox">
 									                <input class="contrato_firmado<?php echo $key; ?>" type="checkbox" value="1" name="contrato_firmado[]">
-									                	<?php echo $proyecto->proyecto;?>
+									                	<as class="ttip" title="<?php echo $proyecto->ruta;?>"><?php echo $proyecto->proyecto;?></as>
 									                <span></span>
 									            </label> 
 											</div>

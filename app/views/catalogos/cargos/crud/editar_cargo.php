@@ -62,7 +62,7 @@
 									  <?php   
 			                                if ($cargo->lider==1) {$marca='checked';} else {$marca='';}
 			                          ?>
-					                <input <?php echo $marca; ?> type="checkbox" value="1" name="contrato_firmado">Lider
+					                <input <?php echo $marca; ?> type="checkbox" value="1" name="lider">Lider
 					                <span></span>
 					            </label> 
 								<label class="mt-checkbox">

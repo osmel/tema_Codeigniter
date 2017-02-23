@@ -200,6 +200,75 @@
 
     //id, id_entorno, id_proyecto, descripcion, horas, fecha, id_usuario, fecha_mac
 
+
+
+
+
+ 
+
+
+public function obtener_contenido() {
+
+    $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : 0;
+    
+    $node = explode(':', $node);
+
+    if(count($node) > 1) {
+        $rslt = array('content' => 'Multiples Seleccionados');
+    } else {
+       //en este caso $temp[path] es agregado para el recorrido seleccionado
+       $temp = $this->modelo_arbol->get_node((int)$node[0], array('with_path' => true));
+
+       //aqui se conforma el formato q voy a presentar del recorrido seleccionado
+       $rslt = array('content' => 'Seleccionado: /' . 
+                                   implode('/',array_map(function ($v) { return $v['nm']; }, $temp['path'])).
+                                   '/'.$temp['nm']
+                    );
+       }
+     
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($rslt);
+    
+  }    
+
+
+//checar si el entorno ya existe
+    public function ruta_elemento($data){
+            //http://www.teacupapps.com/blog/mysql/concatenar-varias-filas-en-una-con-mysql
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+              $sql="
+              select GROUP_CONCAT(data.nm SEPARATOR ' / ') ruta 
+                 from(
+                    SELECT padre.id
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                   WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                    AND nodo.id = ".$data['id']."
+                   ORDER BY padre.lft 
+                ) profundidad
+                INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+              ";                
+
+             $query = $this->db->query($sql);                
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();
+    } 
+
+
+/*
+SELECT parent.name
+FROM nested_category AS node,
+        nested_category AS parent
+WHERE node.lft BETWEEN parent.lft AND parent.rgt
+        AND node.name = 'FLASH'
+ORDER BY parent.lft;    
+
+*/
   public function listado_registro_usuario($data){
 
         $id_session = $this->session->userdata('id');
@@ -207,13 +276,22 @@
 
 
         foreach ($data['proyecto'] as $key => $value) {
-          if ($value->tabla !="no") {
+          
               
               $cons = 'SELECT nm as nombre FROM  inven_pdata_'. $value->tabla.' where  id = '.$value->id_nivel;
               $result = $this->db->query( $cons); 
 
                $value->proyecto = $result->row()->nombre;
-          }
+
+
+              $data["id"] = $value->id_nivel;
+              $data["tabla"] = $value->tabla;
+              $value->ruta = self::ruta_elemento($data);
+
+          
+
+
+         
 
         }  
 
@@ -396,14 +474,15 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
               //$this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
 
 
-            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, id, id_entorno, id_proyecto, id_nivel, profundidad, proyecto, descripcion, costo, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, id_usuario, id_user_cambio, "no" tabla';
+            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id, n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.proyecto, n.descripcion, n.costo, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
             
             $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
 
 
 
-                $consulta = '(select '.$campos_proy.' from '.$this->registro_proyecto.' As n '.$where.')';
-
+                $consulta = '(select '.$campos_proy.' from '.$this->registro_proyecto.' As n 
+                  inner join '.$this->catalogo_proyectos.' As cp  on cp.id = n.id_proyecto
+                  '.$where.')';
                 $max_entornos = $profundidad_activo; //4; //maximos entornos configurados(cantidad de tablas con nivel2..4)
                 for ($i=2; $i <= $max_entornos; $i++) { 
                   $consulta .= ' union (select '.$campos_niveles.' from '.$this->db->dbprefix('registro_nivel'.$i).' As n 

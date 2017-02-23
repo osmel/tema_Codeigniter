@@ -278,7 +278,7 @@
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
             }  else
-                 return FALSE;
+                 return true;
                 $result->free_result();
         } 
 
@@ -486,7 +486,7 @@
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
             }  else
-                 return FALSE;
+                 return true;
                 $result->free_result();
         }   
 
@@ -692,7 +692,7 @@
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
             }  else
-                 return FALSE;
+                 return true;
                 $result->free_result();
         } 
 
@@ -902,7 +902,7 @@
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
             }  else
-                 return FALSE;
+                 return true;
                 $result->free_result();
         } 
 

@@ -276,7 +276,7 @@ function dashboard() {
             case 2:
             case 3:
             case 4:
-                 if  (in_array(5, $coleccion_id_operaciones))  { 
+                 if  (in_array(3, $coleccion_id_operaciones))  { 
                     $this->load->view( 'usuarios/crud/nuevo_usuario', $data );   
                  }   
               break;
@@ -409,7 +409,7 @@ function dashboard() {
 	 
 
 
-		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
+		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(3, $coleccion_id_operaciones)) ) {
 				$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
 				$data['clientes']   = $this->modelo->coger_catalogo_clientes(1);
 				$data['cargos']   = $this->modelo->coger_catalogo_cargos();
@@ -528,7 +528,7 @@ function validacion_edicion_usuario(){
             case 2:
             case 3:
             case 4:
-                 if  (in_array(5, $coleccion_id_operaciones))  { 
+                 if  (in_array(3, $coleccion_id_operaciones))  { 
                       if ($uid=='') {
                           $uid= $this->session->userdata('id');
                       }   
@@ -620,7 +620,7 @@ function validacion_edicion_usuario(){
             case 2:
             case 3:
             case 4:
-                 if  (in_array(5, $coleccion_id_operaciones))  { 
+                 if  (in_array(3, $coleccion_id_operaciones))  { 
                      ob_start();
                           $this->paginacion_ajax_usuario(0);
                           $initial_content = ob_get_contents();
@@ -665,7 +665,7 @@ function actualizar_perfil( $uid = '' ){
     //Administrador con permiso a todo ($id_perfil==1)
     //usuario solo viendo su PERFIL  OR (($id_perfil!=1) and ($id==$uid) )
     //Con permisos de usuarios OR (in_array(5, $coleccion_id_operaciones)) 
-		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(5, $coleccion_id_operaciones)) ) {
+		if	( ($id_perfil==1) OR (($id_perfil!=1) and ($id==$uid) ) OR (in_array(3, $coleccion_id_operaciones)) ) {
 			/*
 			$data['perfiles']		= $this->modelo->coger_catalogo_perfiles();
 			$data['clientes']   = $this->modelo->coger_catalogo_clientes(2);

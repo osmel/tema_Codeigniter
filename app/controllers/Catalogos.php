@@ -89,7 +89,7 @@ class Catalogos extends CI_Controller {
           case 2:
           case 3:
           case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   $this->load->view( 'catalogos/areas/crud/nuevo_area',$data);
                 }   
             break;
@@ -180,7 +180,7 @@ class Catalogos extends CI_Controller {
         case 2:
         case 3:
         case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   
                 
                       $this->load->view( 'catalogos/areas/crud/editar_area', $data );
@@ -213,8 +213,7 @@ function validacion_edicion_area(){
           $data['monto']   = $this->input->post('monto');
           $data['telefono']   = $this->input->post('telefono');
           
-          $existe            =  $this->modelo_catalogo->check_existente_area( $data );
-          if ( $existe !== TRUE ){
+          
 
             $data               = $this->security->xss_clean($data);  
             $guardar            = $this->modelo_catalogo->editar_area( $data );
@@ -226,10 +225,7 @@ function validacion_edicion_area(){
               echo '<span class="error"><b>E01</b> - El nuevo area no pudo ser agregado</span>';
             }
 
-         } else {
-            echo '<span class="error"><b>E01</b> - El campo que desea agregar ya existe. No es posible agregar dos areas iguales.</span>';
-         }  
-
+         
 
       } else {      
         echo validation_errors('<span class="error">','</span>');
@@ -260,7 +256,7 @@ function validacion_edicion_area(){
         case 2:
         case 3:
         case 4:
-              if  ( (in_array(8, $coleccion_id_operaciones)) )  { 
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                 $this->load->view( 'catalogos/areas/crud/eliminar_area', $data );
              }   
           break;
@@ -364,7 +360,7 @@ function validacion_edicion_area(){
 	        case 2:
 	        case 3:
 	        case 4:
-	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+	             if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
 	                $this->load->view( 'catalogos/cargos/crud/nuevo_cargo',$data);
 	              }   
 	          break;
@@ -455,7 +451,7 @@ function validacion_edicion_area(){
         case 2:
         case 3:
         case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   
                 
                       $this->load->view( 'catalogos/cargos/crud/editar_cargo', $data );
@@ -488,8 +484,6 @@ function validacion_edicion_cargo(){
           $data['lider']   = $this->input->post('lider');
           $data['activo']   = $this->input->post('activo');
           
-          $existe            =  $this->modelo_catalogo->check_existente_cargo( $data );
-          if ( $existe !== TRUE ){
 
             $data               = $this->security->xss_clean($data);  
             $guardar            = $this->modelo_catalogo->editar_cargo( $data );
@@ -501,9 +495,6 @@ function validacion_edicion_cargo(){
               echo '<span class="error"><b>E01</b> - El nuevo cargo no pudo ser agregado</span>';
             }
 
-         } else {
-            echo '<span class="error"><b>E01</b> - El campo que desea agregar ya existe. No es posible agregar dos cargos iguales.</span>';
-         }  
 
 
       } else {      
@@ -536,7 +527,7 @@ function eliminar_cargo($id = '', $nombrecompleto=''){
         case 2:
         case 3:
         case 4:
-              if  ( (in_array(8, $coleccion_id_operaciones)) )  { 
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                 $this->load->view( 'catalogos/cargos/crud/eliminar_cargo', $data );
              }   
           break;
@@ -643,7 +634,7 @@ function eliminar_cargo($id = '', $nombrecompleto=''){
           case 2:
           case 3:
           case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   $this->load->view( 'catalogos/perfiles/crud/nuevo_perfil',$data);
                 }   
             break;
@@ -734,7 +725,7 @@ function eliminar_cargo($id = '', $nombrecompleto=''){
         case 2:
         case 3:
         case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   
                 
                       $this->load->view( 'catalogos/perfiles/crud/editar_perfil', $data );
@@ -767,8 +758,6 @@ function validacion_edicion_perfil(){
           $data['operacion']   = $this->input->post('operacion');
           
           
-          $existe            =  $this->modelo_catalogo->check_existente_perfil( $data );
-          if ( $existe !== TRUE ){
 
             $data               = $this->security->xss_clean($data);  
             $guardar            = $this->modelo_catalogo->editar_perfil( $data );
@@ -780,9 +769,6 @@ function validacion_edicion_perfil(){
               echo '<span class="error"><b>E01</b> - El nuevo perfil no pudo ser agregado</span>';
             }
 
-         } else {
-            echo '<span class="error"><b>E01</b> - El campo que desea agregar ya existe. No es posible agregar dos perfiles iguales.</span>';
-         }  
 
 
       } else {      
@@ -813,7 +799,7 @@ function eliminar_perfil($id = '', $nombrecompleto=''){
         case 2:
         case 3:
         case 4:
-              if  ( (in_array(8, $coleccion_id_operaciones)) )  { 
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                 $this->load->view( 'catalogos/perfiles/crud/eliminar_perfil', $data );
              }   
           break;
@@ -923,7 +909,7 @@ function eliminar_perfil($id = '', $nombrecompleto=''){
           case 2:
           case 3:
           case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   $this->load->view( 'catalogos/configuraciones/crud/nuevo_configuracion',$data);
                 }   
             break;
@@ -1014,7 +1000,7 @@ function eliminar_perfil($id = '', $nombrecompleto=''){
         case 2:
         case 3:
         case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                   
                 
                       $this->load->view( 'catalogos/configuraciones/crud/editar_configuracion', $data );
@@ -1047,8 +1033,6 @@ function validacion_edicion_configuracion(){
           $data['valor']   = $this->input->post('valor');
           $data['activo']   = $this->input->post('activo');
           
-          $existe            =  $this->modelo_catalogo->check_existente_configuracion( $data );
-          if ( $existe !== TRUE ){
 
             $data               = $this->security->xss_clean($data);  
             $guardar            = $this->modelo_catalogo->editar_configuracion( $data );
@@ -1060,9 +1044,6 @@ function validacion_edicion_configuracion(){
               echo '<span class="error"><b>E01</b> - El nuevo configuracion no pudo ser agregado</span>';
             }
 
-         } else {
-            echo '<span class="error"><b>E01</b> - El campo que desea agregar ya existe. No es posible agregar dos configuraciones iguales.</span>';
-         }  
 
 
       } else {      
@@ -1095,7 +1076,7 @@ function eliminar_configuracion($id = '', $nombrecompleto=''){
         case 2:
         case 3:
         case 4:
-              if  ( (in_array(8, $coleccion_id_operaciones)) )  { 
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
                 $this->load->view( 'catalogos/configuraciones/crud/eliminar_configuracion', $data );
              }   
           break;

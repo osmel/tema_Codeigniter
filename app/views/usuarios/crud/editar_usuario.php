@@ -106,17 +106,23 @@
 										</div>
 									
 
-									<div class="mt-checkbox-list">
-									
-										<label class="mt-checkbox">
-											  <?php   
-					                                if ($usuario->activo==1) {$marca='checked';} else {$marca='';}
-					                          ?>
-							                <input <?php echo $marca; ?> type="checkbox" value="1" name="activo"> Activar/Desactivar
-							                <span></span>
-							            </label> 
+									<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
+											   <fieldset>
+											<?php } else { ?>	
+												<fieldset disabled>
+									<?php } ?>	
 
-									</div>
+									
+											<div class="mt-checkbox-list">
+												<label class="mt-checkbox">
+													  <?php   
+							                                if ($usuario->activo==1) {$marca='checked';} else {$marca='';}
+							                          ?>
+									                <input <?php echo $marca; ?> type="checkbox" value="1" name="activo"> Activar/Desactivar
+									                <span></span>
+									            </label> 
+											</div>
+									</fieldset>
 
 
 									</div>
@@ -148,37 +154,14 @@
 										<div class="form-group">
 											<label for="id_perfil" class="col-sm-3 col-md-2 control-label">Rol de usuario</label>
 											<div class="col-sm-9 col-md-10">
-											<?php  if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>											
-												<fieldset disabled>
-
-													<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-														<select disabled="disabled" name="id_perfil" id="id_perfil" class="form-control">
+											
+												<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
+													   <fieldset>
 													<?php } else { ?>	
-														<select  name="id_perfil" id="id_perfil" class="form-control">
-													<?php } ?>	
+														<fieldset disabled>
+												<?php } ?>	
+													<select name="id_perfil" id="id_perfil" class="form-control">	
 
-														<?php foreach ( $perfiles as $perfil ){ ?>
-															<?php 
-															   if  ($perfil->id_perfil==$usuario->id_perfil)
-																 {$seleccionado='selected';} else {$seleccionado='';}
-															?>
-
-																 <option value="<?php echo $perfil->id_perfil; ?>" <?php echo $seleccionado; ?> ><?php echo $perfil->perfil; ?></option>
-																	
-
-
-
-														<?php } ?>
-													</select>
-												</fieldset>		
-										    <?php } elseif ( $this->session->userdata( 'id_perfil' ) == 1 ){ ?>											
-													
-
-													<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-														<select disabled="disabled" name="id_perfil" id="id_perfil" class="form-control">
-													<?php } else { ?>	
-														<select name="id_perfil" id="id_perfil" class="form-control">
-													<?php } ?>	
 
 														<?php foreach ( $perfiles as $perfil ){ ?>
 															<?php 
@@ -189,7 +172,8 @@
 
 														<?php } ?>
 													</select>
-										    <?php } ?>									    
+											   </fieldset>		
+										    
 											</div>
 										</div>
 
@@ -198,37 +182,15 @@
 										<div class="form-group">
 											<label for="id_cliente" class="col-sm-3 col-md-2 control-label">Áreas</label>
 											<div class="col-sm-9 col-md-10">
-											<?php  if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>											
-												<fieldset disabled>
-
-													<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-														<select disabled="disabled" name="id_cliente" id="id_cliente" class="form-control">
-													<?php } else { ?>	
-														<select name="id_cliente" id="id_cliente" class="form-control">
-													<?php } ?>	
-
-														<?php foreach ( $clientes as $cliente ){ ?>
-															<?php 
-															   if  ($cliente->id_cliente==$usuario->id_cliente)
-																 {$seleccionado='selected';} else {$seleccionado='';}
-															?>
-
-																	<option value="<?php echo $cliente->id_cliente; ?>" <?php echo $seleccionado; ?> ><?php echo $cliente->cliente; ?></option>
-
-
-														<?php } ?>
-													</select>
-												</fieldset>		
-
-										    <?php } elseif ( $this->session->userdata( 'id_perfil' ) == 1 ){ ?>											
+																			
 													
-
-													<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-														<select disabled="disabled" name="id_cliente" id="id_cliente" class="form-control">
+											<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
+													   <fieldset>
 													<?php } else { ?>	
-														<select name="id_cliente" id="id_cliente" class="form-control">
-													<?php } ?>	
+														<fieldset disabled>
+											<?php } ?>	
 
+													<select name="id_cliente" id="id_cliente" class="form-control">
 														<?php foreach ( $clientes as $cliente ){ ?>
 															<?php 
 															   if  ($cliente->id_cliente==$usuario->id_cliente)
@@ -240,8 +202,8 @@
 
 														<?php } ?>
 													</select>
-										    <?php } ?>									    
 										    
+										    		</fieldset>
 											</div>
 										</div>		
 
@@ -253,11 +215,13 @@
 											<label for="id_cargo" class="col-sm-3 col-md-2 control-label">Cargo</label>
 											<div class="col-sm-9 col-md-10">
 
-											    <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(5, $coleccion_id_operaciones)) ) { ?>
-														<select name="id_cargo" id="id_cargo" class="form-control">
-												<?php } else { ?>	
-													    <select disabled="disabled" name="id_cargo" id="id_cargo" class="form-control">
+											    
+												<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
+													   <fieldset>
+													<?php } else { ?>	
+														<fieldset disabled>
 												<?php } ?>	
+														<select name="id_cargo" id="id_cargo" class="form-control">
 															<!--<option value="0">Selecciona una opción</option>-->
 																<?php foreach ( $cargos as $cargo ){ ?>
 																		<?php 
@@ -268,6 +232,7 @@
 																<?php } ?>
 															<!--rol de usuario -->
 														</select>
+													</fieldset>	
 											</div>
 										</div>
 									</div>
@@ -279,9 +244,11 @@
 							<br>
 
 							<!--SOLO LOS USUARIOS ADMINISTRADORES TENDRAN PERMISO DE OPERACIONES -->	
-							<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-								<fieldset disabled>
-							<?php } ?>		
+								<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
+									   <fieldset>
+									<?php } else { ?>	
+										<fieldset disabled>
+								<?php } ?>	
 								<div id="rol_perfil" style="display:block;" class="container row">
 									<div class="panel panel-primary">
 										<div class="panel-heading">Permisos de operaciones</div>
@@ -314,10 +281,11 @@
 																<?php		
 																   if (in_array($operacion->id, $colab_id_array)) {$marca='checked';} else {$marca='';}
 																?>
-																	<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-																		<input disabled type="checkbox"  value="<?php echo $operacion->id; ?>" name="coleccion_id_operaciones[]" <?php echo $marca; ?>>
-																	<?php } else { ?>	
+																	
+																	<?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>	
 																		<input type="checkbox"  value="<?php echo $operacion->id; ?>" name="coleccion_id_operaciones[]" <?php echo $marca; ?>>
+																	<?php } else { ?>	
+																		<input disabled type="checkbox"  value="<?php echo $operacion->id; ?>" name="coleccion_id_operaciones[]" <?php echo $marca; ?>>
 																	<?php } ?>	
 															<?php echo $operacion->operacion; ?> 
 													</label>
@@ -327,9 +295,9 @@
 										</div>
 									</div>
 								</div>		
-							<?php if ( $this->session->userdata( 'id_perfil' ) != 1 ){ ?>		
-								</fieldset>
-							<?php } ?>		
+							
+							</fieldset>
+							
 							
 
 							<div class="row">

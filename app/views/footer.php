@@ -130,7 +130,7 @@
            <script src="<?php echo base_url(); ?>js/administracion.js" type="text/javascript"></script>
            <script src="<?php echo base_url(); ?>js/catalogos.js" type="text/javascript"></script>
 
-           
+			<!-- -->             
 		   <script src="<?php echo base_url(); ?>js/sistema_tree.js" type="text/javascript"></script>
 
         <!-- fin Propio -->  

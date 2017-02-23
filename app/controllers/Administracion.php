@@ -425,8 +425,6 @@ function listado_usuarios_json(  ){
 
       switch ($id_perfil) {    
         case 1:
-        case 2:
-        case 3:        
                   
                   if ( $data['proy_salvado'] !== FALSE ){
                       $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
@@ -436,9 +434,11 @@ function listado_usuarios_json(  ){
 
           break;
 
+        case 2:
+        case 3:        
         case 4:
-               if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
-                  
+
+               if  ( (in_array(2, $coleccion_id_operaciones)) )  { 
                   if ( $data['proy_salvado'] !== FALSE ){
                       $this->load->view( 'catalogos/proyectos/crud/editar_proyecto', $data );
                   } else {
@@ -611,7 +611,7 @@ function validacion_edicion_proyecto(){
         case 2:
         case 3:
         case 4:
-              if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
+              if  ( (in_array(2, $coleccion_id_operaciones)) )  { 
                      $this->load->view( 'catalogos/proyectos/crud/eliminar_proyecto', $data );
              }   
           break;
@@ -870,10 +870,11 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
         
 	      switch ($id_perfil) {    
 	        case 1:
-          case 2:
-          case 3: //fa-expeditedssl
 	            $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
 	          break;
+
+          case 2:
+          case 3: 
 	        case 4:
 	             if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
 	                $this->load->view( 'catalogos/entornos/crud/nuevo_entorno',$data);
@@ -971,10 +972,6 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
 
       switch ($id_perfil) {    
         case 1:
-        case 2:
-        case 3:
-
-                  
                   if ( $data['entorno'] !== FALSE ){
                       $this->load->view( 'catalogos/entornos/crud/editar_entorno', $data );
                   } else {
@@ -982,6 +979,9 @@ CREATE TABLE IF NOT EXISTS `tree_data` (
                   }       
 
           break;
+          
+        case 2:
+        case 3:
         case 4:
                if  ( (in_array(1, $coleccion_id_operaciones)) )  { 
                   

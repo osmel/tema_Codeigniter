@@ -278,6 +278,7 @@
 
                   case 4: //trabajadores
                       $cond_user = ' AND (
+                                  (c.id_usuario= "'.$id_session.'") OR
                                   (LOCATE("'.$id_session.'",r.id_val)>0) 
                                 )'; 
                      
@@ -434,6 +435,7 @@
 
                 case 4: //trabajadores
                     $where ='(
+                                (c.id_usuario= "'.$id_session.'") OR
                                 (LOCATE("'.$id_session.'",r.id_val)>0) '.$cond_niveles.'
                               )'; 
                     $this->db->where($where);          

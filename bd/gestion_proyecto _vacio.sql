@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 21, 2017 at 10:05 PM
--- Server version: 5.5.49-0ubuntu0.14.04.1
+-- Generation Time: Feb 23, 2017 at 11:14 AM
+-- Server version: 5.5.50-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `inven_bitacora_entornos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 -- --------------------------------------------------------
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `inven_bitacora_proyectos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=70 ;
 
 -- --------------------------------------------------------
 
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_entornos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 --
 -- Dumping data for table `inven_catalogo_entornos`
@@ -253,8 +253,10 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_operaciones` (
 --
 
 INSERT INTO `inven_catalogo_operaciones` (`id`, `operacion`, `tooltip`, `consecutivo`, `conse_factura`, `conse_remision`, `conse_surtido`, `conse_ajuste_factura`, `conse_ajuste_remision`, `fecha_pc`, `id_usuario`, `fecha_mac`, `orden`, `grupo`) VALUES
-(1, 'Entornos', 'Permite el acceso a la sección de generar Entradas al Almacén.', 0, 1, 1, 0, 4, 5, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 15:59:18', 1, 'Operaciones'),
-(2, 'Proyectos', 'Permite el acceso a la sección de generar Salidas del Almacén.', 0, 0, 0, 0, 7, 9, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 15:59:24', 3, 'Operaciones');
+(1, 'Entornos', 'Permite el acceso a la sección de generar Entradas al Almacén.', 0, 1, 1, 0, 4, 5, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 21:59:18', 1, 'Operaciones'),
+(2, 'Proyectos', 'Permite el acceso a la sección de generar Salidas del Almacén.', 0, 0, 0, 0, 7, 9, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 21:59:24', 3, 'Operaciones'),
+(3, 'Usuarios', 'Permite el acceso a la administración de alta/baja de usuarios.', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-23 20:20:13', 0, ''),
+(4, 'Todos los Catálogos', '', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-23 21:02:23', 0, '');
 
 -- --------------------------------------------------------
 
@@ -274,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_proyectos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
 
 -- --------------------------------------------------------
 
@@ -365,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel2` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -391,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel3` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -473,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_proyecto` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
 
 -- --------------------------------------------------------
 
@@ -485,13 +487,16 @@ CREATE TABLE IF NOT EXISTS `inven_registro_user_proy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entorno` int(11) NOT NULL,
   `id_proyecto` int(11) NOT NULL,
+  `identificador` int(11) NOT NULL,
+  `id_nivel` int(11) NOT NULL,
+  `profundidad` int(11) NOT NULL,
   `descripcion` text NOT NULL,
   `horas` float(10,2) NOT NULL,
   `fecha` datetime NOT NULL,
   `id_usuario` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=177 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=401 ;
 
 -- --------------------------------------------------------
 

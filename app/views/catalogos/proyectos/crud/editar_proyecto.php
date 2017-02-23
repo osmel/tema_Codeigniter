@@ -161,8 +161,11 @@
 
                                             	</div>
 												
-												<div class="col-sm-6 col-md-6" id="cuadrante2">
+										
 
+                                            	<!-- cuadrante2-->          
+												
+												<div class="col-sm-6 col-md-6" id="cuadrante2">
 													<div class="portlet light bordered">
 					                                    <div class="portlet-title">
 					                                        <div class="caption">
@@ -180,6 +183,8 @@
 					                                    </div>
 
 					                                     <div class="portlet-body">
+
+					                                     		<!--participantes -->	
 																<div class="etiquetas_usuarios objeto_como_tags">
 															          <h3>Participantes</h3>
 															          <p>
@@ -191,6 +196,7 @@
 															    </div>
 																
 
+															    <!--descripcion -->
 																<div class="form-group">
 																	<label for="descripcion" class="col-sm-3 col-md-2 control-label">Descripción</label>
 																	<?php 
@@ -202,89 +208,87 @@
 								                                            <textarea id="descripcion" name="descripcion" class="form-control" rows="3"><?php echo  set_value('descripcion',$nomb_nom); ?></textarea>
 								                                        </div>
 																</div>
-														</div>	
 
+																<!--costo -->
+																
 
-					                                </div>    
-													
-														
-												</div>	
+																<div class="form-group">
+																	
+																	<!--costo -->
+																	<div class="col-sm-3 col-md-3">
+																			<?php 
+																				$nomb_nom='';
+																				if (isset($proy_salvado ->costo )) 
+																				 {	$nomb_nom = $proy_salvado ->costo ;}
+																			?>
+																		<input value="<?php echo  set_value('costo',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
 
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_1_2">
-                                                
-                                            		<div class="col-sm-6 col-md-6" id="cuadrante3">
+																		<em>Costo del proyecto.</em>
+																	</div>
+																	
+																	<!--tiempo planificado -->
+																	<div class="col-sm-3 col-md-3">
+																			<?php 
+																				$nomb_nom='';
+																				if (isset($proy_salvado ->costo )) 
+																				 {	$nomb_nom = $proy_salvado ->costo ;}
+																			?>
+																		<input value="<?php echo  set_value('tiempo_estimado',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="tiempo_estimado" name="tiempo_estimado" placeholder="0.00">
 
+																		<em>Tiempo estimado.</em>
+																	</div>
 
-
-															
-															<div class="form-group">
-																<label for="costo" class="col-sm-3 col-md-2 control-label">Costo</label>
-																<div class="col-sm-9 col-md-10">
+																	<!--fecha inicial -->
+																	<div class="col-sm-3 col-md-3">
 																		<?php 
 																			$nomb_nom='';
-																			if (isset($proy_salvado ->costo )) 
-																			 {	$nomb_nom = $proy_salvado ->costo ;}
+																			if (isset($proy_salvado ->fecha_inicial )) 
+																			if (strtotime($proy_salvado ->fecha_inicial )>0) 
+																			 {	$nomb_nom = $proy_salvado ->fecha_inicial ;}
+																			
 																		?>
-																	<input value="<?php echo  set_value('costo',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
+																		<input value="<?php echo  set_value('fecha_inicial',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">
+																		<em>Fecha Inicial.</em>
+																			
+																	</div>		
 
-																	<em>Costo del proyecto.</em>
-																</div>
+																	<!--fecha final -->
+
+																	<div class="col-sm-3 col-md-3">
+																		<?php 
+																			$nomb_nom='';
+																			if (isset($proy_salvado ->fecha_final )) 
+																			if (strtotime($proy_salvado ->fecha_final )>0)  
+																			 {	$nomb_nom = $proy_salvado ->fecha_final ;}
+																			
+																		?>
+																		<input value="<?php echo  set_value('fecha_final',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY">
+																		<em>Fecha Final.</em>
+																	</div>	
+
 															</div>	
-
-
-                                            		</div>
-
-
-													<div class="col-sm-6 col-md-6" id="cuadrante4">
-														
-
-
-															
-
-															<div class="form-group">
-																<label for="fecha_inicial" class="col-sm-12 col-md-12">Fecha Inicial:<span class="obligatorio"> *</span></label>
-																<div class="col-sm-12 col-md-12">
-																	<?php 
-																		$nomb_nom='';
-																		if (isset($proy_salvado ->fecha_inicial )) 
-																		if (strtotime($proy_salvado ->fecha_inicial )>0) 
-																		 {	$nomb_nom = $proy_salvado ->fecha_inicial ;}
-																		
-																	?>
-																	<input value="<?php echo  set_value('fecha_inicial',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">
-																		
-																</div>
-															</div>
-
-															<div class="form-group">
-																<label for="fecha_final" class="col-sm-12 col-md-12">Fecha Final:<span class="obligatorio"> *</span></label>
-																<div class="col-sm-12 col-md-12">
-																	<?php 
-																		$nomb_nom='';
-																		if (isset($proy_salvado ->fecha_final )) 
-																		if (strtotime($proy_salvado ->fecha_final )>0)  
-																		 {	$nomb_nom = $proy_salvado ->fecha_final ;}
-																		
-																	?>
-																	<input value="<?php echo  set_value('fecha_final',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY">
-																		
-																</div>
-															</div>
-
-
-															<!--Checkbox -->	
-
-														
-
-
-
-													</div>
-
-
-
+						                                </div>    
+													</div>	
+	                                            </div>
 
                                             </div>
+
+
+
+ 											<!-- Pestaña Ficha Tecnica-->          
+                                            <div class="tab-pane fade" id="tab_1_2">
+                                            			<!-- cuadrante3-->              
+                                            		<div class="col-sm-6 col-md-6" id="cuadrante3"></div>
+
+                                            		<!-- cuadrante4-->          
+													<div class="col-sm-6 col-md-6" id="cuadrante4"></div>
+                                            </div>                                           
+
+
+
+
+
+
                                         </div>
                                         <div class="clearfix margin-bottom-20"> </div>
                                 </div>

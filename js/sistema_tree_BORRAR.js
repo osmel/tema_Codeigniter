@@ -304,70 +304,6 @@ jQuery(document).ready(function($) {
                                                                                             texto+='<textarea id="descripcion" name="descripcion" class="form-control" rows="3">'+$descripcion+'</textarea>';
                                                                                         texto+='</div>';
                                                                                 texto+='</div>';
-
-
-
-                                                                                texto+='<div class="form-group">';
-                                                                                    
-                                                                                    texto+='<div class="col-sm-3 col-md-3">';
-                                                                                           if(datum.datos != false){
-                                                                                                $costo=datum.datos["costo"];
-                                                                                            } else {
-                                                                                                $costo='';
-                                                                                            }    
-
-                                                                                        texto+='<input value="'+$costo+'" restriccion="decimal" type="text" class="form-control ttip" ';
-
-                                                                                                texto+='title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00"> ';
-
-                                                                                        texto+='<em>Costo del proyecto.</em> ';
-                                                                                    texto+='</div> ';
-
-
-
-                                                                                    texto+='<div class="col-sm-3 col-md-3">';
-                                                                                           if(datum.datos != false){
-                                                                                                $tiempo_estimado=datum.datos["costo"];
-                                                                                            } else {
-                                                                                                $tiempo_estimado='';
-                                                                                            }    
-                                                                                        texto+='<input value="'+$tiempo_estimado+'" restriccion="decimal" type="text" class="form-control ttip" ';
-                                                                                                texto+='title="Números y puntos decimales." id="tiempo_estimado" name="tiempo_estimado" placeholder="0.00"> ';
-                                                                                        texto+='<em>Tiempo estimado.</em>';
-                                                                                    texto+='</div> ';
-
-
-
-                                                                                    texto+='<div class="col-sm-3 col-md-3">';
-                                                                                          if(datum.datos != false){
-                                                                                                $fecha_inicial=datum.datos["fecha_inicial"];
-                                                                                            } else {
-                                                                                                $fecha_inicial='';
-                                                                                           }    
-
-
-                                                                                        texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha  input-sm form-control" ';
-                                                                                        texto+='id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">';
-                                                                                    texto+='</div>';
-
-
-                                                                                    texto+='<div class="col-sm-3 col-md-3">';
-                                                                                          if(datum.datos != false){
-                                                                                                $fecha_final=datum.datos["fecha_final"];
-                                                                                            } else {
-                                                                                                $fecha_final='';
-                                                                                           }    
-
-                                                                                        texto+='<input value="'+$fecha_final+'" type="text" class="fecha  input-sm form-control" id="fecha_final" ';
-                                                                                        texto+='name="fecha_final" placeholder="DD-MM-YYYY">';
-                                                                                    texto+='</div>';                                                                
-
-                                                                                texto+='</div> ';
-
-
-
-
-
                                                                                 
                                                                         texto+='</div>  ';
                                                             texto+='</div>';   
@@ -375,16 +311,66 @@ jQuery(document).ready(function($) {
                                             
                                                             $("#cuadrante2").html(texto);    
 
-   
+                                                            texto='<div class="form-group">';
+                                                                texto+='<label for="costo" class="col-sm-3 col-md-2 control-label">Costo</label>';
+                                                                texto+='<div class="col-sm-9 col-md-10">';
 
 
+                                                                       if(datum.datos != false){
+                                                                            $costo=datum.datos["costo"];
+                                                                        } else {
+                                                                            $costo='';
+                                                                        }    
+
+                                                                    texto+='<input value="'+$costo+'" restriccion="decimal" type="text" class="form-control ttip" ';
+
+                                                                            texto+='title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00"> ';
+
+                                                                    texto+='<em>Costo del proyecto.</em> ';
+                                                                texto+='</div> ';
+                                                            texto+='</div> ';   
 
 
-                                                            texto='';
                                                             $("#cuadrante3").html(texto);    
 
-                                                            texto='';
-                                                            $("#cuadrante4").html(texto);    
+
+
+
+                                                            texto= '<div class="form-group">';
+                                                                texto+='<label for="fecha_inicial" class="col-sm-12 col-md-12">Fecha Inicial:<span class="obligatorio"> *</span></label>';
+                                                                texto+='<div class="col-sm-12 col-md-12">';
+                                                                    
+                                                                      if(datum.datos != false){
+                                                                            $fecha_inicial=datum.datos["fecha_inicial"];
+                                                                        } else {
+                                                                            $fecha_inicial='';
+                                                                       }    
+
+
+                                                                    texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha  input-sm form-control" ';
+                                                                    texto+='id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">';
+                                                                        
+                                                                texto+='</div>';
+                                                            texto+='</div>';
+
+                                                            texto+='<div class="form-group">';
+                                                                texto+='<label for="fecha_final" class="col-sm-12 col-md-12">Fecha Final:<span class="obligatorio"> *</span></label>';
+                                                                texto+='<div class="col-sm-12 col-md-12">';
+                                                                    
+                                                                      if(datum.datos != false){
+                                                                            $fecha_final=datum.datos["fecha_final"];
+                                                                        } else {
+                                                                            $fecha_final='';
+                                                                       }    
+
+                                                                    texto+='<input value="'+$fecha_final+'" type="text" class="fecha  input-sm form-control" id="fecha_final" ';
+                                                                    texto+='name="fecha_final" placeholder="DD-MM-YYYY">';
+                                                                        
+                                                                texto+='</div>';
+                                                            texto+='</div>';
+
+
+                                                          $("#cuadrante4").html(texto);    
 
 
 

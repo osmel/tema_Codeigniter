@@ -238,7 +238,7 @@
 											<label for="id_almacen" class="col-sm-3 col-md-2 control-label">Almacén</label>
 											<div class="col-sm-9 col-md-10">
 
-											    <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(5, $coleccion_id_operaciones)) ) { ?>
+											    <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(3, $coleccion_id_operaciones)) ) { ?>
 														<select name="id_almacen" id="id_almacen" class="form-control">
 												<?php } else { ?>	
 													    <select disabled="disabled" name="id_almacen" id="id_almacen" class="form-control">

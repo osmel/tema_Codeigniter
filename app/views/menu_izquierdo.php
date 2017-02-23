@@ -3,14 +3,13 @@
 <?php $id_perfil=$this->session->userdata('id_perfil');  ?>
 
 <?php 
-    /*
-   foreach ($proyectos as $proyecto) { 
-    print_r($proyecto->dueno_real);
-   }*/
-//print_r($proyectos);
+$coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
 
 
- //die;?>
+                          if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) )  {
+                                    $coleccion_id_operaciones = array();
+                          }     
+?>
 
                 <!-- BEGIN SIDEBAR -->
                 <div class="page-sidebar-wrapper">
@@ -115,7 +114,8 @@
                                 </li>
                              Fin Caracteristicas -->     
                             <?php //if ($id_perfil==1) { ?>    
-                            <?php if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
+                            <?php //if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
+                            <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(2, $coleccion_id_operaciones)) ) { ?>    
                                 <!-- encabezado Caracteristicas -->        
                                 <li class="heading">
                                         <h3 class="uppercase">Proyectos</h3>
@@ -235,7 +235,8 @@
 
                                 <!-- encabezado Entornos -->     
                             <?php //if ($id_perfil==1) { ?>    
-                            <?php if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
+                            <?php //if (($id_perfil==1) || ($id_perfil==2) || ($id_perfil==3) ) { ?>   
+                            <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(1, $coleccion_id_operaciones)) ) { ?>    
                                     <li class="heading">
                                         <h3 class="uppercase">Entornos</h3>
                                     </li>
@@ -288,7 +289,7 @@
                                
                                 <!-- encabezado Catalogos --> 
 
-                            <?php if ($id_perfil==1) { ?>    
+                            <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(4, $coleccion_id_operaciones)) ) { ?>    
                                     <li class="heading">
 
                                         <h3 class="uppercase">Catálogos</h3>
