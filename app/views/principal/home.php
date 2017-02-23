@@ -119,11 +119,7 @@
 											<div class="col-sm-2 col-md-2">
 												<div class="col-sm-12 col-md-12">
 													<input restriccion="decimal" type="text" id="hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>" title="Números y puntos decimales." class=" form-control ttip hora_decimal hora<?php echo $key; ?>" name="hora[]" placeholder="" value="<?php echo ( ( isset($proyecto->reg_user->horas)) ? $proyecto->reg_user->horas : '0') ; ?>"> 
-													<!-- <em>Horas.</em> 
-													<input restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
-
-
-													-->
+													
 												</div>
 											</div>
 

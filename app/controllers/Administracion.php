@@ -230,6 +230,7 @@ public function crear_tabla_proyecto($nombre) {
           $data['descripcion']      = 'Nuevo Proyecto';
           $data['privacidad']       = 1; //publico
           $data['costo']            = 0;
+          $data['tiempo_disponible']= 0;
           $data['fecha_creacion']   = date("Y-m-d", strtotime(date("d-m-Y")) );
           $data['fecha_inicial']    = date("Y-m-d", strtotime('') );
           $data['fecha_final']      = date("Y-m-d", strtotime('') );
@@ -330,10 +331,11 @@ public function crear_tabla_proyecto($nombre) {
       	 //$this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
 		      $data['id_proyecto']   		 = $this->input->post('id_proyecto');
 
-          $data['proyecto']   		 = $this->input->post('proyecto');
-          $data['descripcion']   	 = $this->input->post('descripcion');
-          $data['privacidad']   	 = $this->input->post('privacidad');
-          $data['costo']   			 = $this->input->post('costo');
+          $data['proyecto']   		   = $this->input->post('proyecto');
+          $data['descripcion']   	   = $this->input->post('descripcion');
+          $data['privacidad']   	   = $this->input->post('privacidad');
+          $data['costo']   			     = $this->input->post('costo');
+          $data['tiempo_disponible'] = $this->input->post('tiempo_disponible');
           $data['fecha_creacion']  	 = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
           $data['fecha_inicial']  	 = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
           $data['fecha_final']   	 = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
@@ -479,7 +481,8 @@ function validacion_edicion_nivel(){
           $data['nombre']         = $this->input->post('nombre'); //nombre_proyecto o niveles
           $data['proyecto']         = $this->input->post('proyecto'); //nombre_proyecto o niveles
           $data['descripcion']     = $this->input->post('descripcion'); //descripcion_proyecto o niveles
-          $data['costo']         = $this->input->post('costo'); //costo_proyecto o niveles
+          $data['costo']              = $this->input->post('costo'); //costo_proyecto o niveles
+          $data['tiempo_disponible']  = $this->input->post('tiempo_disponible');
           $data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
           $data['fecha_inicial']     = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
           $data['fecha_final']     = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
@@ -542,7 +545,8 @@ function validacion_edicion_proyecto(){
 		      $data['id_proy']   		 = $this->input->post('id_proy');
           $data['descripcion']   	 = $this->input->post('descripcion');
           $data['privacidad']   	 = $this->input->post('privacidad');
-          $data['costo']   			 = $this->input->post('costo');
+          $data['costo']   			     = $this->input->post('costo');
+          $data['tiempo_disponible'] = $this->input->post('tiempo_disponible');
           $data['fecha_creacion']  	 = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
           $data['fecha_inicial']  	 = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
           $data['fecha_final']   	 = date("Y-m-d", strtotime($this->input->post('fecha_final')) );

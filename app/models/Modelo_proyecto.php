@@ -70,7 +70,7 @@
             $id_session = $this->session->userdata('id');  
             
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
-            $this->db->select("c.proyecto nombre, c.descripcion, c.costo");         
+            $this->db->select("c.proyecto nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
 
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
@@ -108,7 +108,7 @@
             $id_session = $this->session->userdata('id');  
             
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
-            $this->db->select("c.nombre, c.descripcion, c.costo");         
+            $this->db->select("c.nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
             
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
@@ -142,7 +142,7 @@
             $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
 
             //$this->db->select("");         
-            $this->db->select("r.id id_proy, r.id_proyecto, r.id_entorno,  r.descripcion, r.privacidad, r.costo");         
+            $this->db->select("r.id id_proy, r.id_proyecto, r.id_entorno,  r.descripcion, r.privacidad, r.costo, r.tiempo_disponible");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
             $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
             $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
@@ -474,9 +474,9 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
               //$this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
 
 
-            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id, n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.proyecto, n.descripcion, n.costo, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
+            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id, n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
             
-            $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
+            $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
 
 
 
@@ -814,6 +814,8 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'descripcion', $data['descripcion'] );  
           $this->db->set( 'privacidad', $data['privacidad'] );  
           $this->db->set( 'costo', $data['costo'] );  
+          $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
+          
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
@@ -979,7 +981,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
             $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
 
             //$this->db->select("");         
-            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo");         
+            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo, r.tiempo_disponible");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
             $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
             $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
@@ -1132,6 +1134,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'descripcion', $data['descripcion'] );  
           
           $this->db->set( 'costo', $data['costo'] );  
+          $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
@@ -1202,6 +1205,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
           $this->db->set( 'costo', $data['costo'] );  
+          $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
@@ -1246,6 +1250,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
           $this->db->set( 'costo', $data['costo'] );  
+          $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  

@@ -269,6 +269,20 @@ jQuery('#costo[restriccion="decimal"]').bind('keypress paste', function (e) {
 });
 
 
+jQuery('#tiempo_disponible[restriccion="decimal"]').bind('keypress paste', function (e) {
+    var nn = jQuery('#tiempo_disponible[restriccion="decimal"]');
+    var strValue = nn[0].value.toString() + String.fromCharCode(e.which);
+    strValue = jQuery.trim(strValue);
+    var bool = reg.test(strValue);
+    if (bool) {
+        return true;
+    }
+    else { 
+        e.preventDefault();
+    }
+});
+
+
 
 
 jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (e) {

@@ -217,12 +217,12 @@ if (isset($proy_salvado ->id_proy ))
 																	<div class="col-sm-3 col-md-3">
 																			<?php 
 																				$nomb_nom='';
-																				if (isset($proy_salvado ->costo )) 
-																				 {	$nomb_nom = $proy_salvado ->costo ;}
+																				if (isset($proy_salvado ->tiempo_disponible )) 
+																				 {	$nomb_nom = $proy_salvado ->tiempo_disponible ;}
 																			?>
-																		<input value="<?php echo  set_value('tiempo_estimado',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="tiempo_estimado" name="tiempo_estimado" placeholder="0.00">
+																		<input value="<?php echo  set_value('tiempo_disponible',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00">
 
-																		<em>Tiempo estimado.</em>
+																		<em>Tiempo disponible.</em>
 																	</div>
 
 																	<!--fecha inicial -->

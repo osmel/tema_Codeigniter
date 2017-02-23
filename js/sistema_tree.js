@@ -327,13 +327,13 @@ jQuery(document).ready(function($) {
 
                                                                                     texto+='<div class="col-sm-3 col-md-3">';
                                                                                            if(datum.datos != false){
-                                                                                                $tiempo_estimado=datum.datos["costo"];
+                                                                                                $tiempo_disponible=datum.datos["tiempo_disponible"];
                                                                                             } else {
-                                                                                                $tiempo_estimado='';
+                                                                                                $tiempo_disponible='';
                                                                                             }    
-                                                                                        texto+='<input value="'+$tiempo_estimado+'" restriccion="decimal" type="text" class="form-control ttip" ';
-                                                                                                texto+='title="Números y puntos decimales." id="tiempo_estimado" name="tiempo_estimado" placeholder="0.00"> ';
-                                                                                        texto+='<em>Tiempo estimado.</em>';
+                                                                                        texto+='<input value="'+$tiempo_disponible+'" restriccion="decimal" type="text" class="form-control ttip" ';
+                                                                                                texto+='title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00"> ';
+                                                                                        texto+='<em>Tiempo disponible.</em>';
                                                                                     texto+='</div> ';
 
 
