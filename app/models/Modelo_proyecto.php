@@ -48,21 +48,121 @@
 
 		}
 
-    /*
-        public function listado_usuarios_niveles( $data ){
+
+
+//SELECT replace(id_val,'"','') FROM `inven_registro_proyecto` WHERE 1
+//SELECT REPLACE( id_val,  '"',  '' )  FROM  `inven_registro_proyecto` 
+
+/*
+SELECT SPLIT_STRING('apple, pear, melon', ',', 1)
+
+select REPLACE(SUBSTRING(SUBSTRING_INDEX('apple, pear, melon', ',', pos),
+       LENGTH(SUBSTRING_INDEX('apple, pear, melon', ',', pos-1)) + 1),
+       ',', '')
+
+select subtring('apple, pear, melon',1,locate(',', 'apple, pear, melon' )-1)
+
+select substring('apple, pear, melon',1,locate(',', 'apple, pear, melon' )-1)
+
+
+
+select u.salario,substring(REPLACE( id_val,  '"',  '' ),1,locate(',', REPLACE( id_val,  '"',  '' ) )-1) id_user
+FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPLACE( id_val,  '"',  '' ),1,locate(',', REPLACE( id_val,  '"',  '' ) )-1) = u.id
+
+
+select u.salario,substring(REPLACE( id_val,  '"',  '' ),1,locate(',', REPLACE( id_val,  '"',  '' ) )-1) id_user
+FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPLACE( id_val,  '"',  '' ),1,locate(',', REPLACE( id_val,  '"',  '' ) )-1) = u.id
+
+
+
+*/
+
+   //checar si el entorno ya existe
+    public function ruta_suma($data){
             
-            $this->db->select("r.json_items");
-            $this->db->from($this->registro_proyecto.' As r');
-            $this->db->where('r.id',$data['id']);
-            $result = $this->db->get(  );
-                if ($result->num_rows() > 0){
-                   return $result->row()->json_items;
-                } else {
-                   return FALSE;
-                }
-                    
-                $result->free_result();
-      }  */
+
+            //lista de las tablas que se ven afectadas
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+              $sql="
+                    SELECT nodo.id id_nivel, (COUNT(padre.id) ) AS id_tabla
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    GROUP BY nodo.id
+                    ORDER BY nodo.lft
+              ";                
+             $query = $this->db->query($sql);                
+             $registros = $query->result();
+
+          $total=0;
+         foreach ($registros as $key => $value) {
+            //if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
+              if ( $value->id_tabla ==1) {
+
+                  $cons = "SELECT sum(n.tiempo_disponible *
+                  (SELECT u.salario
+                    FROM  ".$this->registro_proyecto ." up inner join ".$this->usuarios ." u on substring(REPLACE( id_val, '\"',  '' ),
+                    1,locate(',', REPLACE( id_val, '\"',  '' ) )-1) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+
+                    FROM  ".$this->registro_proyecto ." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+
+
+                   //return $cons;
+                  $result = $this->db->query( $cons); 
+                  $total += $result->row()->total;
+
+
+
+
+
+              } else {  
+
+
+                  $cons = "SELECT sum(tiempo_disponible*
+                  (SELECT u.salario
+                    FROM  inven_registro_nivel". $value->id_tabla." up inner join ".$this->usuarios ." u on substring(REPLACE( id_val, '\"',  '' ),
+                    1,locate(',', REPLACE( id_val, '\"',  '' ) )-1) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+                                     FROM  inven_registro_nivel". $value->id_tabla." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                  $result = $this->db->query( $cons); 
+                  $total += $result->row()->total;
+              }
+        }  
+
+
+            $cons = 'SELECT importe total FROM  '.$this->catalogo_proyectos .' as c where  
+             c.id='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+            $result = $this->db->query( $cons); 
+            //$total = $result->row()->total-$total;
+
+            /*
+            $this->db->where('c.id_proyecto',$data['id_proyecto']);
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            $this->db->where('c.profundidad',$data['profundidad']);
+            $this->db->where('c.id_entorno', $this->session->userdata('entorno_activo') );
+            */
+
+
+
+        return  $total;   
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();
+    } 
+
+
+
 
 
      public function listado_nivel_proyectos($data){
@@ -72,6 +172,7 @@
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
             $this->db->select("c.proyecto nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
+            //$this->db->select("c.importe");         
 
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
 
@@ -110,6 +211,7 @@
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
             $this->db->select("c.nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
+            //$this->db->select("c.importe");         
             
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_final) > 0 THEN DATE_FORMAT((c.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final", FALSE);
@@ -146,7 +248,8 @@
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
             $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
             $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
-            
+            $this->db->select("c.importe");         
+
             $this->db->select("r.contrato_firmado, r.pago_anticipado, r.factura_enviada");
             $this->db->select("r.id_val, r.json_items");
 
@@ -474,9 +577,9 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
               //$this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
 
 
-            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id, n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
+            $campos_proy = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id, n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla,cp.importe';
             
-            $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla';
+            $campos_niveles = $data["id"].' as id_activo, '.'"'.$nombre_activo.'" as nombre_activo, '.'"'.$profundidad_activo.'" as profundidad_activo, 1 as dueno, n.id_usuario = "'.$id_session.'", (n.id_usuario= "'.$id_session.'") as dueno_real, n.id,  n.id_entorno, n.id_proyecto, n.id_nivel, n.profundidad, n.nombre as proyecto, n.descripcion, n.costo, n.tiempo_disponible, n.fecha_creacion, n.fecha_inicial, n.fecha_final, n.id_val, n.json_items, n.id_usuario, n.id_user_cambio, cp.tabla,cp.importe';
 
 
 
@@ -521,7 +624,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
             $id_entorno = $this->session->userdata('entorno_activo');
 
-            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad");         
+            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad,c.importe");         
             $this->db->select($data["id"]." as id_activo",false);         
             $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
             $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
@@ -753,6 +856,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'id_usuario',  $id_session );
           $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
+          $this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );  
 
           $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
@@ -786,7 +890,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
           $this->db->select('"'.$id_session.'"'.' as id_user', false);
           $this->db->select('"'.$data['operacion'].'"'.' as operacion', false);
-          $this->db->select('id as id_proyecto, id_entorno, Proyecto, tabla, profundidad, ruta, tooltip, id_usuario, id_user_cambio');
+          $this->db->select('id as id_proyecto, id_entorno,importe, Proyecto, tabla, profundidad, ruta, tooltip, id_usuario, id_user_cambio');
 
           $this->db->from($this->catalogo_proyectos);
           $this->db->where('id',$data['fila_insertada']);
@@ -818,6 +922,8 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          //$this->db->set( 'importe', $data['importe'] );  
+
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
@@ -891,7 +997,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
           $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
           
-          $this->db->select('c.id, c.proyecto, c.tabla, c.profundidad, c.ruta');
+          $this->db->select('c.id, c.proyecto, c.importe,c.tabla, c.profundidad, c.ruta');
 
           $this->db->from($this->catalogo_proyectos.' as c');
           
@@ -981,7 +1087,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
             $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
 
             //$this->db->select("");         
-            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo, r.tiempo_disponible");         
+            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo, r.tiempo_disponible,c.importe");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
             $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
             $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
@@ -1051,6 +1157,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           //$this->db->set( 'id_usuario',  $id_session );
           $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
+          $this->db->set( 'importe', $data['importe'] );  
           //$this->db->set( 'tabla', $data['tabla'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
 
@@ -1089,6 +1196,8 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           //$this->db->set( 'id_usuario',  $id_session );
           $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
+          $this->db->set( 'importe', $data['importe'] );  
+
           //$this->db->set( 'tabla', $data['tabla'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
 
@@ -1137,6 +1246,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          //$this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
@@ -1207,6 +1317,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          //$this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
@@ -1218,8 +1329,12 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
            $this->db->where('id_nivel',$data['id_nivel']);
            $this->db->where('profundidad',$data['profundidad']);
            $this->db->where('id_entorno', $this->session->userdata('entorno_activo') );
+           $this->db->update($this->db->dbprefix('registro_nivel'.$data["profundidad"]));
 
-          $this->db->update($this->db->dbprefix('registro_nivel'.$data["profundidad"]));
+         //actualizar solo "importe" 
+          $this->db->set( 'importe', $data['importe'] );  
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_proyectos );
 
 
 
@@ -1231,6 +1346,23 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
                 $result->free_result();          
 
          } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1252,6 +1384,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          //$this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 

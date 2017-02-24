@@ -282,6 +282,35 @@ jQuery('#tiempo_disponible[restriccion="decimal"]').bind('keypress paste', funct
     }
 });
 
+//salario usuarios
+jQuery('#salario[restriccion="decimal"]').bind('keypress paste', function (e) {
+    var nn = jQuery('#salario[restriccion="decimal"]');
+    var strValue = nn[0].value.toString() + String.fromCharCode(e.which);
+    strValue = jQuery.trim(strValue);
+    var bool = reg.test(strValue);
+    if (bool) {
+        return true;
+    }
+    else { 
+        e.preventDefault();
+    }
+});
+
+
+//importe del proyecto
+jQuery('#importe[restriccion="decimal"]').bind('keypress paste', function (e) {
+    var nn = jQuery('#importe[restriccion="decimal"]');
+    var strValue = nn[0].value.toString() + String.fromCharCode(e.which);
+    strValue = jQuery.trim(strValue);
+    var bool = reg.test(strValue);
+    if (bool) {
+        return true;
+    }
+    else { 
+        e.preventDefault();
+    }
+});
+
 
 
 

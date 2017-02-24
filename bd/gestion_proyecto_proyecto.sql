@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 23, 2017 at 11:14 AM
+-- Generation Time: Feb 24, 2017 at 09:10 AM
 -- Server version: 5.5.50-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.17
 
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_configuraciones` (
   `orden` int(11) NOT NULL,
   `grupo` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `inven_catalogo_configuraciones`
@@ -162,7 +162,8 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_configuraciones` (
 INSERT INTO `inven_catalogo_configuraciones` (`id`, `configuracion`, `valor`, `nombre`, `precio`, `activo`, `tooltip`, `consecutivo`, `fecha_pc`, `id_usuario`, `fecha_mac`, `orden`, `grupo`) VALUES
 (1, 'Profundidad Ãrbol Entorno', 6, '', 0.00, 1, '', 0, 0, 'b69d7d2b-582b-11e6-aeb5-7071bce181c3', '2017-02-20 15:39:28', 0, ''),
 (2, 'Entorno por defecto simple', 0, '', 16.00, 1, '', 0, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-17 15:24:02', 0, ''),
-(3, 'Proyecto por defecto Multiple', 1, '', 0.00, 0, '', 0, 0, '', '2017-02-11 19:39:00', 0, '');
+(3, 'Proyecto por defecto Multiple', 1, '', 0.00, 0, '', 0, 0, '', '2017-02-11 19:39:00', 0, ''),
+(4, 'Gastos Administrativos', 40000, '', 40000.00, 1, '', 0, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:39:12', 0, '');
 
 -- --------------------------------------------------------
 
@@ -267,6 +268,7 @@ INSERT INTO `inven_catalogo_operaciones` (`id`, `operacion`, `tooltip`, `consecu
 CREATE TABLE IF NOT EXISTS `inven_catalogo_proyectos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entorno` int(11) NOT NULL,
+  `importe` float(10,2) NOT NULL,
   `Proyecto` varchar(256) NOT NULL,
   `tabla` varchar(100) NOT NULL,
   `profundidad` int(11) NOT NULL,
@@ -276,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_proyectos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
 
 -- --------------------------------------------------------
 
@@ -358,6 +360,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel2` (
   `nombre` varchar(256) NOT NULL,
   `descripcion` text NOT NULL,
   `costo` float(10,2) NOT NULL,
+  `tiempo_disponible` float(10,2) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
   `fecha_inicial` datetime NOT NULL,
   `fecha_final` datetime NOT NULL,
@@ -384,6 +387,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel3` (
   `nombre` varchar(256) NOT NULL,
   `descripcion` text NOT NULL,
   `costo` float(10,2) NOT NULL,
+  `tiempo_disponible` float(10,2) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
   `fecha_inicial` datetime NOT NULL,
   `fecha_final` datetime NOT NULL,
@@ -410,6 +414,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel4` (
   `nombre` varchar(256) NOT NULL,
   `descripcion` text NOT NULL,
   `costo` float(10,2) NOT NULL,
+  `tiempo_disponible` float(10,2) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
   `fecha_inicial` datetime NOT NULL,
   `fecha_final` datetime NOT NULL,
@@ -436,6 +441,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel5` (
   `nombre` varchar(256) NOT NULL,
   `descripcion` text NOT NULL,
   `costo` float(10,2) NOT NULL,
+  `tiempo_disponible` float(10,2) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
   `fecha_inicial` datetime NOT NULL,
   `fecha_final` datetime NOT NULL,
@@ -463,6 +469,7 @@ CREATE TABLE IF NOT EXISTS `inven_registro_proyecto` (
   `descripcion` text NOT NULL,
   `privacidad` bigint(20) NOT NULL,
   `costo` float(10,2) NOT NULL,
+  `tiempo_disponible` float(10,2) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
   `fecha_inicial` datetime NOT NULL,
   `fecha_final` datetime NOT NULL,
@@ -549,6 +556,7 @@ INSERT INTO `inven_struct_osmel10125630aPJR256` (`id`, `lft`, `rgt`, `lvl`, `pid
 CREATE TABLE IF NOT EXISTS `inven_usuarios` (
   `id` varchar(36) NOT NULL,
   `activo` bigint(1) NOT NULL DEFAULT '1',
+  `salario` float(10,2) NOT NULL,
   `email` varbinary(128) NOT NULL,
   `contrasena` varbinary(128) NOT NULL,
   `creacion` int(11) NOT NULL,
@@ -575,28 +583,28 @@ CREATE TABLE IF NOT EXISTS `inven_usuarios` (
 -- Dumping data for table `inven_usuarios`
 --
 
-INSERT INTO `inven_usuarios` (`id`, `activo`, `email`, `contrasena`, `creacion`, `telefono`, `extension`, `nombre`, `Apellidos`, `estado`, `id_perfil`, `fecha_pc`, `id_usuario`, `fecha_mac`, `coleccion_id_operaciones`, `coleccion_id_cargos`, `id_cliente`, `sala`, `num_partida`, `id_cargo`, `especial`) VALUES
-('00e10de5-f491-11e6-b097-7071bce181c3', 1, 'FV)g5S¤®éùôš°Ö–³3mÆïFK6)!mÈÆs¾>\rÈ‹eC„ŒÎ', '#RÞØ¾Ÿîmó¡½|¦', 1487281430, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Osmel', 'CalderÃ³n', 0, 4, 1487353952, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 8, 3, '', 2, 0),
-('02f6dc95-f533-11e6-aa7b-7071bce181c3', 0, 'ýVDÃ#1é#øø{#¨kŠØæ»&È ôû@Æý.', '#RÞØ¾Ÿîmó¡½|¦', 1487351012, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Erick', 'Bravo', 0, 4, 1487354201, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 8, 3, '', 1, 0),
-('127a8866-f22f-11e6-8df6-7071bce181c3', 3, 'ˆeß«|Ðš®Çƒá`g„åÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487019466, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Mariana', 'PÃ©rez', 0, 4, 1487279472, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 6, 3, '', 4, 0),
-('27e4ad13-f22f-11e6-8df6-7071bce181c3', 1, '	50ÈÆ«·‹÷h­\\%øëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019502, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Luis', 'Diaz', 0, 3, 1487281694, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:20', 'null', '[]', 6, 3, '', 5, 0),
-('538c36af-f48f-11e6-b097-7071bce181c3', 1, 'ïEºVßÒT?Ë(ünzÝÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280710, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Rodrigo', 'VÃ¡zquez', 0, 4, 1487280710, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 4, 3, '', 8, 0),
-('65350f7e-d031-11e5-b036-04015a6da701', 1, 'IoC¥Œq_¨ßÚRQ©oø¨kŠØæ»&È ôû@Æý.', 'ß|Ôÿ¬Ðb£@Íf®)½J“', 1455134627, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Jorge', 'Bobadilla', 0, 1, 1487281272, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-16 22:00:52', 'null', '[]', 1, 3, '', 7, 0),
-('6e78e365-f48f-11e6-b097-7071bce181c3', 1, '(¿Uê¶ÏRÝm)½ë&+µ1M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280755, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Sandra', 'Rodriguez', 0, 4, 1487280755, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 4, 3, '', 8, 0),
-('8c4ef380-f48f-11e6-b097-7071bce181c3', 1, 'ØþvE©ûbÛÀJ-©…M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280805, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Andrea', 'CÃ©sar', 0, 3, 1487281642, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:20', 'null', '[]', 3, 3, '', 8, 0),
-('b3728c39-f48f-11e6-b097-7071bce181c3', 1, 'VHÃç‹G‚5*FßY,:ÙqÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280870, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Marissa', 'Martinez', 0, 2, 1487281626, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-16 22:00:26', 'null', '[]', 2, 3, '', 8, 0),
-('bceed19e-f22e-11e6-8df6-7071bce181c3', 1, '8…r1YS’\rÏ\ZÜ”eÒë\\M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019323, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ulises', 'Flores', 0, 4, 1487279807, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 8, 3, '', 2, 0),
-('c2656b07-f48c-11e6-b097-7071bce181c3', 1, 'GúÉL5h»Å©x Œñ›ü¨kŠØæ»&È ôû@Æý.', '#RÞØ¾Ÿîmó¡½|¦', 1487279607, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Angel', 'NuÃ±ez', 0, 4, 1487281322, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 6, 3, '', 4, 0),
-('cc28e2de-f537-11e6-aa7b-7071bce181c3', 0, '÷"½£T÷0ÅÞŠ¦¢•™‡ù¯~	ë!úØÛ¤ÍbJ:Q“ÄûÍIG²gª6¸Ú', '#RÞØ¾Ÿîmó¡½|¦', 1487353067, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Guillermo', 'Huerta', 0, 4, 1487354112, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 8, 3, '', 1, 0),
-('d6ce3eff-f48f-11e6-b097-7071bce181c3', 1, '^^cÁw¹!þC „–A}y™‡ù¯~	ë!úØÛ¤ÍbJ:Q“ÄûÍIG²gª6¸Ú', '#RÞØ¾Ÿîmó¡½|¦', 1487280930, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Margarita', 'Sayavedra', 0, 4, 1487280930, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 2, 3, '', 8, 0),
-('d86270f7-f22e-11e6-8df6-7071bce181c3', 1, 'i.+zŸ½áÂ„‚ž…c·ãM–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019369, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Adrian', 'Guerrero', 0, 3, 1487601083, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:20', 'null', '[]', 8, 3, '', 3, 0),
-('e24edcf7-f48d-11e6-b097-7071bce181c3', 1, '¾%€›lqFÖ Ø·	S9M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280090, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Lucero', 'Dominguez', 0, 4, 1487280090, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 5, 3, '', 8, 0),
-('e57dc15e-f393-11e6-a437-7071bce181c3', 1, '³·g6'';¢P}*¿LôM–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487172721, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Roxana', 'Luviano', 0, 4, 1487279965, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', '["2"]', '[]', 7, 3, '', 8, 0),
-('eda8cc65-f48f-11e6-b097-7071bce181c3', 1, '3ûÎOáªZñuEYÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280968, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Olympia', 'de la Puente', 0, 4, 1487281798, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 2, 3, '', 8, 0),
-('f963a139-122e-11e6-8df6-7071bce181c3', 1, '¥X€FÒÆ«B]É-°úÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ariadna', 'Miranda', 0, 3, 1487281666, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:20', 'null', '[]', 5, 3, '', 8, 0),
-('f963a239-f22e-11e6-8df6-7071bce181c3', 1, '&ÇÏRšÈ¦VÕÀzêÇ<æøëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Gina', 'Tejada', 0, 4, 1487280032, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 5, 3, '', 8, 0),
-('f963a339-222e-11e6-8df6-7071bce181c3', 1, '|Keo4‰\\@æReÀh©Û^M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Rebeca', 'Bravo', 0, 4, 1487280609, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 5, 3, '', 8, 0),
-('f963a439-322e-11e6-8df6-7071bce181c3', 1, 'd§¼¡&µÆUruÖà’,Åøëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ilse', 'Salazar', 0, 4, 1487280559, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-20 14:40:08', 'null', '[]', 5, 3, '', 8, 0);
+INSERT INTO `inven_usuarios` (`id`, `activo`, `salario`, `email`, `contrasena`, `creacion`, `telefono`, `extension`, `nombre`, `Apellidos`, `estado`, `id_perfil`, `fecha_pc`, `id_usuario`, `fecha_mac`, `coleccion_id_operaciones`, `coleccion_id_cargos`, `id_cliente`, `sala`, `num_partida`, `id_cargo`, `especial`) VALUES
+('00e10de5-f491-11e6-b097-7071bce181c3', 1, 10000.00, 'FV)g5S¤®éùôš°Ö–³3mÆïFK6)!mÈÆs¾>\rÈ‹eC„ŒÎ', '#RÞØ¾Ÿîmó¡½|¦', 1487281430, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Osmel', 'CalderÃ³n', 0, 4, 1487353952, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 8, 3, '', 2, 0),
+('02f6dc95-f533-11e6-aa7b-7071bce181c3', 0, 10000.00, 'ýVDÃ#1é#øø{#¨kŠØæ»&È ôû@Æý.', '#RÞØ¾Ÿîmó¡½|¦', 1487351012, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Erick', 'Bravo', 0, 4, 1487354201, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 8, 3, '', 1, 0),
+('127a8866-f22f-11e6-8df6-7071bce181c3', 3, 10000.00, 'ˆeß«|Ðš®Çƒá`g„åÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487019466, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Mariana', 'PÃ©rez', 0, 4, 1487279472, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 6, 3, '', 4, 0),
+('27e4ad13-f22f-11e6-8df6-7071bce181c3', 1, 10000.00, '	50ÈÆ«·‹÷h­\\%øëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019502, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Luis', 'Diaz', 0, 3, 1487281694, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 6, 3, '', 5, 0),
+('538c36af-f48f-11e6-b097-7071bce181c3', 1, 10000.00, 'ïEºVßÒT?Ë(ünzÝÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280710, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Rodrigo', 'VÃ¡zquez', 0, 4, 1487280710, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 4, 3, '', 8, 0),
+('65350f7e-d031-11e5-b036-04015a6da701', 1, 10000.00, 'IoC¥Œq_¨ßÚRQ©oø¨kŠØæ»&È ôû@Æý.', 'ß|Ôÿ¬Ðb£@Íf®)½J“', 1455134627, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Jorge', 'Bobadilla', 0, 1, 1487281272, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 1, 3, '', 7, 0),
+('6e78e365-f48f-11e6-b097-7071bce181c3', 1, 10000.00, '(¿Uê¶ÏRÝm)½ë&+µ1M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280755, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Sandra', 'Rodriguez', 0, 4, 1487280755, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 4, 3, '', 8, 0),
+('8c4ef380-f48f-11e6-b097-7071bce181c3', 1, 10000.00, 'ØþvE©ûbÛÀJ-©…M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280805, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Andrea', 'CÃ©sar', 0, 3, 1487281642, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 3, 3, '', 8, 0),
+('b3728c39-f48f-11e6-b097-7071bce181c3', 1, 10000.00, 'VHÃç‹G‚5*FßY,:ÙqÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280870, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Marissa', 'Martinez', 0, 2, 1487281626, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 2, 3, '', 8, 0),
+('bceed19e-f22e-11e6-8df6-7071bce181c3', 1, 10000.00, '8…r1YS’\rÏ\ZÜ”eÒë\\M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019323, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ulises', 'Flores', 0, 4, 1487279807, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 8, 3, '', 2, 0),
+('c2656b07-f48c-11e6-b097-7071bce181c3', 1, 10000.00, 'GúÉL5h»Å©x Œñ›ü¨kŠØæ»&È ôû@Æý.', '#RÞØ¾Ÿîmó¡½|¦', 1487279607, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Angel', 'NuÃ±ez', 0, 4, 1487281322, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 6, 3, '', 4, 0),
+('cc28e2de-f537-11e6-aa7b-7071bce181c3', 0, 10000.00, '÷"½£T÷0ÅÞŠ¦¢•™‡ù¯~	ë!úØÛ¤ÍbJ:Q“ÄûÍIG²gª6¸Ú', '#RÞØ¾Ÿîmó¡½|¦', 1487353067, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Guillermo', 'Huerta', 0, 4, 1487354112, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 8, 3, '', 1, 0),
+('d6ce3eff-f48f-11e6-b097-7071bce181c3', 1, 10000.00, '^^cÁw¹!þC „–A}y™‡ù¯~	ë!úØÛ¤ÍbJ:Q“ÄûÍIG²gª6¸Ú', '#RÞØ¾Ÿîmó¡½|¦', 1487280930, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Margarita', 'Sayavedra', 0, 4, 1487280930, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 2, 3, '', 8, 0),
+('d86270f7-f22e-11e6-8df6-7071bce181c3', 1, 10000.00, 'i.+zŸ½áÂ„‚ž…c·ãM–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019369, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Adrian', 'Guerrero', 0, 3, 1487601083, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 8, 3, '', 3, 0),
+('e24edcf7-f48d-11e6-b097-7071bce181c3', 1, 10000.00, '¾%€›lqFÖ Ø·	S9M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487280090, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Lucero', 'Dominguez', 0, 4, 1487280090, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 5, 3, '', 8, 0),
+('e57dc15e-f393-11e6-a437-7071bce181c3', 1, 10000.00, '³·g6'';¢P}*¿LôM–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487172721, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Roxana', 'Luviano', 0, 4, 1487279965, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', '["2"]', '[]', 7, 3, '', 8, 0),
+('eda8cc65-f48f-11e6-b097-7071bce181c3', 1, 10000.00, '3ûÎOáªZñuEYÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487280968, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Olympia', 'de la Puente', 0, 4, 1487281798, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 2, 3, '', 8, 0),
+('f963a139-122e-11e6-8df6-7071bce181c3', 1, 10000.00, '¥X€FÒÆ«B]É-°úÓZSO-\0*ÕH“<»–', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ariadna', 'Miranda', 0, 3, 1487281666, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 5, 3, '', 8, 0),
+('f963a239-f22e-11e6-8df6-7071bce181c3', 1, 10000.00, '&ÇÏRšÈ¦VÕÀzêÇ<æøëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Gina', 'Tejada', 0, 4, 1487280032, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 5, 3, '', 8, 0),
+('f963a339-222e-11e6-8df6-7071bce181c3', 1, 10000.00, '|Keo4‰\\@æReÀh©Û^M–iã¿ù‹/ƒ£¸)í„&', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Rebeca', 'Bravo', 0, 4, 1487280609, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 5, 3, '', 8, 0),
+('f963a439-322e-11e6-8df6-7071bce181c3', 1, 10000.00, 'd§¼¡&µÆUruÖà’,Åøëk°Ü­8)2drÊ', '#RÞØ¾Ÿîmó¡½|¦', 1487019424, 'ö·§*…GûA¥qåFA÷“Ù', '', 'Ilse', 'Salazar', 0, 4, 1487280559, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 14:40:47', 'null', '[]', 5, 3, '', 8, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

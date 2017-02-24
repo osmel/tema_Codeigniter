@@ -90,14 +90,20 @@ if (isset($proy_salvado ->id_proy ))
 					                                            <i class="icon-equalizer font-dark hide"></i>
 
 
-					                                            <div class="col-md-6">	
+					                                            <div class="col-md-4">	
 					                                              	<span class="caption-subject font-dark bold uppercase">Proyecto</span>
 
 					                                            </div>
 
-																<div class="col-md-6">
+																<div class="col-md-4">
 																	
 																		<span class="caption-subject font-dark bold uppercase">Creación</span>
+
+					                                            </div>
+
+																<div class="col-md-4">
+																	
+																		<span class="caption-subject font-dark bold uppercase">Costo Proyecto</span>
 
 					                                            </div>
 
@@ -105,7 +111,8 @@ if (isset($proy_salvado ->id_proy ))
 
 					                                        </div>
 					                                    </div>
-					                                     <div class="col-md-6">	
+					                                    		
+					                                    		<div class="col-md-4">	
 					                                               <?php 
 																			$nomb_nom='';
 																			if (isset($proy_salvado ->proyecto )) 
@@ -118,7 +125,7 @@ if (isset($proy_salvado ->id_proy ))
 
 					                                            </div>
 
-																<div class="col-md-6">
+																<div class="col-md-4">
 																	<?php 
 																			$nomb_nom=date("d-m-Y"); 
 																			if (isset($proy_salvado ->fecha_creacion )) 
@@ -127,6 +134,19 @@ if (isset($proy_salvado ->id_proy ))
 																		<fieldset disabled>
 																			<input value="<?php echo  set_value('fecha_creacion',$nomb_nom); ?>" type="text" class="fecha  form-control" id="fecha_creacion" name="fecha_creacion" placeholder="DD-MM-YYYY">
 																		</fieldset>	
+					                                            </div>
+
+					                                     		<div class="col-md-4">	
+					                                               <?php 
+																			$nomb_nom='0.00';
+																			if (isset($proy_salvado ->importe )) 
+																			 {	$nomb_nom = $proy_salvado ->importe ;}
+																		?>
+
+																		<fieldset>
+																			<input value="<?php echo  set_value('importe',$nomb_nom); ?>"  restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales."  id="importe" name="importe" placeholder="0.00">
+																		</fieldset>	
+
 					                                            </div>
 
 

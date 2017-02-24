@@ -89,6 +89,14 @@
 					</div>
 
 
+					<div class="form-group">
+						<label for="salario" class="col-sm-3 col-md-2 control-label">Salario</label>
+						<div class="col-sm-9 col-md-10">
+							<input type="text" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="salario" name="salario" placeholder="0.00">			
+						</div>
+					</div>					
+
+
 				</div>
 				<div class="col-sm-6 col-md-6">
 					<div class="form-group">

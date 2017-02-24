@@ -122,6 +122,22 @@
 									                <span></span>
 									            </label> 
 											</div>
+
+
+
+										<div class="form-group">
+											<label for="salario" class="col-sm-3 col-md-2 control-label">Salario</label>
+											<div class="col-sm-9 col-md-10">
+												<?php 
+													$nomb_nom='';
+													if (isset($usuario->salario)) 
+													 {	$nomb_nom = $usuario->salario;}
+												?>
+												<input value="<?php echo  set_value('salario',$nomb_nom); ?>" type="text" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="salario" name="salario" placeholder="0.00">												
+
+											</div>
+										</div>
+
 									</fieldset>
 
 

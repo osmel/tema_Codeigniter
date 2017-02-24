@@ -331,6 +331,7 @@ jQuery(document).ready(function($) {
                                                                                             } else {
                                                                                                 $tiempo_disponible='';
                                                                                             }    
+                                                                                        
                                                                                         texto+='<input value="'+$tiempo_disponible+'" restriccion="decimal" type="text" class="form-control ttip" ';
                                                                                                 texto+='title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00"> ';
                                                                                         texto+='<em>Tiempo disponible.</em>';
@@ -372,6 +373,8 @@ jQuery(document).ready(function($) {
                                                                         texto+='</div>  ';
                                                             texto+='</div>';   
 
+
+                                                            texto+='<em>'+datum.suma+'</em>';
                                             
                                                             $("#cuadrante2").html(texto);    
 

@@ -304,6 +304,9 @@ function dashboard() {
 			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
 			$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
 			$this->form_validation->set_rules( 'telefono', 'Teléfono', 'trim|numeric|callback_valid_phone|xss_clean');
+			
+			//$this->form_validation->set_rules( 'salario', 'Salario', 'trim|numeric|callback_valid_phone|xss_clean');
+
 			$this->form_validation->set_rules('id_perfil', 'Rol de usuario', 'required|callback_valid_option|xss_clean');
 			$this->form_validation->set_rules('id_cliente', 'Cliente Asociado', 'required|callback_valid_option|xss_clean');
 			$this->form_validation->set_rules( 'pass_1', 'Contraseña', 'required|trim|min_length[8]|xss_clean');
@@ -329,6 +332,7 @@ function dashboard() {
 						$usuario['email']   			= $this->input->post( 'email' );
 						$usuario['contrasena']				= $this->input->post( 'pass_1' );
 						$usuario['telefono']   		= $this->input->post( 'telefono' );
+						$usuario['salario']   		= $this->input->post( 'salario' );
 						$usuario['id_perfil']   		= $this->input->post( 'id_perfil' );
 						$usuario['id_cliente']   		= $this->input->post( 'id_cliente' );
 						$usuario['activo']   		= $this->input->post( 'activo' );
@@ -447,6 +451,7 @@ function validacion_edicion_usuario(){
 			$this->form_validation->set_rules( 'apellidos', 'Apellido(s)', 'trim|required|callback_nombre_valido|min_length[3]|max_length[180]|xss_clean');
 			$this->form_validation->set_rules( 'email', 'Email', 'trim|required|valid_email|xss_clean');
 			$this->form_validation->set_rules( 'telefono', 'Teléfono', 'trim|numeric|callback_valid_phone|xss_clean');
+			//$this->form_validation->set_rules( 'salario', 'Salario', 'trim|numeric|callback_valid_phone|xss_clean');
 			$this->form_validation->set_rules('id_perfil', 'Rol de usuario', 'required|callback_valid_option|xss_clean');
 			$this->form_validation->set_rules('id_cliente', 'Cliente Asociado', 'required|callback_valid_option|xss_clean');
 			$this->form_validation->set_rules( 'pass_1', 'Contraseña', 'required|trim|min_length[8]|xss_clean');
@@ -473,6 +478,7 @@ function validacion_edicion_usuario(){
 						$usuario['email']   					= $this->input->post( 'email' );
 						$usuario['contrasena']						= $this->input->post( 'pass_1' );
 						$usuario['telefono']   				= $this->input->post( 'telefono' );
+						$usuario['salario']   		= $this->input->post( 'salario' );
 						$usuario['id_perfil']   				= $this->input->post( 'id_perfil' );
 						$usuario['id_cliente']   				= $this->input->post( 'id_cliente' );
 						$usuario['activo']   		= $this->input->post( 'activo' );
