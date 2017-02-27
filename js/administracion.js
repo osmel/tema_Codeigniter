@@ -386,13 +386,14 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
 
 //jQuery('.fecha').datepicker({ dateFormat: 'dd-mm-yyyy'});
 
-
+/*
 jQuery('form').on('focusin','.fecha', function (e) {
     jQuery(this).datepicker({ 
         //inline: true, 
-        Format: 'dd-mm-yyyy'
+        Format: 'dd-mm-yyyy',
+         //startDate: '-1d'
     });
-});
+});*/
 
 /*
 jQuery('form').on('datepicker','.fecha', function (e) {
