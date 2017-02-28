@@ -90,13 +90,30 @@
 
 
 
-
-
-        if  ( ($data['fecha_inicial'] !="") and  ($data['fecha_final'] !="")) {
-                $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
-        } else {
-           $cond_fecha ="";
+        if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
+              $data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
+              $data['fecha_final'] = date('d-m-Y', strtotime('today') );  //dia de hoy
+              // $cond_fecha ="";
         }
+
+
+        $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+
+          $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
+
+          if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
+          if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
+
+          if ($data['fecha_inicial'] > $data['fecha_final']) return createDateRangeArray($data['fecha_final'], $data['fecha_inicial']);
+
+          do {
+              $arreglo_fechas[] = date('d-m-Y', $data['fecha_inicial']);
+              $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
+          } while($data['fecha_inicial'] <= $data['fecha_final']);
+
+
+
 
 
 
@@ -119,12 +136,9 @@
                         nomb, apellidos, salario ,
                             
 
-                            SUM(IF(day(fecha) = 26, horas, 0)) AS a26,
-                            SUM(IF(day(fecha) = 27, horas, 0)) AS a27,
-                            SUM(IF(day(fecha) = 28, horas, 0)) AS a28,
-                            SUM(IF(day(fecha) = 29, horas, 0)) AS a29,
-                            SUM(IF(day(fecha) = 30, horas, 0)) AS a30,
-                            SUM(IF(day(fecha) = 31, horas, 0)) AS a31
+                            SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = 26, horas, 0)) AS a26,
+
+
                          from (
                         select proy.id_nivel, proy.profundidad, proy.nombre, proy.id identificador, proy.tabla, proy.id_entorno,
                         r.id_usuario, r.id, r.id_proyecto,  r.costo, r.tiempo_disponible, r.fecha_creacion, r.fecha_inicial, r.fecha_final, r.id_val, r.json_items,

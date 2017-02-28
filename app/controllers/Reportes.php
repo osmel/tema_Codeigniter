@@ -20,6 +20,42 @@ class Reportes extends CI_Controller {
   
 //***********************areas **********************************//
  public function procesando_rep_general(){
+
+//$data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
+
+
+
+/*
+$data['fecha_inicial'] = date('d-m-Y', strtotime('26-01-2017') ); 
+$data['fecha_final'] = date('d-m-Y', strtotime('today') ); 
+
+
+
+
+
+
+    $arreglo_fechas = array();
+
+    if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
+    if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
+
+    if ($data['fecha_inicial'] > $data['fecha_final']) return createDateRangeArray($data['fecha_final'], $data['fecha_inicial']);
+
+    do {
+        $arreglo_fechas[] = date('Y-m-d', $data['fecha_inicial']);
+        $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
+    } while($data['fecha_inicial'] <= $data['fecha_final']);
+
+
+
+
+    print_r($arreglo_fechas);
+
+
+
+  die;
+
+*/
          $dato=$_POST;
          $dato['id_proyecto'] = 79;
 
