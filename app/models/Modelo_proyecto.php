@@ -135,7 +135,7 @@ FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPL
             $cons = 'SELECT importe total FROM  '.$this->catalogo_proyectos .' as c where  
              c.id='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
             $result = $this->db->query( $cons); 
-            $datos['total'] = $result->row()->total-$total;
+            $datoss['total'] = $result->row()->total-$total;
 
 
             //fin  de total de tiempo disponible
@@ -438,11 +438,11 @@ sort($datos['cond_finicial_menor']);
 sort($datos['cond_ffinal_menor']);
 
 
-$datos['inicial_start'] = $datos['cond_finicial_mayor'][count($datos['cond_finicial_mayor'])-1];
-$datos['inicial_end'] = (isset($datos['cond_finicial_menor'][0])) ? ($datos['cond_finicial_menor'][0]) : null;
+$datoss['inicial_start'] = $datos['cond_finicial_mayor'][count($datos['cond_finicial_mayor'])-1];
+$datoss['inicial_end'] = (isset($datos['cond_finicial_menor'][0])) ? ($datos['cond_finicial_menor'][0]) : null;
 
-$datos['final_start'] = (isset($datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1])) ? $datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1] : null;
-$datos['final_end']=    (isset($datos['cond_ffinal_menor'][0])) ? $datos['cond_ffinal_menor'][0] : null;
+$datoss['final_start'] = (isset($datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1])) ? $datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1] : null;
+$datoss['final_end']=    (isset($datos['cond_ffinal_menor'][0])) ? $datos['cond_ffinal_menor'][0] : null;
 
 
 
@@ -459,7 +459,7 @@ $datos['final_end']=    (isset($datos['cond_ffinal_menor'][0])) ? $datos['cond_f
            
 
 
-        return  ($datos);   
+        return  ($datoss);   
 
 
 

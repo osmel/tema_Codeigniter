@@ -346,8 +346,9 @@ jQuery(document).ready(function($) {
                                                                                                 $fecha_inicial='';
                                                                                            }    
 
+                                                                                           //min-date="'+datum.suma.inicial_start+'"
 
-                                                                                        texto+='<input min-date="'+datum.suma.inicial_start+'" value="'+$fecha_inicial+'" type="text" class="fecha  input-sm form-control" ';
+                                                                                        texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha_ini  input-sm form-control" ';
                                                                                         texto+='id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">';
                                                                                     texto+='</div>';
 
@@ -359,7 +360,7 @@ jQuery(document).ready(function($) {
                                                                                                 $fecha_final='';
                                                                                            }    
 
-                                                                                        texto+='<input value="'+$fecha_final+'" type="text" class="fecha  input-sm form-control" id="fecha_final" ';
+                                                                                        texto+='<input value="'+$fecha_final+'" type="text" class="fecha_fin  input-sm form-control" ';
                                                                                         texto+='name="fecha_final" placeholder="DD-MM-YYYY">';
                                                                                     texto+='</div>';                                                                
 
@@ -377,65 +378,66 @@ jQuery(document).ready(function($) {
                                                             texto+='<em>'+datum.suma.total+'</em>';
 
                                                             
-                                                            //console.log(moment([2017, 1, 24]).fromNow());
-                                                            jQuery('form').on('focusin','.fecha', function (e) {
-                                                                jQuery(this).datepicker({ 
-                                                                    //inline: true, 
-                                                                    //Format: 'dd-mm-yyyy',
-                                                                    //dateFormat: 'dd-mm-yyyy',
-                                                                    //startDate: datum.suma.inicial_start,
-                                                                    //startDate: moment(datum.suma.inicial_start).format("dd-mm-yyyy")
-                                                                    //startDate:  //-Infinity, // moment("22-02-2017").format("dd-mm-yyyy")
+                                                           
 
-                                                                    //maxDate: new Date(),
-                                                                    //minDate: "22-02-2017",
-                                                                    //maxDate: "24-02-2017",
-                                                                    //dateFomat: 'DD-MM-YYYY',
-                                                                    //Format: 'DD-MM-YYYY', //"d",
-                                                                    //Format: "MM-DD-YYYY", //'dd-mm-yyyy', //"d",
-                                                                    //dateFormat:"MM-DD-YYYY",// 'dd-mm-yyyy', //"d",'DD-MM-YYYY', //"d",
-                                                                    /*
-                                                                    Format: 'DD-MM-YYYY', //"d",
-                                                                    dateFormat:'DD-MM-YYYY', //"d",
-                                                                    startDate:  new Date ('24-02-2017'),
-                                                                    */
-
-
-
-    startDate: new Date (datum.suma.inicial_start),
-    endDate: new Date (datum.suma.inicial_end),
-
-    autoclose: true
-
-
-                                                                    //moment("29-06-1995", ["MM-DD-YYYY", "DD-MM", "DD-MM-YYYY"] , 'es'), 
-
-                                                                    // moment(date("24-02-2017")),
-                                                                    //startDate:"-05d",
-                                                                    
-                                                                    //minDate:"-10D",
-
-                                                                    //startDate:"24/02/2017",
-
-                                                                    
-                                                                });
-                                                            });
-
-
-                                                            console.log(datum.suma.inicial_start);
+                                                           // console.log(datum.suma.inicial_start);
                                             
                                                             $("#cuadrante2").html(texto);    
-
-   
-
-
-
 
                                                             texto='';
                                                             $("#cuadrante3").html(texto);    
 
                                                             texto='';
                                                             $("#cuadrante4").html(texto);    
+
+
+                                                            jQuery('form').on('focusin','.fecha_ini', function (e) {
+                                                                jQuery(this).datepicker({ 
+                                                                    //inline: true, 
+                                                                    Format: 'dd-mm-yyyy',
+                                                                    dateFormat: 'dd-mm-yyyy',
+                                                                    //startDate: (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity,
+                                                                    //endDate: (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity,
+                                                                    autoclose: true,
+                                                                }).on('changeDate', function (selected) {
+                                                                    var minDate = new Date(selected.date.valueOf());
+                                                                    console.log(minDate);
+                                                                    var minimo_final = (datum.suma.final_start!=null) ? new Date (datum.suma.final_start.valueOf()) : - Infinity;
+                                                                    if (minDate<minimo_final){
+                                                                        minDate=minimo_final;
+                                                                    }
+                                                                    console.log(minDate);
+                                                                    $('.fecha_fin').datepicker('setStartDate', minDate);
+                                                                    $('.fecha_fin').datepicker('setEndDate', (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity);
+                                                                });
+
+                                                                $('.fecha_ini').datepicker('setStartDate', (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity);
+                                                                $('.fecha_ini').datepicker('setEndDate', (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity);
+                                                            })
+
+                                                            //http://jsfiddle.net/wsodjsyv/
+
+                                                            jQuery('form').on('focusin','.fecha_fin', function (e) {
+                                                                jQuery(this).datepicker({ 
+                                                                    Format: 'dd-mm-yyyy',
+                                                                    dateFormat: 'dd-mm-yyyy',
+                                                                    //startDate: (datum.suma.final_start!=null) ? new Date (datum.suma.final_start.valueOf()) : - Infinity,
+                                                                    //endDate: (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity,
+                                                                    autoclose: true
+                                                                }).on('changeDate', function (selected) {
+                                                                    var minDate = new Date(selected.date.valueOf());
+                                                                    var minimo_final = (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity;
+                                                                    if (minDate>minimo_final){
+                                                                        minDate=minimo_final;
+                                                                    }
+
+                                                                   $('.fecha_ini').datepicker('setStartDate', (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity); 
+                                                                   $('.fecha_ini').datepicker('setEndDate', minDate);
+                                                                });
+
+                                                                $('.fecha_fin').datepicker('setStartDate', (datum.suma.final_start!=null) ? new Date (datum.suma.final_start.valueOf()) : - Infinity);
+                                                                $('.fecha_fin').datepicker('setEndDate', (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity);
+                                                            });                                                            
 
 
 
