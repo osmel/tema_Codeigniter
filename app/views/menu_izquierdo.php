@@ -336,6 +336,31 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
 
 
 
+
+                             <!-- encabezado Reportes --> 
+
+                            <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(5, $coleccion_id_operaciones)) ) { ?>    
+                                    <li class="heading">
+
+                                        <h3 class="uppercase">Reportes</h3>
+                                    </li>
+                                    
+
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>general" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">General</span>
+                                            <span class="badge"><i class="fa fa-print"></i></span>
+                                            
+                                        </a>
+                                    </li>                                    
+
+                                    
+                                    
+                            <?php } ?>     
+
+
+
                             </ul>
                             <!-- END SIDEBAR MENU -->
                         <!-- END SIDEBAR MENU -->

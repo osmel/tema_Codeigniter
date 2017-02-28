@@ -241,6 +241,42 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                     }else{
                             $catalogo = e.target.name;
 
+
+                                        /*
+
+                                        $.ajax({
+                                            url: "/listado_fechas",
+                                            type: 'POST',
+                                            dataType: "json",
+                                            data: {
+                                                        id_nivel: $("#id_nivel").val(),
+                                                     profundidad: $("#profundidad").val(),
+                                                     id_cat_proy: $("input[name=id]").val(),
+                                                     id_reg_proy: $("#id_proy").val(),
+                                             },
+                                            success: function(datu){
+
+                                                        $('.fecha_ini').datepicker('setStartDate', (datu.suma.inicial_start!=null) ? new Date (datu.suma.inicial_start.valueOf()) : - Infinity);
+                                                        $('.fecha_ini').datepicker('setEndDate', (datu.suma.inicial_end!=null) ? new Date (datu.suma.inicial_end.valueOf()): Infinity);
+
+                                                        $('.fecha_fin').datepicker('setStartDate', (datu.suma.final_start!=null) ? new Date (datu.suma.final_start.valueOf()) : - Infinity);
+                                                        $('.fecha_fin').datepicker('setEndDate', (datu.suma.final_end!=null) ? new Date (datu.suma.final_end.valueOf()): Infinity);
+
+
+                                               }
+                                        });  
+
+                                        */
+
+
+
+
+
+
+
+
+
+
                              if (!(e.isTrigger)) { //si fue una presion real del boton guardar
                                 window.location.href = '/'+$catalogo;   
                              }   

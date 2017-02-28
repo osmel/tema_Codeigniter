@@ -394,25 +394,21 @@ jQuery(document).ready(function($) {
                                                             jQuery('form').on('focusin','.fecha_ini', function (e) {
                                                                 jQuery(this).datepicker({ 
                                                                     //inline: true, 
-                                                                    Format: 'dd-mm-yyyy',
-                                                                    dateFormat: 'dd-mm-yyyy',
-                                                                    //startDate: (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity,
+                                                                    Format: 'DD-MM-YYYY',
+                                                                    dateFormat: 'DD-MM-YYYY',
+                                                                    
+                                                                    //dateFormat: 'MM dd, yy',
+                                                                   // startDate: (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity,
                                                                     //endDate: (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity,
                                                                     autoclose: true,
+                                                                    /*onSelect: function(dateText, inst) {
+                                                                        $("#test").html($.inst.formatDate('yy-mm-dd', dateText); // What exactly do I have to do, to get the date from dd-mm-yy to yy-mm-dd
+                                                                    }*/
                                                                 }).on('changeDate', function (selected) {
-                                                                    var minDate = new Date(selected.date.valueOf());
-                                                                    console.log(minDate);
-                                                                    var minimo_final = (datum.suma.final_start!=null) ? new Date (datum.suma.final_start.valueOf()) : - Infinity;
-                                                                    if (minDate<minimo_final){
-                                                                        minDate=minimo_final;
-                                                                    }
-                                                                    console.log(minDate);
-                                                                    $('.fecha_fin').datepicker('setStartDate', minDate);
-                                                                    $('.fecha_fin').datepicker('setEndDate', (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity);
+                                                                     //jQuery('form').submit();
+
                                                                 });
 
-                                                                $('.fecha_ini').datepicker('setStartDate', (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity);
-                                                                $('.fecha_ini').datepicker('setEndDate', (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity);
                                                             })
 
                                                             //http://jsfiddle.net/wsodjsyv/
@@ -425,18 +421,10 @@ jQuery(document).ready(function($) {
                                                                     //endDate: (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity,
                                                                     autoclose: true
                                                                 }).on('changeDate', function (selected) {
-                                                                    var minDate = new Date(selected.date.valueOf());
-                                                                    var minimo_final = (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity;
-                                                                    if (minDate>minimo_final){
-                                                                        minDate=minimo_final;
-                                                                    }
-
-                                                                   $('.fecha_ini').datepicker('setStartDate', (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity); 
-                                                                   $('.fecha_ini').datepicker('setEndDate', minDate);
+                                                                       // jQuery('form').submit();
                                                                 });
 
-                                                                $('.fecha_fin').datepicker('setStartDate', (datum.suma.final_start!=null) ? new Date (datum.suma.final_start.valueOf()) : - Infinity);
-                                                                $('.fecha_fin').datepicker('setEndDate', (datum.suma.final_end!=null) ? new Date (datum.suma.final_end.valueOf()): Infinity);
+                                                               
                                                             });                                                            
 
 

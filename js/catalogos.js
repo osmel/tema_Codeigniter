@@ -22,7 +22,147 @@ jQuery(document).ready(function($) {
     }); 
 
 
+
+
+    jQuery('.fecha_reporte').daterangepicker(
+          { 
+            locale: { cancelLabel: 'Cancelar',
+                      applyLabel: 'Aceptar',
+                      fromLabel : 'Desde',
+                      toLabel: 'Hasta',
+                      monthNames : "ene._feb._mar_abr._may_jun_jul._ago_sep._oct._nov._dec.".split("_"),
+                      daysOfWeek: "Do_Lu_Ma_Mi_Ju_Vi_Sa".split("_"),
+                      customRangeLabel: "Personalizar rango",
+                      //format: 'DD-MM-YYYY',
+             } , 
+             ranges: {
+                   'Hoy': [moment(), moment()],
+                   'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                   'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                   'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                   'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                   'Ultimo Mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+              },
+              format: 'DD-MM-YYYY',
+               "startDate": "22-02-2017",
+               "endDate": "28-02-2017",
+               minDate: "01-02-2017",
+               maxDate: "28-02-2017",
+
+              //http://www.daterangepicker.com/
+              //maxDate: "-3d",
+             //maxDate: moment(),
+            separator: ' / ',
+            
+          }
+    );
+
+    jQuery('.fecha_reporte').on('apply.daterangepicker', function(ev, picker) {
+        comienzo=true; 
+        var oTable =jQuery('#tabla_rep_general').dataTable();
+       oTable._fnAjaxUpdate();
+
+    });
+
+
+
+jQuery('#tabla_rep_general').dataTable( {
+        "pagingType": "full_numbers",
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+                    "url" : "procesando_rep_general",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                    }
+                    
+         },   
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+        "columnDefs": [
+                    { 
+                        "render": function ( data, type, row ) {
+                                return '-'.repeat(row[3])+''+row[4];
+                        },
+                        "targets": [0] 
+                    },
+                    { 
+                        "render": function ( data, type, row ) {
+                                return row[5]+' '+row[6] ;
+                        },
+                        "targets": [1] 
+                    },
+                    { 
+                        "render": function ( data, type, row ) {
+                                return row[8];
+                        },
+                        "targets": [2] 
+                    },
+
+                    { 
+                        "render": function ( data, type, row ) {
+                                return row[9];
+                        },
+                        "targets": [3] 
+                    },
+
+                    { 
+                        "render": function ( data, type, row ) {
+                                return row[10];
+                        },
+                        "targets": [4] 
+                    },
+                   
+                   
+                    
+                ],
+    });  
+
+
 /*
+
+ 0=>$row->id_nivel,
+  1=>$row->id_entorno,
+  2=>$row->id_proyecto,
+  3=>$row->profundidad,
+  4=>$row->nombre,
+  5=>$row->nomb,
+  6=>$row->apellidos,
+  7=>$row->salario,
+  8=>$row->a26,
+  9=>$row->a27,
+  10=>$row->a28,
+
+
+
+
+
+
+
 var comenzar = false;
 //jQuery('input[type="checkbox"][class="check_activo"]').click(function(e) {
     jQuery('body').on('click','input.check_activo[type="checkbox"]', function (e) {         

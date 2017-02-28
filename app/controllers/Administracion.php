@@ -88,6 +88,21 @@ function listado_niveles( ){
           echo json_encode($data);
 }  
 
+
+
+
+function listado_fechas( ){
+                     $data['id_proyecto']   = $this->input->post('id_cat_proy');
+                   $data['id_reg_proy']     = $this->input->post('id_reg_proy');
+                   $data['id_nivel']        = $this->input->post('id_nivel');
+          $data['profundidad']              = $this->input->post('profundidad');
+                $data['tabla'] = $this->session->userdata('creando_proyecto');   
+               $data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
+                    
+          echo json_encode($data);
+  
+}
+
   function ajax_user_proy_json(  ){
 
           
