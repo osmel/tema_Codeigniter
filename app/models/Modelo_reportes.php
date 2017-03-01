@@ -41,6 +41,8 @@
               $this->registro_nivel5                         = $this->db->dbprefix('registro_nivel5');
               $this->registro_nivel6                         = $this->db->dbprefix('registro_nivel6');
 
+              $this->catalogo_areas                         = $this->db->dbprefix('catalogo_empresas');
+
               
               
 
@@ -50,39 +52,6 @@
 
 
 
-      //Lista de todos los usuarios 
-
-        public function listado_usuarios(  ){
-
-            $id_perfil=$this->session->userdata('id_perfil');
-            $id=$this->session->userdata('id');
-            $id_area=$this->session->userdata('id_area');
-            $this->db->select('u.id, nombre,  apellidos');
-            
-            switch ($id_perfil) {
-              case 1: //super
-              case 2: //Admin
-                              // todos los usuarios
-                break;
-              case 3:
-                    $this->db->where('u.id_cliente', $id_area);   
-                break;
-
-              default:
-                   $this->db->where('u.id', $id);   
-                break;
-            }
-            
-            $this->db->from($this->usuarios.' as u');
-            $result = $this->db->get();
-            
-            if ( $result->num_rows() > 0 )
-               return $result->result();
-            else
-               return False;
-            $result->free_result();
-        }       
-   
 
 
 
@@ -110,6 +79,73 @@
                     
                 $result->free_result();
      }  
+
+
+
+ public function listado_niveles($data){
+
+      $arreglo = array();
+      for ($i=0; $i < 4; $i++) { 
+        $arreglo[$i]["id"] =  $i;
+        $arreglo[$i]["nombre"] ="Nivel ".$i;
+
+      }
+          
+      
+
+       return ((object)$arreglo);
+          
+ } 
+
+
+
+ public function listado_areas($data){
+          $this->db->select("id, area nombre", FALSE);         
+          $this->db->from($this->catalogo_areas);
+
+          $result = $this->db->get(  );
+             if ( $result->num_rows() > 0 ) {
+                  return $result->result();
+              } else 
+                  return false;
+            $result->free_result();   
+ } 
+
+
+
+    //Lista de todos los usuarios 
+
+      public function listado_usuarios( $data ){
+
+          $id_perfil=$this->session->userdata('id_perfil');
+          $id=$this->session->userdata('id');
+          $id_area=$this->session->userdata('id_area');
+          $this->db->select('u.id, nombre,  apellidos');
+          
+          switch ($id_perfil) {
+            case 1: //super
+            case 2: //Admin
+                            // todos los usuarios
+              break;
+            case 3:
+                  $this->db->where('u.id_cliente', $id_area);   
+              break;
+
+            default:
+                 $this->db->where('u.id', $id);   
+              break;
+          }
+          
+          $this->db->from($this->usuarios.' as u');
+          $result = $this->db->get();
+          
+          if ( $result->num_rows() > 0 )
+             return $result->result();
+          else
+             return False;
+          $result->free_result();
+    }       
+ 
 
 
 

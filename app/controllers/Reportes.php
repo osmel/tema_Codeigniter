@@ -33,10 +33,10 @@ class Reportes extends CI_Controller {
             $elementos  = $this->modelo_reporte->listado_proyectos();
             break;
         case "id_profundidad":
-            $elementos  = $this->modelo_reporte->listado_proyectos($data);
+            $elementos  = $this->modelo_reporte->listado_niveles($data);
             break;
         case "id_area":
-            $elementos  = $this->modelo_reporte->listado_proyectos($data);
+            $elementos  = $this->modelo_reporte->listado_areas($data);
             break;
         case "id_usuario":
             $elementos  = $this->modelo_reporte->listado_usuarios($data);
