@@ -49,6 +49,70 @@
 		}
 
 
+
+      //Lista de todos los usuarios 
+
+        public function listado_usuarios(  ){
+
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id=$this->session->userdata('id');
+            $id_area=$this->session->userdata('id_area');
+            $this->db->select('u.id, nombre,  apellidos');
+            
+            switch ($id_perfil) {
+              case 1: //super
+              case 2: //Admin
+                              // todos los usuarios
+                break;
+              case 3:
+                    $this->db->where('u.id_cliente', $id_area);   
+                break;
+
+              default:
+                   $this->db->where('u.id', $id);   
+                break;
+            }
+            
+            $this->db->from($this->usuarios.' as u');
+            $result = $this->db->get();
+            
+            if ( $result->num_rows() > 0 )
+               return $result->result();
+            else
+               return False;
+            $result->free_result();
+        }       
+   
+
+
+
+
+    public function listado_proyectos(  ){
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+            $this->db->select("c.id, c.proyecto nombre");         
+            $this->db->from($this->catalogo_proyectos.' As c');
+  
+             $where ='(
+                    (c.id_entorno= '.$id_entorno.')
+                  )'; 
+
+                          
+             $this->db->where($where);
+             $this->db->group_by('c.id');
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+     }  
+
+
+
 /*
   $data['id_proyecto']
 */
@@ -96,6 +160,7 @@
               // $cond_fecha ="";
         }
 
+$intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
 
         $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
 
@@ -119,11 +184,35 @@
 
 
              $cons = 'SELECT id id_proyecto, id_entorno, tabla  FROM  '.$this->catalogo_proyectos .' as c where  
-             c.id='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+              c.id_entorno='.$this->session->userdata('entorno_activo'); //c.id='.$data['id_proyecto'].' AND
             $result = $this->db->query( $cons); 
             $proyectos = $result->result();
 
-            foreach ($proyectos as $key => $value) {
+
+    $filtro="";        
+if  ($data['id_usuario']!=0){
+    $filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
+}
+
+if  ($data['id_proyecto']!=0){
+  $filtro.= (($filtro!="") ? " and " : "") . " (id_proyecto = '".$data["id_proyecto"]."') ";
+} 
+
+
+if  ($data['id_area']!=0){
+   $filtro.= (($filtro!="") ? " and " : "") . " (id_area = ".$data['id_area'].") ";
+}
+
+if  ($data['id_profundidad']!=-1){
+   $filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
+}
+
+$filtro= (($filtro!="") ? " where " : "") . $filtro;
+
+
+//$filtro=" ";
+
+   foreach ($proyectos as $key => $value) {
 
                 $tabla_struct  = $this->db->dbprefix('pstruct_'.$value->tabla);
                 $tabla_data  = $this->db->dbprefix('pdata_'.$value->tabla);
@@ -133,16 +222,19 @@
                 $sql=" select 
                         id_nivel, profundidad, nombre, tabla, id_entorno,
                         id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                        nomb, apellidos, salario ,
+                        nomb, apellidos, salario, id_area"; 
+                            
+                            foreach ($arreglo_fechas as $key1 => $value1) {
+                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                            }
+
                             
 
-                            SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = 26, horas, 0)) AS a26,
 
-
-                         from (
+                 $sql .="   from (
                         select proy.id_nivel, proy.profundidad, proy.nombre, proy.id identificador, proy.tabla, proy.id_entorno,
                         r.id_usuario, r.id, r.id_proyecto,  r.costo, r.tiempo_disponible, r.fecha_creacion, r.fecha_inicial, r.fecha_final, r.id_val, r.json_items,
-                        r.nombre nomb, r.apellidos, r.salario , r.horas, r.fecha
+                        r.nombre nomb, r.apellidos, r.salario , r.id_area, r.horas, r.fecha
                           from (
                             select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno  from (
                                 select profundidad.id id_nivel, profundidad.depth profundidad,
@@ -157,7 +249,7 @@
                                     ORDER BY nodo.lft
                                 ) profundidad
                                 INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
-                             ) e, inven_catalogo_proyectos as p
+                             ) e, ".$this->catalogo_proyectos." as p
                             WHERE p.id_entorno=".$value->id_entorno." and  p.tabla='".$value->tabla."'
                             )
                          proy  inner join 
@@ -166,7 +258,7 @@
 
 
                         (
-                        select u.nombre, u.apellidos, u.salario, r1.id, r1.id_entorno, r1.id_proyecto, r1.id_nivel, r1.costo, r1.tiempo_disponible, r1.fecha_creacion, r1.fecha_inicial,
+                        select u.nombre, u.apellidos, u.salario, u.id_cliente id_area, r1.id, r1.id_entorno, r1.id_proyecto, r1.id_nivel, r1.costo, r1.tiempo_disponible, r1.fecha_creacion, r1.fecha_inicial,
                         r1.fecha_final, r1.id_val, r1.json_items, r1.id_usuario, h.horas, h.fecha
                          from 
                          (SELECT id, id_entorno, id_proyecto, id_nivel, costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
@@ -183,80 +275,80 @@
 
                           $sql .="
                         ) r1 
-                          left join  inven_usuarios u  on r1.id_usuario = u.id
-                          left join  inven_registro_user_proy h  on h.id_usuario = r1.id_usuario and 
+                          left join  ".$this->usuarios." u  on r1.id_usuario = u.id
+                          left join  ".$this->registro_user_proy." h  on h.id_usuario = r1.id_usuario and 
                           h.id_entorno = r1.id_entorno and 
                           h.id_proyecto = r1.id_proyecto and 
                           h.id_nivel = r1.id_nivel ".$cond_fecha.
                          ") r 
                         on proy.id_nivel = r.id_nivel
 
-                        ) todo
-
-                        GROUP BY 
+                        ) todo 
+                        ".$filtro."                           
+                         GROUP BY 
                         id_nivel, profundidad, nombre, tabla, id_entorno,
                         id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                        nomb, apellidos, salario 
+                        nomb, apellidos, salario, id_area 
+                        
                 ";
 
-                //return $sql;
+              
 
                $result = $this->db->query( $sql); 
 
 
 
-
-
-
-                //$proyectos = $result->result();
-                //return $proyectos;
-              //$result = $this->db->get();
-
               if ( $result->num_rows() > 0 ) {
 
-                    /*
-                    $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
-                    $found_rows = $cantidad_consulta->row(); 
-                    $registros_filtrados =  ( (int) $found_rows->cantidad);
 
-                  $retorno= " ";  
-                  */
+                      
 
-                      foreach ($result->result() as $row) {
+                      foreach ($result->result() as $key => $row) {
                                $dato[]= array(
                                       0=>$row->id_nivel,
                                       1=>$row->id_entorno,
                                       2=>$row->id_proyecto,
                                       3=>$row->profundidad,
-                                      4=>$row->nombre,
-                                      5=>$row->nomb,
-                                      6=>$row->apellidos,
+                                      4=>($row->nombre!=null) ? ($row->nombre) : '',
+                                      5=>($row->nomb!=null) ? ($row->nomb) : '',
+                                      6=>($row->apellidos!=null) ? ($row->apellidos) : '',
                                       7=>$row->salario,
-                                      8=>$row->a26,
-                                      9=>$row->a27,
-                                      10=>$row->a28,
-                                      //4=>self::entornos_en_uso($row->id),
+                                      8=>$intervalo_dia->format('%a'),
                                     );
+
+                                for ($i=0; $i <31 ; $i++) { 
+                                   //$dato[$key][9+$i] = 0;
+                                    $dato[count($dato)-1][9+$i] = 0;
+                                }
+
+                                foreach ($arreglo_fechas as $key1 => $value1) {
+                                    $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
+                                }    
                       }
 
+            }
+
+  }   //fin del foreach de proyectos
 
 
 
+               if ( isset($dato) ) {
                       return json_encode ( array(
                         "draw"            => 0, //intval( $data['draw'] ),
-                        "recordsTotal"    => 10, //intval( self::total_cat_entornos() ), 
-                        "recordsFiltered" => 10,  //$registros_filtrados, 
+                        "recordsTotal"    => 100, //intval( self::total_cat_entornos() ), 
+                        "recordsFiltered" => 100,  //$registros_filtrados, 
+                                 "intervalo"=>$intervalo_dia->format('%a'),
                         "data"            =>  $dato 
                       ));
                     
-              }   
-              else {
+              } else {
                   //cuando este vacio la tabla que envie este
                 //http://www.datatables.net/forums/discussion/21311/empty-ajax-response-wont-render-in-datatables-1-10
                   $output = array(
                   "draw" =>  intval( $data['draw'] ),
                   "recordsTotal" => 0,
                   "recordsFiltered" =>0,
+                  "intervalo"=>$intervalo_dia->format('%a'),
                   "aaData" => array()
                   );
                   $array[]="";
@@ -266,26 +358,11 @@
               }
 
               $result->free_result();   
+  
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            } 
+            
 
 
 

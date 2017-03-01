@@ -77,8 +77,89 @@ FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPL
 
 */
 
+  public function ruta_suma($data){
+            
+
+            //lista de las tablas que se ven afectadas
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+              $sql="
+                    SELECT nodo.id id_nivel, (COUNT(padre.id) ) AS id_tabla
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    GROUP BY nodo.id
+                    ORDER BY nodo.lft
+              ";                
+             $query = $this->db->query($sql);                
+             $registros = $query->result();
+
+          $total=0;
+         foreach ($registros as $key => $value) {
+            if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
+              if ( $value->id_tabla ==1) {
+
+
+
+                  $cons = "SELECT sum(n.tiempo_disponible *
+                  (SELECT u.salario
+                    FROM  ".$this->registro_proyecto ." up inner join ".$this->usuarios ." u on SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END         ) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+
+                    FROM  ".$this->registro_proyecto ." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                  $result = $this->db->query( $cons); 
+                 $total += $result->row()->total;
+
+              } else {  
+
+                  $cons = "SELECT sum(tiempo_disponible*
+                  (SELECT u.salario
+                    FROM  inven_registro_nivel". $value->id_tabla." up inner join ".$this->usuarios ." u on SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END         ) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+                                     FROM  inven_registro_nivel". $value->id_tabla." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                  
+                   //return $cons;
+                  $result = $this->db->query( $cons); 
+                  $total += $result->row()->total;
+              }
+        }  
+
+
+            $cons = 'SELECT importe total FROM  '.$this->catalogo_proyectos .' as c where  
+             c.id='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+            $result = $this->db->query( $cons); 
+            $datoss['total'] = $result->row()->total-$total;
+
+
+            //fin  de total de tiempo disponible
+
+
+
+           
+
+
+        return  ($datoss);   
+
+
+
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();            
+
+    }        
+
+
    //checar si el entorno ya existe
-    public function ruta_suma($data){
+    public function ruta_suma1($data){
             
 
             //lista de las tablas que se ven afectadas

@@ -31,8 +31,8 @@
 
 
 		<!-- Aqui comienza filtro	-->
-
-				<div class="col-md-12 form-horizontal" id="tab_filtro">      
+		<div class="row">      
+			<div class="col-md-12 form-horizontal" id="tab_filtro">      
 						
 						<h4>Filtros</h4>	
 						<hr style="padding: 0px; margin: 15px;"/>					
@@ -45,100 +45,100 @@
 								</div>	
 		                </div>
 
-						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
-							<div class="form-group">
-								<label for="estructura" class="col-sm-12 col-md-12">Estructura</label>
-								<div class="col-sm-12 col-md-12">
-									<select name="id_estructura" id="id_estructura" class="form-control ttip" title="Seleccione la estructura a consultar.">
-											<?php if ( $estructuras) ?>
-											<?php foreach ( $estructuras as $estructura ){ ?>
-													<option value="<?php echo $estructura->id; ?>"><?php echo $estructura->nombre; ?></option>
-											<?php } ?>
-									</select>
-								</div>
-							</div>
-						</div>	
-
 
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-3">
 							<div class="form-group">
 								<label for="proyecto" class="col-sm-12 col-md-12">Proyecto</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_proyecto" id="id_proyecto" class="form-control ttip" title="Seleccione la proyecto a consultar.">
-											<?php if ( $proyectos) ?>
-											<?php foreach ( $proyectos as $proyecto ){ ?>
-													<option value="<?php echo $proyecto->id; ?>"><?php echo $proyecto->nombre; ?></option>
-											<?php } ?>
+									<select name="id_proyecto" id="id_proyecto" class="form-control ttip" title="Seleccione la proyecto a consultar."
+									 dependencia="id_profundidad">
+
+											<option value="0">Todos</option>
+											<?php if ( $datos['proyectos']) { ?>
+											<?php foreach ( $datos['proyectos'] as $proyecto ){ ?>
+													<option value="<?php echo $proyecto->id; ?>"><?php echo $proyecto->proyecto; ?></option>
+											<?php } } ?>
 									</select>
 								</div>
 							</div>
 						</div>	
-
 
 
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
 							<div class="form-group">
-								<label for="persona" class="col-sm-12 col-md-12">persona</label>
+								<label for="estructura" class="col-sm-12 col-md-12">Niveles</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_persona" id="id_persona" class="form-control ttip" title="Seleccione la persona a consultar.">
-											<?php if ( $personas) ?>
-											<?php foreach ( $personas as $persona ){ ?>
-													<option value="<?php echo $persona->id; ?>"><?php echo $persona->nombre; ?></option>
+									<select name="id_profundidad" id="id_profundidad" class="form-control ttip" title="Seleccione la estructura a consultar."
+									dependencia="id_area">
+											<option value="-1">Todos</option>
+											
+											<?php  for ($i=0; $i < $datos['entornos'][0]->profundidad_activo ; $i++) {    ?>
+													<option value="<?php echo $i ?>"> Nivel <?php echo $i+1; ?></option>
 											<?php } ?>
 									</select>
 								</div>
 							</div>
 						</div>	
+
+
+
+
+
 
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
 							<div class="form-group">
 								<label for="area" class="col-sm-12 col-md-12">Área</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_area" id="id_area" class="form-control ttip" title="Seleccione la area a consultar.">
-											<?php if ( $areas) ?>
+									<select name="id_area" id="id_area" class="form-control ttip" title="Seleccione la area a consultar."
+									dependencia="id_usuario">
+											<option value="0">Todos</option>
+											<?php if ( $areas) { ?>
 											<?php foreach ( $areas as $area ){ ?>
-													<option value="<?php echo $area->id; ?>"><?php echo $area->nombre; ?></option>
-											<?php } ?>
+													<option value="<?php echo $area->id; ?>"><?php echo $area->area; ?></option>
+											<?php } } ?>
 									</select>
 								</div>
 							</div>
 						</div>	
+
+
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							<div class="form-group">
+								<label for="persona" class="col-sm-12 col-md-12">Usuarios</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_usuario" id="id_usuario" class="form-control ttip" title="Seleccione la persona a consultar."
+									dependencia="">
+											<option value="0">Todos</option>
+											<?php if ( $datos['usuarios']) { ?>
+											<?php foreach ( $datos['usuarios'] as $usuario ){ ?>
+													<option value="<?php echo $usuario->id; ?>"><?php echo $usuario->nombre; ?></option>
+											<?php } } ?>
+									</select>
+								</div>
+							</div>
+						</div>							
 			
 
-			<br>
-			<div class="col-md-12">
-				<div class="table-responsive">
+						<br>
+						<div class="col-md-12">
+							<div class="table-responsive">
 
-					<section>
-						<table id="tabla_rep_general" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
-							<thead>
-								<tr>
-									<th class="text-center cursora" width="22%">Nombre</th>
-									<th class="text-center cursora" width="22%">Usuarios</th>
-									
-									<th class="text-center cursora" width="8%">26</th>
-									<th class="text-center cursora" width="8%">27</th>
-									<th class="text-center cursora" width="8%">28</th>
-									<!--
-									<th class="text-center cursora" width="8%">4</th>
-									<th class="text-center cursora" width="8%">5</th>
-									<th class="text-center cursora" width="8%">6</th>
-									<th class="text-center cursora" width="8%">7</th>
-									-->
-									
+								<section>
+									<table id="tabla_rep_general" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+										<thead>
+											<tr>
+												
+												
+											</tr>
+										</thead>
+									</table>
+								</section>
+							</div>
+						</div>
 
-									
-								</tr>
-							</thead>
-						</table>
-					</section>
-				</div>
-			</div>
-
-
-
-		            
-				</div>
+		    </div>
+		</div>    
 
 <!-- Hasta aqui el filtro	-->
 

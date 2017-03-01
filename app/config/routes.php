@@ -77,8 +77,11 @@ $route['ajaxAgents']	= 'nucleo/ajaxAgents';
 /////////////////////////////////Reportes///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-$route['general']						= 'Reportes/listado_general';
-$route['procesando_rep_general']		= 'Reportes/procesando_rep_general';
+$route['general']							= 'Reportes/listado_general';
+$route['procesando_rep_general']			= 'Reportes/procesando_rep_general';
+$route['cargar_dependencia_reportes']		= 'Reportes/cargar_dependencia_reportes';
+
+
 
 
 

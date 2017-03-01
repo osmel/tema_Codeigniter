@@ -66,7 +66,90 @@ jQuery(document).ready(function($) {
 
 
 
-jQuery('#tabla_rep_general').dataTable( {
+jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario ").on('change', function(e) {
+        
+        var campo = jQuery(this).attr("name");   
+
+        var id_proyecto = jQuery('#id_proyecto').val();
+        var id_profundidad = jQuery('#id_profundidad').val();
+        var id_area = jQuery('#id_area').val();
+        var id_usuario = jQuery('#id_usuario').val();
+
+        var dependencia = jQuery(this).attr("dependencia"); 
+
+
+        if (dependencia !="") {     
+            //limpiar la dependencia
+            jQuery("#"+dependencia).html(''); 
+            //cargar la dependencia
+            cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia);
+        }
+
+
+    //cuando cambie uno que refresh tabla
+    var hash_url = window.location.pathname;
+    if  ( (hash_url=="/general") )   {  
+       var oTable =jQuery('#tabla_rep_general').dataTable();
+       oTable._fnAjaxUpdate();
+    }   
+
+});
+
+
+
+
+function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia) {
+        
+        var url = 'cargar_dependencia_totales'; 
+        jQuery.ajax({
+                url : '/cargar_dependencia_reportes',
+                data:{
+                    campo:campo,
+                    id_proyecto:id_proyecto,
+                    id_profundidad:id_profundidad,
+                    id_area: id_area,
+                    id_usuario:id_usuario,                    
+                    dependencia:dependencia
+                },
+
+
+                type : 'POST',
+                dataType : 'json',
+                success : function(data) {
+                      //console.log(dependencia);
+                      if (dependencia == "id_profundidad")  {
+                        jQuery("#"+dependencia).append('<option value="-1" >Todos</option>'); //Seleccione '+nombre+'
+                      } else {
+                        jQuery("#"+dependencia).append('<option value="0" >Todos</option>'); //Seleccione '+nombre+'   
+                      }
+                     
+                    
+                    if (data != "[]") {
+                        
+                        jQuery.each(data, function (i, valor) {
+                            if (valor.nombre !== null) {
+                                 jQuery("#"+dependencia).append('<option value="' + valor.identificador + '">' + valor.nombre + '</option>');     
+                            }
+                        });
+
+                    }   
+                    
+                    jQuery("#"+dependencia).trigger('change');
+
+                    return false;
+                },
+                error : function(jqXHR, status, error) {
+                },
+                complete : function(jqXHR, status) {
+                    
+                }
+            }); 
+    }
+
+
+
+
+var table =  jQuery('#tabla_rep_general').dataTable( {
         "pagingType": "full_numbers",
         "processing": true,
         "serverSide": true,
@@ -77,6 +160,14 @@ jQuery('#tabla_rep_general').dataTable( {
                         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
                         d.fecha_inicial = fecha[0];
                         d.fecha_final = fecha[1];
+                        
+                        
+                        
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        
                     }
                     
          },   
@@ -103,44 +194,124 @@ jQuery('#tabla_rep_general').dataTable( {
                 "sortDescending": ": Activando para ordenar columnas descendentes"
             },
         },
-        "columnDefs": [
+
+
+"infoCallback": function( settings, start, end, max, total, pre ) {
+           var api = this.api(), data;
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+
+                console.log(settings.json.intervalo);
+            
+            for (var i = 9; i <= (intVal(settings.json.intervalo)+10); i++) {
+                    api.column(i).visible(true);      
+                }        
+
+            for (var i = (intVal(settings.json.intervalo)+10); i <= 39; i++) {
+                    api.column(i).visible(false);      
+                }    
+
+                
+
+
+    return pre
+},
+
+        "columnDefs": [ 
+
+        {
+            "targets": 39, //(jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1  !== 'undefined') ? (jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1) : 9 ,
+            
+        },
+        
+
                     { 
-                        "render": function ( data, type, row ) {
-                                return '-'.repeat(row[3])+''+row[4];
+                        "render": function ( data, type, row ) {    
+                          var color=(row[0]==1) ? "red" : "black";
+                          return '<span style="color:'+color+';">'+'-'.repeat(row[3])+''+row[4]+'</span>';
                         },
                         "targets": [0] 
                     },
+
                     { 
                         "render": function ( data, type, row ) {
                                 return row[5]+' '+row[6] ;
                         },
                         "targets": [1] 
-                    },
-                    { 
-                        "render": function ( data, type, row ) {
-                                return row[8];
-                        },
-                        "targets": [2] 
-                    },
+                    },     
 
-                    { 
-                        "render": function ( data, type, row ) {
-                                return row[9];
-                        },
-                        "targets": [3] 
-                    },
 
-                    { 
-                        "render": function ( data, type, row ) {
-                                return row[10];
-                        },
-                        "targets": [4] 
-                    },
-                   
-                   
-                    
-                ],
+                { 
+                     "visible": false,
+                    "targets": [2,3,4,5,6,7,8]
+                }                                   
+
+
+         ],
+
+    
+         //callback
+    "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
+        var arreglo = ['Proyectos', 'Usuarios','1', '2','3','4', '5','6','7', '8','9','10', '11','12','13', '14','15','16', '17','18','19', '20','21','22', '23','24','25', '26','27','28','29','30','31']; 
+        
+
+        var encabezado ='';
+    
+        console.log(aData );
+        if (aData.length !=0) {
+            for (var i=0; i<=arreglo.length-(31-aData[0][8]); i++) { //cant_colum
+                     encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
+                }
+
+                nHead.innerHTML='<tr role="row">'+encabezado+'</tr>'
+        }    
+
+    },       
+
+
+       
     });  
+
+
+/*
+function Person( name, age, position ) {
+    this._name     = name;
+    this._age      = age;
+    this._position = position;
+ 
+    this.name = function () {
+        return this._name;
+    };
+ 
+    this.age = function () {
+        return this._age;
+    };
+ 
+    this.position = function () {
+        return this._position;
+    };
+}
+
+var table =  jQuery('#tabla_rep_general').dataTable( {
+     columns: [
+            { data: null, render: 'name' },
+            { data: null, render: 'age' },
+            { data: null, render: 'position' }
+        ]
+
+});
+
+
+table.row.add( new Person( 'Airi Satou',     33, 'Accountant' ) );
+table.draw();*/
+
+
+
 
 
 /*

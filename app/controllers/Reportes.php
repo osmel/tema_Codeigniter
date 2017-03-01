@@ -16,61 +16,66 @@ class Reportes extends CI_Controller {
 
 
 
+ function cargar_dependencia_reportes(){
+    
+    $data['campo']        = $this->input->post('campo');
+
+    $data['id_proyecto']        = $this->input->post('id_proyecto');
+    $data['id_profundidad']        = $this->input->post('id_profundidad');
+    $data['id_area']        = $this->input->post('id_area');
+    $data['id_usuario']        = $this->input->post('id_usuario');
+
+    $data['dependencia']        = $this->input->post('dependencia');
+
+
+    switch ($data['dependencia']) {
+        case "id_proyecto": //nunca será una dependencia
+            $elementos  = $this->modelo_reporte->listado_proyectos();
+            break;
+        case "id_profundidad":
+            $elementos  = $this->modelo_reporte->listado_proyectos($data);
+            break;
+        case "id_area":
+            $elementos  = $this->modelo_reporte->listado_proyectos($data);
+            break;
+        case "id_usuario":
+            $elementos  = $this->modelo_reporte->listado_usuarios($data);
+            break;
+        default:
+    }
+
+
+                      /*
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();  
+                      */
+
+
+      $variables = array();
+    if ($elementos != false)  {     
+         foreach( (json_decode(json_encode($elementos))) as $clave =>$valor ) {
+              array_push($variables,array('nombre' => $valor->nombre, 'identificador' => $valor->id));  
+       }
+    }  
+
+     echo json_encode($variables);
+  }
+
+
 
   
 //***********************areas **********************************//
  public function procesando_rep_general(){
-
-//$data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
-
-
-
-/*
-$data['fecha_inicial'] = date('d-m-Y', strtotime('26-01-2017') ); 
-$data['fecha_final'] = date('d-m-Y', strtotime('today') ); 
-
-
-
-
-
-
-    $arreglo_fechas = array();
-
-    if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
-    if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
-
-    if ($data['fecha_inicial'] > $data['fecha_final']) return createDateRangeArray($data['fecha_final'], $data['fecha_inicial']);
-
-    do {
-        $arreglo_fechas[] = date('Y-m-d', $data['fecha_inicial']);
-        $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
-    } while($data['fecha_inicial'] <= $data['fecha_final']);
-
-
-
-
-    print_r($arreglo_fechas);
-
-
-
-  die;
-
-*/
-         $dato=$_POST;
-         $dato['id_proyecto'] = 79;
-
-         print_r($this->modelo_reporte->procesando_rep_general($dato));    
-
+         $data=$_POST;
+         print_r($this->modelo_reporte->procesando_rep_general($data));    
 
  } 
 
-
-
-    public function listado_general(){
-
-  
-                      //die;
-
+ 
+                     
+  public function listado_general(){
     
         $id_perfil=$this->session->userdata('id_perfil');
 
@@ -79,6 +84,10 @@ $data['fecha_final'] = date('d-m-Y', strtotime('today') );
                       $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
                       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
                       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+
+                      //print_r($data['datos']['proyectos']); die;
                
                   
                       switch ($id_perfil) {    

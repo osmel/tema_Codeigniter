@@ -210,7 +210,17 @@
 
 
 
+ public function listado_areas(){
+          $this->db->select("id, area", FALSE);         
+          $this->db->from($this->catalogo_areas);
 
+          $result = $this->db->get(  );
+             if ( $result->num_rows() > 0 ) {
+                  return $result->result();
+              } else 
+                  return false;
+            $result->free_result();   
+ } 
 
 
  //checar si el composicion ya existe
