@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 24, 2017 at 03:32 PM
+-- Generation Time: Mar 01, 2017 at 05:07 PM
 -- Server version: 5.5.50-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.17
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `inven_bitacora_proyectos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=82 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=106 ;
 
 --
 -- Dumping data for table `inven_bitacora_proyectos`
@@ -119,7 +119,31 @@ INSERT INTO `inven_bitacora_proyectos` (`id`, `id_user`, `operacion`, `id_proyec
 (78, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 20.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:05:48'),
 (79, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 20.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:06:18'),
 (80, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 20.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:19:44'),
-(81, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 20.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:27:54');
+(81, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 20.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:27:54'),
+(82, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 14:25:41'),
+(83, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 15:00:49'),
+(84, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:03:14'),
+(85, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:03:22'),
+(86, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:04:13'),
+(87, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:07:34'),
+(88, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:08:15'),
+(89, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 17:08:42'),
+(90, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 22:58:37'),
+(91, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 22:58:59'),
+(92, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 23:00:18'),
+(93, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 14:22:13'),
+(94, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 14:23:06'),
+(95, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:06:52'),
+(96, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:08:12'),
+(97, '65350f7e-d031-11e5-b036-04015a6da701', 'c', 81, 1, 0.00, 'Proyectos_20170301122535dNDW429', '20170301122535dNDW429', 1, 'Proyectos_20170301122535dNDW429', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:25:37'),
+(98, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 81, 1, 0.00, 'Proyectos_20170301122535dNDW429', '20170301122535dNDW429', 1, 'Proyectos_20170301122535dNDW429', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:25:39'),
+(99, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 81, 1, 0.00, 'iniciativa', '20170301122535dNDW429', 2, 'iniciativa / uno / dos / tres', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:13'),
+(100, '65350f7e-d031-11e5-b036-04015a6da701', 'c', 82, 1, 0.00, 'Proyectos_20170301123116UblE405', '20170301123116UblE405', 1, 'Proyectos_20170301123116UblE405', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:31:17'),
+(101, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 82, 1, 0.00, 'Proyectos_20170301123116UblE405', '20170301123116UblE405', 1, 'Proyectos_20170301123116UblE405', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:31:20'),
+(102, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 82, 1, 0.00, 'ventas de auto', '20170301123116UblE405', 2, 'ventas de auto / auto1 / auto2', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:31:36'),
+(103, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 82, 1, 0.00, 'ventas de auto', '20170301123116UblE405', 2, 'ventas de auto / auto1 / auto2', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:32:26'),
+(104, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 82, 1, 0.00, 'ventas de auto', '20170301123116UblE405', 2, 'ventas de auto / auto1 / auto2', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:33:14'),
+(105, '65350f7e-d031-11e5-b036-04015a6da701', 'm', 80, 1, 1.00, 'otro', '20170224094241VJCq816', 3, 'otro / uno / dos', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 21:18:47');
 
 -- --------------------------------------------------------
 
@@ -276,7 +300,8 @@ INSERT INTO `inven_catalogo_operaciones` (`id`, `operacion`, `tooltip`, `consecu
 (1, 'Entornos', 'Permite el acceso a la sección de generar Entradas al Almacén.', 0, 1, 1, 0, 4, 5, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 21:59:18', 1, 'Operaciones'),
 (2, 'Proyectos', 'Permite el acceso a la sección de generar Salidas del Almacén.', 0, 0, 0, 0, 7, 9, 0, '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-09 21:59:24', 3, 'Operaciones'),
 (3, 'Usuarios', 'Permite el acceso a la administración de alta/baja de usuarios.', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-23 20:20:13', 0, ''),
-(4, 'Todos los Catálogos', '', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-23 21:02:23', 0, '');
+(4, 'Todos los Catálogos', '', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-23 21:02:23', 0, ''),
+(5, 'Reportes', '', 0, 0, 0, 0, 0, 0, 0, '', '2017-02-28 15:04:57', 0, '');
 
 -- --------------------------------------------------------
 
@@ -297,15 +322,17 @@ CREATE TABLE IF NOT EXISTS `inven_catalogo_proyectos` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=83 ;
 
 --
 -- Dumping data for table `inven_catalogo_proyectos`
 --
 
 INSERT INTO `inven_catalogo_proyectos` (`id`, `id_entorno`, `importe`, `Proyecto`, `tabla`, `profundidad`, `ruta`, `tooltip`, `id_usuario`, `id_user_cambio`, `fecha_mac`) VALUES
-(79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:21:12'),
-(80, 1, 90000.00, 'otro', '20170224094241VJCq816', 2, 'otro / asdas', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 15:51:51');
+(79, 1, 30000.00, 'osmel', '20170224091034BQMc018', 4, 'osmel / uno / dos / tres / cuatro / cinco / otro / otro2', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:28:52'),
+(80, 1, 1.00, 'otro', '20170224094241VJCq816', 3, 'otro / uno / dos', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-27 18:59:55'),
+(81, 1, 0.00, 'iniciativa', '20170301122535dNDW429', 2, 'iniciativa / uno / dos / tres', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:13'),
+(82, 1, 0.00, 'ventas de auto', '20170301123116UblE405', 2, 'ventas de auto / auto1 / auto2', '', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:31:36');
 
 -- --------------------------------------------------------
 
@@ -368,7 +395,9 @@ INSERT INTO `inven_pdata_20170224091034BQMc018` (`id`, `nm`) VALUES
 (3, 'dos'),
 (4, 'tres'),
 (5, 'cuatro'),
-(6, 'cinco');
+(6, 'cinco'),
+(7, 'otro'),
+(8, 'otro2');
 
 -- --------------------------------------------------------
 
@@ -388,7 +417,51 @@ CREATE TABLE IF NOT EXISTS `inven_pdata_20170224094241VJCq816` (
 
 INSERT INTO `inven_pdata_20170224094241VJCq816` (`id`, `nm`) VALUES
 (1, 'otro'),
-(2, 'asdas');
+(2, 'uno'),
+(3, 'dos');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inven_pdata_20170301122535dNDW429`
+--
+
+CREATE TABLE IF NOT EXISTS `inven_pdata_20170301122535dNDW429` (
+  `id` int(11) unsigned NOT NULL,
+  `nm` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `inven_pdata_20170301122535dNDW429`
+--
+
+INSERT INTO `inven_pdata_20170301122535dNDW429` (`id`, `nm`) VALUES
+(1, 'iniciativa'),
+(2, 'uno'),
+(3, 'dos'),
+(4, 'tres');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inven_pdata_20170301123116UblE405`
+--
+
+CREATE TABLE IF NOT EXISTS `inven_pdata_20170301123116UblE405` (
+  `id` int(11) unsigned NOT NULL,
+  `nm` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `inven_pdata_20170301123116UblE405`
+--
+
+INSERT INTO `inven_pdata_20170301123116UblE405` (`id`, `nm`) VALUES
+(1, 'ventas de auto'),
+(2, 'auto1'),
+(3, 'auto2');
 
 -- --------------------------------------------------------
 
@@ -430,19 +503,21 @@ CREATE TABLE IF NOT EXISTS `inven_pstruct_20170224091034BQMc018` (
   `pid` int(11) unsigned NOT NULL,
   `pos` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `inven_pstruct_20170224091034BQMc018`
 --
 
 INSERT INTO `inven_pstruct_20170224091034BQMc018` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
-(1, 1, 12, 0, 0, 0),
+(1, 1, 16, 0, 0, 0),
 (2, 2, 11, 1, 1, 0),
 (3, 3, 8, 2, 2, 0),
 (4, 4, 5, 3, 3, 0),
 (5, 6, 7, 3, 3, 1),
-(6, 9, 10, 2, 2, 1);
+(6, 9, 10, 2, 2, 1),
+(7, 12, 13, 1, 1, 1),
+(8, 14, 15, 1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -458,15 +533,67 @@ CREATE TABLE IF NOT EXISTS `inven_pstruct_20170224094241VJCq816` (
   `pid` int(11) unsigned NOT NULL,
   `pos` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `inven_pstruct_20170224094241VJCq816`
 --
 
 INSERT INTO `inven_pstruct_20170224094241VJCq816` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
-(1, 1, 4, 0, 0, 0),
-(2, 2, 3, 1, 1, 0);
+(1, 1, 6, 0, 0, 0),
+(2, 2, 5, 1, 1, 0),
+(3, 3, 4, 2, 2, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inven_pstruct_20170301122535dNDW429`
+--
+
+CREATE TABLE IF NOT EXISTS `inven_pstruct_20170301122535dNDW429` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lft` int(11) unsigned NOT NULL,
+  `rgt` int(11) unsigned NOT NULL,
+  `lvl` int(11) unsigned NOT NULL,
+  `pid` int(11) unsigned NOT NULL,
+  `pos` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `inven_pstruct_20170301122535dNDW429`
+--
+
+INSERT INTO `inven_pstruct_20170301122535dNDW429` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
+(1, 1, 8, 0, 0, 0),
+(2, 2, 3, 1, 1, 0),
+(3, 4, 5, 1, 1, 1),
+(4, 6, 7, 1, 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inven_pstruct_20170301123116UblE405`
+--
+
+CREATE TABLE IF NOT EXISTS `inven_pstruct_20170301123116UblE405` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lft` int(11) unsigned NOT NULL,
+  `rgt` int(11) unsigned NOT NULL,
+  `lvl` int(11) unsigned NOT NULL,
+  `pid` int(11) unsigned NOT NULL,
+  `pos` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `inven_pstruct_20170301123116UblE405`
+--
+
+INSERT INTO `inven_pstruct_20170301123116UblE405` (`id`, `lft`, `rgt`, `lvl`, `pid`, `pos`) VALUES
+(1, 1, 6, 0, 0, 0),
+(2, 2, 3, 1, 1, 0),
+(3, 4, 5, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -493,15 +620,20 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel2` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `inven_registro_nivel2`
 --
 
 INSERT INTO `inven_registro_nivel2` (`id`, `id_entorno`, `id_proyecto`, `id_nivel`, `profundidad`, `nombre`, `descripcion`, `costo`, `tiempo_disponible`, `fecha_creacion`, `fecha_inicial`, `fecha_final`, `id_val`, `json_items`, `id_usuario`, `id_user_cambio`, `fecha_mac`) VALUES
-(10, 1, 79, 2, 2, 'osmel', '', 0.00, 3.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"bceed19e-f22e-11e6-8df6-7071bce181c3"', '[{"id":"bceed19e-f22e-11e6-8df6-7071bce181c3","nombre":"Ulises"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:30:48'),
-(11, 1, 80, 2, 2, 'otro', '', 0.00, 3.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 16:54:56');
+(10, 1, 79, 2, 2, 'cinco', '', 0.00, 3.00, '2017-02-24 00:00:00', '2017-02-26 00:00:00', '2017-02-27 00:00:00', '"65350f7e-d031-11e5-b036-04015a6da701,00e10de5-f491-11e6-b097-7071bce181c3"', '[{"id":"65350f7e-d031-11e5-b036-04015a6da701","nombre":"Jorge"},{"id":"00e10de5-f491-11e6-b097-7071bce181c3","nombre":"Osmel"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:32'),
+(11, 1, 80, 2, 2, 'dos', '', 0.00, 3.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"d86270f7-f22e-11e6-8df6-7071bce181c3"', '[{"id":"d86270f7-f22e-11e6-8df6-7071bce181c3","nombre":"Adrian"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 21:18:34'),
+(12, 1, 82, 2, 2, 'ventas de auto', '', 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"00e10de5-f491-11e6-b097-7071bce181c3"', '[{"id":"00e10de5-f491-11e6-b097-7071bce181c3","nombre":"Osmel"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:35:13'),
+(13, 1, 82, 3, 2, 'auto1', '', 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:35:06'),
+(14, 1, 81, 3, 2, 'tres', '', 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:35:49'),
+(15, 1, 81, 4, 2, 'iniciativa', '', 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:35:50'),
+(16, 1, 81, 2, 2, 'iniciativa', '', 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:35:47');
 
 -- --------------------------------------------------------
 
@@ -528,15 +660,16 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel3` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `inven_registro_nivel3`
 --
 
 INSERT INTO `inven_registro_nivel3` (`id`, `id_entorno`, `id_proyecto`, `id_nivel`, `profundidad`, `nombre`, `descripcion`, `costo`, `tiempo_disponible`, `fecha_creacion`, `fecha_inicial`, `fecha_final`, `id_val`, `json_items`, `id_usuario`, `id_user_cambio`, `fecha_mac`) VALUES
-(5, 1, 79, 3, 3, 'uno', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"6e78e365-f48f-11e6-b097-7071bce181c3"', '[{"id":"6e78e365-f48f-11e6-b097-7071bce181c3","nombre":"Sandra"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:30:48'),
-(6, 1, 79, 6, 3, 'cuatro', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"d86270f7-f22e-11e6-8df6-7071bce181c3"', '[{"id":"d86270f7-f22e-11e6-8df6-7071bce181c3","nombre":"Adrian"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:23:29');
+(5, 1, 79, 3, 3, 'uno', '', 0.00, 0.00, '2017-02-24 00:00:00', '2017-02-26 00:00:00', '2017-02-27 00:00:00', '"65350f7e-d031-11e5-b036-04015a6da701,00e10de5-f491-11e6-b097-7071bce181c3"', '[{"id":"65350f7e-d031-11e5-b036-04015a6da701","nombre":"Jorge"},{"id":"00e10de5-f491-11e6-b097-7071bce181c3","nombre":"Osmel"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:26:15'),
+(6, 1, 79, 6, 3, 'tres', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:37'),
+(7, 1, 80, 3, 3, 'dos', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"b3728c39-f48f-11e6-b097-7071bce181c3"', '[{"id":"b3728c39-f48f-11e6-b097-7071bce181c3","nombre":"Marissa"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 21:18:50');
 
 -- --------------------------------------------------------
 
@@ -570,8 +703,8 @@ CREATE TABLE IF NOT EXISTS `inven_registro_nivel4` (
 --
 
 INSERT INTO `inven_registro_nivel4` (`id`, `id_entorno`, `id_proyecto`, `id_nivel`, `profundidad`, `nombre`, `descripcion`, `costo`, `tiempo_disponible`, `fecha_creacion`, `fecha_inicial`, `fecha_final`, `id_val`, `json_items`, `id_usuario`, `id_user_cambio`, `fecha_mac`) VALUES
-(1, 1, 79, 5, 4, 'tres', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"d6ce3eff-f48f-11e6-b097-7071bce181c3"', '[{"id":"d6ce3eff-f48f-11e6-b097-7071bce181c3","nombre":"Margarita"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:30:47'),
-(2, 1, 79, 4, 4, 'dos', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"b3728c39-f48f-11e6-b097-7071bce181c3"', '[{"id":"b3728c39-f48f-11e6-b097-7071bce181c3","nombre":"Marissa"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 21:30:47');
+(1, 1, 79, 5, 4, 'cinco', '', 0.00, 0.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', '"d6ce3eff-f48f-11e6-b097-7071bce181c3"', '[{"id":"d6ce3eff-f48f-11e6-b097-7071bce181c3","nombre":"Margarita"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 14:37:36'),
+(2, 1, 79, 4, 4, 'cuatro', '', 0.00, 0.00, '2017-02-24 00:00:00', '2017-02-26 00:00:00', '2017-02-26 00:00:00', '"b3728c39-f48f-11e6-b097-7071bce181c3"', '[{"id":"b3728c39-f48f-11e6-b097-7071bce181c3","nombre":"Marissa"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:39');
 
 -- --------------------------------------------------------
 
@@ -629,15 +762,17 @@ CREATE TABLE IF NOT EXISTS `inven_registro_proyecto` (
   `id_user_cambio` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 --
 -- Dumping data for table `inven_registro_proyecto`
 --
 
 INSERT INTO `inven_registro_proyecto` (`id`, `id_entorno`, `id_proyecto`, `id_nivel`, `profundidad`, `proyecto`, `descripcion`, `privacidad`, `costo`, `tiempo_disponible`, `fecha_creacion`, `fecha_inicial`, `fecha_final`, `contrato_firmado`, `pago_anticipado`, `factura_enviada`, `id_val`, `json_items`, `id_usuario`, `id_user_cambio`, `fecha_mac`) VALUES
-(38, 1, 79, 1, 1, 'osmel', 'Nuevo Proyecto', 1, 0.00, 1.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', b'0', b'0', b'0', '"00e10de5-f491-11e6-b097-7071bce181c3,65350f7e-d031-11e5-b036-04015a6da701"', '[{"id":"00e10de5-f491-11e6-b097-7071bce181c3","nombre":"Osmel"},{"id":"65350f7e-d031-11e5-b036-04015a6da701","nombre":"Jorge"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 17:27:54'),
-(39, 1, 80, 1, 1, 'otro', 'Nuevo Proyecto', 1, 0.00, 1.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', b'0', b'0', b'0', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-24 16:55:15');
+(38, 1, 79, 1, 1, 'osmel', 'Nuevo Proyecto', 1, 0.00, 1.00, '2017-02-24 00:00:00', '2017-02-24 00:00:00', '2017-02-28 00:00:00', b'0', b'0', b'0', '"65350f7e-d031-11e5-b036-04015a6da701,00e10de5-f491-11e6-b097-7071bce181c3"', '[{"id":"65350f7e-d031-11e5-b036-04015a6da701","nombre":"Jorge"},{"id":"00e10de5-f491-11e6-b097-7071bce181c3","nombre":"Osmel"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:08:12'),
+(39, 1, 80, 1, 1, 'otro', 'Nuevo Proyecto', 1, 0.00, 1.00, '2017-02-24 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', b'0', b'0', b'0', '"eda8cc65-f48f-11e6-b097-7071bce181c3"', '[{"id":"eda8cc65-f48f-11e6-b097-7071bce181c3","nombre":"Olympia"}]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 21:18:47'),
+(40, 1, 81, 1, 1, 'iniciativa', 'Nuevo Proyecto', 1, 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', b'0', b'0', b'0', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:29:13'),
+(41, 1, 82, 1, 1, 'ventas de auto', 'Nuevo Proyecto', 1, 0.00, 0.00, '2017-03-01 00:00:00', '1969-12-31 00:00:00', '1969-12-31 00:00:00', b'0', b'0', b'0', '""', '[]', '65350f7e-d031-11e5-b036-04015a6da701', '65350f7e-d031-11e5-b036-04015a6da701', '2017-03-01 18:33:14');
 
 -- --------------------------------------------------------
 
@@ -658,7 +793,25 @@ CREATE TABLE IF NOT EXISTS `inven_registro_user_proy` (
   `id_usuario` varchar(36) NOT NULL,
   `fecha_mac` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=401 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=413 ;
+
+--
+-- Dumping data for table `inven_registro_user_proy`
+--
+
+INSERT INTO `inven_registro_user_proy` (`id`, `id_entorno`, `id_proyecto`, `identificador`, `id_nivel`, `profundidad`, `descripcion`, `horas`, `fecha`, `id_usuario`, `fecha_mac`) VALUES
+(401, 1, 79, 10, 2, 2, '', 4.00, '2017-02-28 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:05:43'),
+(402, 1, 79, 5, 3, 3, '', 5.00, '2017-02-28 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:05:43'),
+(403, 1, 79, 10, 2, 2, '', 6.00, '2017-02-27 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:05:48'),
+(404, 1, 79, 5, 3, 3, '', 7.00, '2017-02-27 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:05:48'),
+(405, 1, 79, 38, 1, 1, '', 12.00, '2017-02-28 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:07:01'),
+(406, 1, 79, 38, 1, 1, '', 13.00, '2017-02-27 00:00:00', '65350f7e-d031-11e5-b036-04015a6da701', '2017-02-28 17:07:05'),
+(407, 1, 79, 38, 1, 1, '', 1.00, '2017-02-28 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:08:50'),
+(408, 1, 79, 10, 2, 2, '', 30.00, '2017-02-28 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:23:36'),
+(409, 1, 79, 5, 3, 3, '', 1.00, '2017-02-28 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:08:50'),
+(410, 1, 79, 38, 1, 1, '', 2.00, '2017-02-27 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:08:59'),
+(411, 1, 79, 10, 2, 2, '', 2.00, '2017-02-27 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:08:59'),
+(412, 1, 79, 5, 3, 3, '', 2.00, '2017-02-27 00:00:00', '00e10de5-f491-11e6-b097-7071bce181c3', '2017-02-28 17:08:59');
 
 -- --------------------------------------------------------
 
