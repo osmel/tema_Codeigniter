@@ -153,6 +153,7 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
         "pagingType": "full_numbers",
         "processing": true,
         "serverSide": true,
+         "ordering": false,
         "ajax": {
                     "url" : "procesando_rep_general",
                     "type": "POST",
@@ -257,8 +258,42 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
     
          //callback
     "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
-        var arreglo = ['Proyectos', 'Usuarios','1', '2','3','4', '5','6','7', '8','9','10', '11','12','13', '14','15','16', '17','18','19', '20','21','22', '23','24','25', '26','27','28','29','30','31']; 
+        var d = new Date();
+        var n = d.getMonth()+1;
+        var arreglo = ['Proyectos', 'Usuarios','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
         
+        
+        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+         var   fecha_inicial = fecha[0];
+         var   fecha_final = fecha[1];
+
+
+        
+
+       if (fecha[0].length !=0) {
+        console.log("asdas");
+
+               var fi = fecha[0]; //"28-02-2017 0:00";
+               var fo = fecha[1]; //"02-03-2017 0:00";
+
+                var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
+
+                for (i = 0; i < dateArray.length; i ++ ) {
+                    /*
+                    console.log (dateArray[i]);
+                    console.log (dateArray[i].getFullYear());
+                    console.log (dateArray[i].getMonth());
+                    console.log (dateArray[i].getDay());
+                    console.log (dateArray[i].getUTCDate());
+                    */
+                    
+                     arreglo[i+2] = dateArray[i].getUTCDate()+'/'+dateArray[i].getMonth();
+                }    
+
+
+       }
+
+
 
         var encabezado ='';
     
@@ -276,6 +311,26 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
 
        
     });  
+
+
+   Date.prototype.addDays = function(days) {
+       var dat = new Date(this.valueOf())
+       dat.setDate(dat.getDate() + days);
+       return dat;
+   }
+
+   function getDates(startDate, stopDate) {
+      var dateArray = new Array();
+      var currentDate = startDate;
+      while (currentDate <= stopDate) {
+        dateArray.push(currentDate)
+        currentDate = currentDate.addDays(1);
+      }
+      return dateArray;
+    }
+
+
+
 
 
 /*

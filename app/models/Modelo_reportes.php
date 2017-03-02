@@ -50,11 +50,44 @@
 
 		}
 
+public function altura_arbol( $data ){
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+            $this->db->select("c.id, c.tabla");         
+            $this->db->from($this->catalogo_proyectos.' As c');
+            $where ='(
+                    (c.id_entorno= '.$id_entorno.') AND (c.id= '.$data["id_proyecto"].')
+                  )'; 
+           $this->db->where($where);            
+           $result = $this->db->get( );
+
+           $tabla =$result->row()->tabla;
 
 
 
+          $tabla_struct  = $this->db->dbprefix('pstruct_'.$tabla);
+          $tabla_data  = $this->db->dbprefix('pdata_'.$tabla);
 
 
+      $cons = "select MAX(profundidad.depth) max_profundida_arbol from  (
+              SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+              FROM ".$tabla_struct." AS nodo,
+                      ".$tabla_struct." AS padre
+              WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+              GROUP BY nodo.id
+              ORDER BY nodo.lft
+              ) profundidad
+             ";
+              
+
+          $resultado = $this->db->query( $cons); 
+
+          return $resultado->row()->max_profundida_arbol;
+
+          //if ( $result->num_rows() > 0 ) {
+
+
+}
 
     public function listado_proyectos(  ){
 
@@ -82,25 +115,30 @@
 
 
 
+
  public function listado_niveles($data){
 
+      if ($data["id_proyecto"] !=0) {
+        $altura_arbol = self::altura_arbol($data); 
+      } else {
+        $altura_arbol =  3;  
+      }
+
+      
+
       $arreglo = array();
-      for ($i=0; $i < 4; $i++) { 
+      for ($i=0; $i < $altura_arbol+1; $i++) { 
         $arreglo[$i]["id"] =  $i;
-        $arreglo[$i]["nombre"] ="Nivel ".$i;
+        $arreglo[$i]["nombre"] ="Nivel ".($i+1);
 
       }
-          
-      
 
        return ((object)$arreglo);
           
  } 
 
-
-
- public function listado_areas($data){
-          $this->db->select("id, area nombre", FALSE);         
+public function listado_todas_areas($data){
+        $this->db->select("id, area nombre", FALSE);         
           $this->db->from($this->catalogo_areas);
 
           $result = $this->db->get(  );
@@ -108,14 +146,213 @@
                   return $result->result();
               } else 
                   return false;
+            $result->free_result(); 
+ }            
+
+
+ public function listado_areas($data){
+
+        $id_entorno = $this->session->userdata('entorno_activo');
+        $this->db->select("c.id, c.tabla");         
+        $this->db->from($this->catalogo_proyectos.' As c');
+        $where ='(
+                (c.id_entorno= '.$id_entorno.') AND (c.id= '.$data["id_proyecto"].')
+              )'; 
+       $this->db->where($where);            
+       $result = $this->db->get( );
+
+       $tabla =$result->row()->tabla;
+
+
+       
+       $filtro_profundidad = "";
+       $filtro_agrupamiento = " group by r.id_area ";
+      if  ($data['id_profundidad']!=-1){
+         //$filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
+         $filtro_profundidad = " where proy.profundidad =".$data['id_profundidad']; 
+         $filtro_agrupamiento = " group by proy.profundidad,r.id_area ";
+      }
+
+
+      $tabla_struct  = $this->db->dbprefix('pstruct_'.$tabla);
+      $tabla_data  = $this->db->dbprefix('pdata_'.$tabla);
+
+      $sql ="  select r.id_area id, e.area nombre, proy.profundidad
+        from (
+          select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno  from (
+              select profundidad.id id_nivel, profundidad.depth profundidad,
+              CONCAT( REPEAT(  ' ', (profundidad.depth+1)*2 ) , data.nm ) nombre1,
+               data.nm  nombre
+               from (
+                  SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+                        FROM ".$tabla_struct." AS nodo,
+                                ".$tabla_struct." AS padre
+                  WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                  GROUP BY nodo.id
+                  ORDER BY nodo.lft
+              ) profundidad
+              INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+           ) e, ".$this->catalogo_proyectos." as p
+          WHERE p.id_entorno=".$id_entorno." and  p.tabla='".$tabla."'
+          )
+       proy  inner join 
+      (
+      select u.id_cliente id_area, r1.id_nivel, r1.id_usuario
+       from 
+       (SELECT  id_nivel,
+        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+       FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+
+              for ($i=2; $i <= 5; $i++) { 
+                     $sql .=" union
+                      SELECT id_nivel,
+                        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+                        FROM inven_registro_nivel".$i."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+              }
+
+      $sql .="
+       ) r1
+
+         left join   ".$this->usuarios." u  on r1.id_usuario = u.id) r on proy.id_nivel = r.id_nivel
+         left join  ".$this->catalogo_areas."  e  on e.id = r.id_area
+       ".$filtro_profundidad." 
+        ".$filtro_agrupamiento." 
+      having r.id_area IS NOT NULL";
+
+      
+
+      $result = $this->db->query( $sql); 
+
+      if ( $result->num_rows() > 0 ) {
+                  return $result->result();
+              } else 
+                  return false;
             $result->free_result();   
+
+
  } 
 
 
 
     //Lista de todos los usuarios 
 
-      public function listado_usuarios( $data ){
+  public function listado_usuarios($data){
+
+        $id_entorno = $this->session->userdata('entorno_activo');
+        $this->db->select("c.id, c.tabla");         
+        $this->db->from($this->catalogo_proyectos.' As c');
+        $where ='(
+                (c.id_entorno= '.$id_entorno.') AND (c.id= '.$data["id_proyecto"].')
+              )'; 
+       $this->db->where($where);            
+       $result = $this->db->get( );
+
+       $tabla =$result->row()->tabla;
+
+
+       
+       $filtro_profundidad = "";
+       //$filtro_agrupamiento = " group by proy.profundidad,r.id_area, r.id_usuario  ";
+       $filtro_agrupamiento = " r.id_usuario  ";
+
+    $filtro="";        
+
+if  ($data['id_proyecto']!=0){
+  $filtro.= (($filtro!="") ? " and " : "") . " (proy.id = ".$data["id_proyecto"].") ";
+  $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.id";
+} 
+
+if  ($data['id_profundidad']!=-1){
+   $filtro.= (($filtro!="") ? " and " : "") . " (proy.profundidad = ".$data['id_profundidad'].") ";
+   $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.profundidad";
+}
+
+if  ($data['id_area']!=0){
+   $filtro.= (($filtro!="") ? " and " : "") . " (r.id_area = ".$data['id_area'].") ";
+   $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_area";
+}
+
+if  ($data['id_usuario']!=0){
+    $filtro.= (($filtro!="") ? " and " : "") . " (r.id_usuario = '".$data['id_usuario']."') ";  
+   // $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_usuario";
+}
+
+
+$filtro= (($filtro!="") ? " where " : "") . $filtro;
+$filtro_profundidad = $filtro;
+
+
+$filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro_agrupamiento;
+
+
+
+
+
+
+
+
+
+
+
+      $tabla_struct  = $this->db->dbprefix('pstruct_'.$tabla);
+      $tabla_data  = $this->db->dbprefix('pdata_'.$tabla);
+
+      $sql =" select proy.id id_proyecto, proy.id_nivel, proy.profundidad, r.id_area , r.id_usuario id, r.nombre, r.apellidos
+        from (
+          select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno  from (
+              select profundidad.id id_nivel, profundidad.depth profundidad,
+              CONCAT( REPEAT(  ' ', (profundidad.depth+1)*2 ) , data.nm ) nombre1,
+               data.nm  nombre
+               from (
+                  SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+                        FROM ".$tabla_struct." AS nodo,
+                                ".$tabla_struct." AS padre
+                  WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                  GROUP BY nodo.id
+                  ORDER BY nodo.lft
+              ) profundidad
+              INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+           ) e, ".$this->catalogo_proyectos." as p
+          WHERE p.id_entorno=".$id_entorno." and  p.tabla='".$tabla."'
+          )
+       proy  inner join 
+      (
+      select u.id_cliente id_area, r1.id_nivel, r1.id_usuario, u.nombre, u.apellidos
+       from 
+       (SELECT  id_nivel,
+        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+       FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+
+              for ($i=2; $i <= 5; $i++) { 
+                     $sql .=" union
+                      SELECT id_nivel,
+                        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+                        FROM inven_registro_nivel".$i."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+              }
+
+      $sql .="
+       ) r1
+
+         left join   ".$this->usuarios." u  on r1.id_usuario = u.id) r on proy.id_nivel = r.id_nivel
+         left join  ".$this->catalogo_areas."  e  on e.id = r.id_area
+       ".$filtro_profundidad." 
+        ".$filtro_agrupamiento." 
+      having r.nombre IS NOT NULL";
+
+      
+
+      $result = $this->db->query( $sql); 
+
+      if ( $result->num_rows() > 0 ) {
+                  return $result->result();
+              } else 
+                  return false;
+            $result->free_result();   
+
+
+ } 
+
+      public function listado_todo_usuarios( $data ){
 
           $id_perfil=$this->session->userdata('id_perfil');
           $id=$this->session->userdata('id');
@@ -155,38 +392,16 @@
 
     public function procesando_rep_general($data) {
 
-      /*
+      
           $cadena = addslashes($data['search']['value']);
           $inicio = $data['start'];
           $largo = $data['length'];
-          
-
-          $columa_order = $data['order'][0]['column'];
-                 $order = $data['order'][0]['dir'];
-          switch ($columa_order) {
-
-                   case '0':
-                        $columna = 'c.entorno';
-                     break;
-                   case '1':
-                        $columna = 'c.tabla'; //, tabla
-                     break;
-                   case '2':
-                        $columna = 'c.profundidad'; //, tabla
-                     break;                 
-                  case '3':
-                        $columna = 'c.ruta'; //, tabla
-                     break;                     
-                   default:
-                        $columna = 'c.id';
-                     break;
-                 }                 
-
+        
 
           $id_session = $this->session->userdata('id');      
           $id_perfil=$this->session->userdata('id_perfil');
 
-          */
+      
 
 
 
@@ -321,13 +536,15 @@ $filtro= (($filtro!="") ? " where " : "") . $filtro;
 
                         ) todo 
                         ".$filtro."                           
+                          
                          GROUP BY 
-                        id_nivel, profundidad, nombre, tabla, id_entorno,
-                        id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                        nomb, apellidos, salario, id_area 
+                        id_nivel, profundidad, nombre, tabla, id_entorno, id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, nomb, apellidos, salario, id_area
+                        LIMIT ".$inicio.",".$largo." 
                         
                 ";
 
+                //
+                //LIMIT 0 OFFSET 10
               
 
                $result = $this->db->query( $sql); 
@@ -364,15 +581,19 @@ $filtro= (($filtro!="") ? " where " : "") . $filtro;
 
             }
 
+              //return $inicio+($result->num_rows());
+            //$inicio = $inicio+($result->num_rows()+1);
+            $largo = $largo-($result->num_rows());
+
   }   //fin del foreach de proyectos
 
 
 
                if ( isset($dato) ) {
                       return json_encode ( array(
-                        "draw"            => 0, //intval( $data['draw'] ),
-                        "recordsTotal"    => 100, //intval( self::total_cat_entornos() ), 
-                        "recordsFiltered" => 100,  //$registros_filtrados, 
+                        "draw"            => intval( $data['draw'] ),
+                        "recordsTotal"    => 10, //intval( self::total_cat_entornos() ), 
+                        "recordsFiltered" => 30,  //$registros_filtrados, 
                                  "intervalo"=>$intervalo_dia->format('%a'),
                         "data"            =>  $dato 
                       ));

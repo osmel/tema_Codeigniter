@@ -36,10 +36,22 @@ class Reportes extends CI_Controller {
             $elementos  = $this->modelo_reporte->listado_niveles($data);
             break;
         case "id_area":
-            $elementos  = $this->modelo_reporte->listado_areas($data);
+            if ($data['id_proyecto']!=0) {
+                $elementos  = $this->modelo_reporte->listado_areas($data);
+            } else {
+              $elementos  = $this->modelo_reporte->listado_todas_areas($data);
+            }
             break;
         case "id_usuario":
-            $elementos  = $this->modelo_reporte->listado_usuarios($data);
+            
+            if ($data['id_proyecto']!=0) {
+                $elementos  = $this->modelo_reporte->listado_usuarios($data);
+            } else {
+              $elementos  = $this->modelo_reporte->listado_todo_usuarios($data);
+            }
+
+
+
             break;
         default:
     }
