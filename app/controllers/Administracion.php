@@ -12,8 +12,6 @@ class Administracion extends CI_Controller {
 	}
 
 
-
-
   public function buscador(){
 
     if ($this->session->userdata('session') !== TRUE) {
