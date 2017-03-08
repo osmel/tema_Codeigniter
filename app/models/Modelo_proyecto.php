@@ -77,7 +77,7 @@ FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPL
 
 */
 
-  public function ruta_suma($data){
+  public function ruta_suma1($data){
             
 
             //lista de las tablas que se ven afectadas
@@ -158,8 +158,345 @@ FROM  `inven_registro_proyecto` up inner join inven_usuarios u on substring(REPL
     }        
 
 
+
+//checar si el entorno ya existe
+    public function ruta_suma($data){
+            
+
+            //lista de las tablas que se ven afectadas
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+              $sql="
+                    SELECT nodo.id id_nivel, (COUNT(padre.id) ) AS id_tabla
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    GROUP BY nodo.id
+                    ORDER BY nodo.lft
+              ";                
+             $query = $this->db->query($sql);                
+             $registros = $query->result();
+
+          $total=0;
+         foreach ($registros as $key => $value) {
+            if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
+              if ( $value->id_tabla ==1) {
+
+
+
+                  $cons = "SELECT sum(n.tiempo_disponible *
+                  (SELECT u.salario
+                    FROM  ".$this->registro_proyecto ." up inner join ".$this->usuarios ." u on SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END         ) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+
+                    FROM  ".$this->registro_proyecto ." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                  $result = $this->db->query( $cons); 
+                 $total += $result->row()->total;
+
+              } else {  
+
+                  $cons = "SELECT sum(tiempo_disponible*
+                  (SELECT u.salario
+                    FROM  inven_registro_nivel". $value->id_tabla." up inner join ".$this->usuarios ." u on SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END         ) = u.id
+                   where  id_nivel = ".$value->id_nivel." AND id_proyecto=".$data['id_proyecto']." AND id_entorno=".$this->session->userdata('entorno_activo')."
+                    ) 
+                  ) total 
+                                     FROM  inven_registro_nivel". $value->id_tabla." as n where  n.id_nivel = ".$value->id_nivel." 
+                   AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                  
+                   //return $cons;
+                  $result = $this->db->query( $cons); 
+                  $total += $result->row()->total;
+              }
+        }  
+
+
+            $cons = 'SELECT importe total FROM  '.$this->catalogo_proyectos .' as c where  
+             c.id='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+            $result = $this->db->query( $cons); 
+            $datoss['total'] = $result->row()->total-$total;
+
+
+            //fin  de total de tiempo disponible
+
+            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //Fecha creacion
+            $cons = 'SELECT ( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),"%Y-%m-%d 0:00") ELSE "" END ) AS fecha_creacion
+              FROM  '.$this->registro_proyecto .' as c where  
+             c.id_proyecto='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+            $result = $this->db->query( $cons); 
+            $fecha_creacion = $result->row()->fecha_creacion;
+
+
+          //listado de sus padres, abuelos, etc en orden descendente
+          $cons = "SELECT estructura.id id_nivel, data.nm,
+                                ( SELECT  (COUNT(padre.id)) AS id_tabla
+                                FROM ".$tabla_struct."  AS nodo,
+                                        ".$tabla_struct."  AS padre
+                                WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                AND nodo.id = estructura.id
+                                GROUP BY nodo.id
+                                ORDER BY nodo.lft
+                                ) id_tabla
+           from (
+            SELECT padre.id
+            FROM ".$tabla_struct."  AS nodo,
+                    ".$tabla_struct."  AS padre
+            WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    AND nodo.id =  ".$data['id_nivel']."
+            ORDER BY padre.lft desc
+          ) estructura
+          INNER JOIN ".$tabla_data."  data ON data.id=estructura.id
+          ";
+
+           $result = $this->db->query( $cons); 
+           $padres = $result->result();
+
+            //listados de hijos, nietos, etc
+            $cons = "SELECT estructura.id id_nivel, data.nm, 
+                                ( SELECT  (COUNT(padre.id)) AS id_tabla
+                                FROM ".$tabla_struct."  AS nodo,
+                                        ".$tabla_struct."  AS padre
+                                WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                AND nodo.id = estructura.id
+                                GROUP BY nodo.id
+                                ORDER BY nodo.lft
+                                ) id_tabla
+            from ( 
+            SELECT nodo.id
+            FROM ".$tabla_struct." AS nodo ,
+                 ".$tabla_struct." AS padre
+            WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    AND padre.id = ".$data['id_nivel']."
+            ORDER BY nodo.lft ) estructura
+            INNER JOIN ".$tabla_data." data ON data.id=estructura.id
+            ";
+            $result = $this->db->query( $cons); 
+            $hijos = $result->result();
+            
+
+
+            $fecha_inicial= array();
+            $fecha_final= array();
+          foreach ($padres as $key => $value) {
+              
+              //if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
+                
+                if ( $value->id_tabla ==1) {
+                    
+                    $cons = "SELECT ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_final
+                      FROM  ".$this->registro_proyecto ." as n where  n.id_nivel = ".$value->id_nivel." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+                    
+                    if ($data['id_nivel'] != $value->id_nivel) {
+                            if ($result->row()->fecha_inicial!="")
+                              $fecha_inicial[] = $result->row()->fecha_inicial;
+
+                            if ($result->row()->fecha_final!="")
+                              $fecha_final[] = $result->row()->fecha_final;
+                    } else {
+                      $fecha_inicio = $result->row()->fecha_inicial;
+                         $fecha_fin = $result->row()->fecha_final;
+                    }
+
+
+                } else {  
+
+                    $cons = "SELECT ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_final
+                          FROM  inven_registro_nivel". $value->id_tabla." as n where  n.id_nivel = ".$value->id_nivel." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+
+                    if ($data['id_nivel'] != $value->id_nivel) {
+                        if ($result->row()->fecha_inicial!="")
+                          $fecha_inicial[] = $result->row()->fecha_inicial;
+
+                        if ($result->row()->fecha_final!="")
+                          $fecha_final[] = $result->row()->fecha_final;
+                    } else {
+                      $fecha_inicio = $result->row()->fecha_inicial;
+                         $fecha_fin = $result->row()->fecha_final;
+                    }
+
+
+                }
+
+
+
+
+          }  
+
+
+           if  (!($fecha_inicial))  //sino hay ninguna fecha_inicial entonces tomará la de creacion
+                $fecha_inicial_padre = $fecha_creacion; //$fecha_inicial[] = $fecha_creacion;
+           else      
+                $fecha_inicial_padre = $fecha_inicial[0]; 
+
+
+           if  (!($fecha_final)) { //sino hay ninguna fecha_final entonces tomará la de fecha inicial
+                //$fecha_final_padre = $fecha_inicial_padre; //$fecha_final[] = $fecha_inicial[0];
+                $fecha_final_padre = '';
+           } else {      
+                $fecha_final_padre = $fecha_final[0]; 
+           }
+
+ 
+
+ 
+
+          $fecha_inicial= array();
+          $fecha_final= array();
+
+          foreach ($hijos as $key => $value) {
+              if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
+                if ( $value->id_tabla ==1) {
+                    
+                    $cons = "SELECT ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_final
+                      FROM  ".$this->registro_proyecto ." as n where  n.id_nivel = ".$value->id_nivel." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+                    
+                    if ($result->row()->fecha_inicial!="")
+                      $fecha_inicial[] = $result->row()->fecha_inicial;
+
+                    if ($result->row()->fecha_final!="")
+                      $fecha_final[] = $result->row()->fecha_final;
+
+                } else {  
+
+                    $cons = "SELECT ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%Y-%m-%d 0:00') ELSE '' END ) AS fecha_final
+                          FROM  inven_registro_nivel". $value->id_tabla." as n where  n.id_nivel = ".$value->id_nivel." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+
+
+                    if ($result->row()->fecha_inicial!="")
+                      $fecha_inicial[] = $result->row()->fecha_inicial;
+
+                    if ($result->row()->fecha_final!="")
+                      $fecha_final[] = $result->row()->fecha_final;
+
+                }
+          }  
+
+
+
+
+
+          sort($fecha_inicial);
+
+          $fecha_final_hijo_mayor ="";
+          $fecha_inicial_hijo_mayor="";
+
+          if  ($fecha_inicial) {
+             $fecha_inicial_hijo_menor =  $fecha_inicial[0]; 
+             $fecha_inicial_hijo_mayor =  $fecha_inicial[count($fecha_inicial)-1]; 
+          } else {
+            $fecha_inicial_hijo_menor ='';
+             //$fecha_inicial_hijo_menor =  $fecha_final_padre; 
+          }
+
+          sort($fecha_final);
+
+          if  ($fecha_final) {
+             $fecha_final_hijo_menor =  $fecha_final[0]; 
+             $fecha_final_hijo_mayor =  $fecha_final[count($fecha_final)-1]; 
+          } else {
+            $fecha_final_hijo_menor = '';
+          }
+
+            $datos['cond_finicial_mayor']= array();
+            $datos['cond_ffinal_mayor']= array();
+            $datos['cond_finicial_menor']= array();
+            $datos['cond_ffinal_menor'] = array();
+
+
+
+            if ($fecha_creacion!="") {
+                $datos['cond_finicial_mayor'][] = $fecha_creacion;
+                $datos['cond_ffinal_mayor'][] = $fecha_creacion;
+            }
+
+            if ($fecha_inicial_padre!="") {
+                $datos['cond_finicial_mayor'][] = $fecha_inicial_padre;
+                $datos['cond_ffinal_mayor'][] = $fecha_inicial_padre;
+            }
+
+            if ($fecha_final_padre!="") {
+              $datos['cond_finicial_menor'][] = $fecha_final_padre;
+              $datos['cond_ffinal_menor'][] = $fecha_final_padre;
+
+            }  
+
+            if ($fecha_inicial_hijo_menor!="") {
+              $datos['cond_finicial_menor'][] = $fecha_inicial_hijo_menor;
+            }
+
+            if ($fecha_final_hijo_menor!="") {
+              $datos['cond_finicial_menor'][] = $fecha_final_hijo_menor;
+            }
+
+
+            if ($fecha_fin!="") {
+               $datos['cond_finicial_menor'][] = $fecha_fin;
+            }  
+
+            if ($fecha_inicial_hijo_mayor!="") {
+               $datos['cond_ffinal_mayor'][] = $fecha_inicial_hijo_mayor;
+            }  
+
+
+            if ($fecha_final_hijo_mayor!="") {
+               $datos['cond_ffinal_mayor'][] = $fecha_final_hijo_mayor;
+            }  
+
+            if ($fecha_inicio!="") {
+                $datos['cond_ffinal_mayor'][] = $fecha_inicio;
+            }  
+
+
+            sort($datos['cond_finicial_mayor']);
+            sort($datos['cond_ffinal_mayor']);
+
+            sort($datos['cond_finicial_menor']);
+            sort($datos['cond_ffinal_menor']);
+
+
+            $datoss['inicial_start'] = $datos['cond_finicial_mayor'][count($datos['cond_finicial_mayor'])-1];
+            $datoss['inicial_end'] = (isset($datos['cond_finicial_menor'][0])) ? ($datos['cond_finicial_menor'][0]) : null;
+
+            $datoss['final_start'] = (isset($datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1])) ? $datos['cond_ffinal_mayor'][count($datos['cond_ffinal_mayor'])-1] : null;
+            $datoss['final_end']=    (isset($datos['cond_ffinal_menor'][0])) ? $datos['cond_ffinal_menor'][0] : null;
+
+
+          return  ($datoss);   
+
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();
+    } 
+
+
+
+
+
    //checar si el entorno ya existe
-    public function ruta_suma1($data){
+    public function ruta_suma2($data){
             
 
             //lista de las tablas que se ven afectadas

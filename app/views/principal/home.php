@@ -7,6 +7,7 @@
 	}
 </style>
 
+
             <!-- Comienzo del contenedor -->
 	            <div class="page-container">
 	                
@@ -18,11 +19,6 @@
 		                <div class="page-content-wrapper">
 		                	<div class="page-content" >
 									<?php $this->load->view( 'navegacion' ); ?>
-
-
-
-
-
 
 
 
@@ -74,6 +70,7 @@
 								</div>
 
 
+
 							 <?php foreach ($datos["proyectos_salvado"] as $key => $proyecto) { ?>
 								<div class="row">
 									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->					<!--
@@ -104,7 +101,6 @@
 											<!-- id del registro_user_proy -->			
 											<input type="hidden" class="id_entorno<?php echo $key; ?>" name="id_entorno[]" value="<?php echo ( ( isset($proyecto->id_activo)) ? $proyecto->id_activo : null) ; ?>">
 
-
 											<!-- hr_anterior -->			
 											<div class="col-sm-2 col-md-2">
 											   <fieldset disabled>
@@ -115,6 +111,7 @@
 												</fieldset>
 											</div>
 
+											
 											<!-- hora -->			
 											<div class="col-sm-2 col-md-2">
 												<div class="col-sm-12 col-md-12">
@@ -145,7 +142,7 @@
 							  </div>
 						</div>
 					</div>
-					</div>
+
 
 					<div class="row">
 						<div class="col-sm-4 col-md-4"></div>
@@ -156,22 +153,16 @@
 							<input type="submit" class="btn btn-success btn-block" value="Guardar"/>
 						</div>
 					</div>
+
+
+					</div>
+
+
+
 				</div>
 			</div>
 
 		<?php echo form_close(); ?>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

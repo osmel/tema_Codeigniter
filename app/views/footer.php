@@ -103,10 +103,13 @@
 			 <script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-context-menu.min.js" type="text/javascript"></script>
 
 
-			<!-- componente fecha simple -->
-			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker.js"></script>
+
+
 			<!-- componente rango fecha -->
 			<script type="text/javascript" src="<?php echo base_url(); ?>js/daterangepicker.js"></script>	
+
+
+
 
 
 		<!-- paginador de fecha -->
@@ -115,6 +118,13 @@
         <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/assets/pages/scripts/ui-datepaginator.min.js" type="text/javascript"></script>			
         
+
+
+
+			<!-- componente fecha simple -->
+			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+
         
 
 			<!--

@@ -248,6 +248,8 @@ jQuery(document).ready(function($) {
                                     /*case 1:
                                         console.log('1');
                                         break;*/
+
+
                                     case 1:    
                                     case 2:
                                     case 3:
@@ -339,6 +341,8 @@ jQuery(document).ready(function($) {
 
 
 
+
+                                                                                    /*
                                                                                     texto+='<div class="col-sm-3 col-md-3">';
                                                                                           if(datum.datos != false){
                                                                                                 $fecha_inicial=datum.datos["fecha_inicial"];
@@ -363,6 +367,30 @@ jQuery(document).ready(function($) {
                                                                                         texto+='<input value="'+$fecha_final+'" type="text" class="fecha_fin  input-sm form-control" ';
                                                                                         texto+='name="fecha_final" placeholder="DD-MM-YYYY">';
                                                                                     texto+='</div>';                                                                
+                                                                                    */
+
+                                                                                    
+                                                                                    texto+='<div class="input-daterange input-group col-sm-3 col-md-3"" id="datepicker">';
+                                                                                     if(datum.datos != false){
+                                                                                                $fecha_inicial=datum.datos["fecha_inicial"];
+                                                                                            } else {
+                                                                                                $fecha_inicial='';
+                                                                                           }    
+                                                                                        texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha_ini input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY" />';
+
+                                                                                        //texto+='<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+                                                                                        texto+='<span class="input-group-addon">to</span>';
+
+                                                                                        if(datum.datos != false){
+                                                                                                $fecha_final=datum.datos["fecha_final"];
+                                                                                            } else {
+                                                                                                $fecha_final='';
+                                                                                           }  
+                                                                                        //texto+='<input type="text" class="input-sm form-control" name="end" />';
+                                                                                        texto+='<input value="'+$fecha_final+'" type="text" class="fecha_final input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY" />';
+                                                                                        //texto+='<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+
+                                                                                    texto+='</div>';
 
                                                                                 texto+='</div> ';
 
@@ -391,29 +419,129 @@ jQuery(document).ready(function($) {
                                                             $("#cuadrante4").html(texto);    
 
 
-                                                            jQuery('form').on('focusin','.fecha_ini', function (e) {
-                                                                jQuery(this).datepicker({ 
-                                                                    //inline: true, 
-                                                                    Format: 'DD-MM-YYYY',
-                                                                    dateFormat: 'DD-MM-YYYY',
-                                                                    
-                                                                    //dateFormat: 'MM dd, yy',
-                                                                   // startDate: (datum.suma.inicial_start!=null) ? new Date (datum.suma.inicial_start.valueOf()) : - Infinity,
-                                                                    //endDate: (datum.suma.inicial_end!=null) ? new Date (datum.suma.inicial_end.valueOf()): Infinity,
-                                                                    autoclose: true,
-                                                                    /*onSelect: function(dateText, inst) {
-                                                                        $("#test").html($.inst.formatDate('yy-mm-dd', dateText); // What exactly do I have to do, to get the date from dd-mm-yy to yy-mm-dd
-                                                                    }*/
-                                                                }).on('changeDate', function (selected) {
-                                                                     //jQuery('form').submit();
 
-                                                                });
+
+                                                       
+
+
+
+                                                            jQuery('form').on('focusin','.input-daterange', function (e) {
+
+                                                                    var date1 = new Date;
+                                                                    date1.setHours(0, 0, 0, 0);
+                                                                    date1.setDate(10);
+                                                                    var date2 = new Date;
+                                                                    date2.setHours(0, 0, 0, 0);
+                                                                    date2.setDate(23);
+
+                                                                   // console.log(" - "+date1);
+                                                                    //console.log(" - "+date2);
+
+
+                                                                    jQuery(this).datepicker({ 
+                                                                        
+                                                                        autoclose: true, //Si se cierra o no el datepicker inmediatamente cuando se selecciona una fecha.
+                                                                        format: "dd-mm-yyyy",
+                                                                        language: "es",
+                                                                        daysOfWeekDisabled: [0,6],  //Días de la semana que se deben deshabilitar, 0->domingo, 6-sabado
+                                                                        forceParse: true, //forzar a que sea correcta la entrada de fecha
+                                                                        startView: 0 , //vista que inicia(0- dia, 1-mes, 2-año, 3-decada, 4-siglo)
+                                                                        title: "",  //title: "hola probando",
+                                                                        todayHighlight: true, // fecha actual destacada
+
+
+                                                                        /*
+
+                                                                        defaultViewDate: 'today', //today
+
+                                                                        multidate: true,  //poder elegir multiples fechas
+                                                                        multidateSeparator: "*", //separador de multiples fechas
+                                                                        toggleActive: true,
+
+                                                                        
+                                                                        
+
+                                                                        
+                                                                        calendarWeeks: true, //Si muestra o no los números de semana a la izquierda de las filas 
+                                                                        clearBtn: true, //botón "Clear" en la parte inferior, si autoclose:true tambien se cerrará automaticamente
+                                                                            
+                                                                        
+                                                                        datesDisabled: ['06-03-2017', '21-03-2017'],    
+                                                                        daysOfWeekHighlighted: [4],   //Días de la semana en que debe ser destacado(highlighted)
+                                                                        //defaultViewDate: { year: 1977, month: 04, day: 25 }, // con que fecha abre inicialmente objeto
+                                                                        
+                                                                        //defaultViewDate: '06-03-2017', //en que fecha se abre inicialmente
+
+
+
+                                                                        //endDate: "21-03-2017", //última fecha en la que se puede seleccionar; todas las fechas posteriores serán desactivados.
+                                                                        //endDate: "0d", // a partir de hoy
+                                                                        endDate: "+3d", // a partir de 3 días 
+                                                                        startDate: "-3d", // a partir de -3 días 
+
+                                                                        keyboardNavigation: true, //si va a permitir navegación por teclado
+                                                                        orientation: "top auto", //orientacion en que se mostrara el datapicker
+                                                                        showOnFocus:true,  //false: no se muestra el picker cuando recibe el foco
+
+                                                                        showWeekDays: true, //false: el datepicker no añadirá los nombres de los días de semana a su view.
+
+                                                                        
+                                                                      
+                                                                        todayBtn: "linked",  //boton hoy
+
+                                                                        weekStart: 5, //1er día de la semana que se presentará( 5 comenzaría por Viernes )
+                                                                        
+                                                                        
+
+                                                                        beforeShowCentury: function(date) { //siglo
+                                                                                //console.log(date);
+                                                                        },
+
+                                                                        
+                                                                        beforeShowDecade: function(date) {  //decada
+                                                                                //console.log(date);
+                                                                        },
+
+                                                                        beforeShowYear: function(date) { //año
+                                                                                //console.log(date);
+                                                                        },
+
+
+                                                                        beforeShowMonth: function(date) { //mes
+                                                                               // console.log(date);
+                                                                        },
+
+                                                                        
+                                                                        
+
+                                                                        beforeShowDay: function(date) { //day
+                                                                             if (date.getMonth() == (new Date()).getMonth()) //mes presente
+                                                                                switch (date.getDate()){
+                                                                                      case 4:
+                                                                                        return {
+                                                                                          tooltip: 'Example tooltip',
+                                                                                          classes: 'active'
+                                                                                        };
+                                                                                      case 8:
+                                                                                        return false;
+                                                                                      case 12:
+                                                                                        return "green";
+                                                                                }
+                                                                                            
+                                                                        }
+                                                                  */
+                                                                            
+                                                                    }).on('changeDate', function (selected) {
+                                                                        //alert('asd');
+                                                                             
+
+                                                                    });
 
                                                             })
 
                                                             //http://jsfiddle.net/wsodjsyv/
 
-                                                            jQuery('form').on('focusin','.fecha_fin', function (e) {
+                                                            jQuery('form').on('focusin','.fecha_fin1', function (e) {
                                                                 jQuery(this).datepicker({ 
                                                                     Format: 'dd-mm-yyyy',
                                                                     dateFormat: 'dd-mm-yyyy',

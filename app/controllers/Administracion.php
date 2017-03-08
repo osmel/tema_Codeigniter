@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Administracion extends CI_Controller {
 
-    public function __construct(){ 
+    public function __construct() { 
 		parent::__construct();
 		$this->load->model('Modelo_nucleo', 'modelo'); 
 		$this->load->model('Modelo_arbol', 'modelo_arbol'); 
@@ -13,17 +13,17 @@ class Administracion extends CI_Controller {
 
 
   public function buscador(){
-
     if ($this->session->userdata('session') !== TRUE) {
       redirect('/');
     } else {
-      
        $data['key']=$_GET['key'];
 	   $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
 
        echo $busqueda;
     }  
   }
+
+
 
 
   public function validar_registro_usuario(){
@@ -45,6 +45,7 @@ class Administracion extends CI_Controller {
 
 
 /*
+
 function listado_usuarios_niveles(  ){
 
                    $data['id_proyecto']     = $this->input->post('id_cat_proy');
@@ -61,11 +62,12 @@ function listado_usuarios_niveles(  ){
           echo $usuario_json;
 
 } 
+
 */
 
 
+
 function listado_niveles( ){
-                   
                    
                    $data['id_proyecto']     = $this->input->post('id_cat_proy');
                    $data['id_reg_proy']     = $this->input->post('id_reg_proy');
@@ -80,8 +82,6 @@ function listado_niveles( ){
                     
                 $data['tabla'] = $this->session->userdata('creando_proyecto');   
                $data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
-                    
-
 
           echo json_encode($data);
 }  
