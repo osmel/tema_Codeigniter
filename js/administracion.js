@@ -240,6 +240,7 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                         return "error";
                     }else{
                             $catalogo = e.target.name;
+                            
 
 
                                         /*
