@@ -229,22 +229,23 @@ jQuery(document).ready(function($) {
 
                                 $("#nombre").val(data.node.text);
                                 
-                                //jQuery('form').submit();
+                                jQuery('form').submit();
 
-                                jQuery('form').submit(function(event) {
-
-                                  alert('asdas');
-
+                                /*
+                                $( document ).ajaxSuccess(function( event, xhr, settings ) {
+                                    //console.log(settings.url);
+                                     if ( settings.url == "http://tema.dev.com/validacion_edicion_nivel" ) {
+                                           alert(settings.url );
+                                        }
                                 });
+                                */
+
 
                                 jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
                                 jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
                                 jQuery(this).parent().parent().parent().siblings().css('display','block');   
 
                                 switch (data.node.parents.length) {
-                                    /*case 1:
-                                        console.log('1');
-                                    break;*/
                                     case 1:    
                                     case 2:
                                     case 3:
@@ -498,13 +499,10 @@ jQuery(document).ready(function($) {
                                    default:
                                         //console.log('nose');
                                 }
+
                             } //fin de ambito_app=2 proyecto
                                 
-                                /*
-                                $.get('/obtener_contenido?operation=get_content&id=' + data.selected.join(':'), function (d) {
-                                    $('#data .default').text(d.content).show();
-
-                                });*/
+                              
 
 
                             }
