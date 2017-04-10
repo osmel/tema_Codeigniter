@@ -81,7 +81,10 @@
 												<label class="mt-checkbox">
 									                <input class="contrato_firmado<?php echo $key; ?>" type="checkbox" value="1" name="contrato_firmado[]">
 									                	<as class="ttip" title="<?php echo $proyecto->ruta;?>"><?php echo $proyecto->proyecto;?></as>
-									                <span></span>
+									                 
+									                <h6 class="help-block" style="color:#666;" id="<?php echo $key; ?>"><?php echo 
+									                substr( $proyecto->ruta , 0, strpos( $proyecto->ruta, "/") );
+									                ?> </h6> 
 									            </label> 
 											</div>
 

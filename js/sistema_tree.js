@@ -231,14 +231,25 @@ jQuery(document).ready(function($) {
                                 
                                 jQuery('form').submit();
 
+                                //jQuery('form').trigger('submit:complete');
                                 /*
-                                $( document ).ajaxSuccess(function( event, xhr, settings ) {
+
+                                     setTimeout(function() {
+                                            $('#helloworld').get(0).submit();
+                                     }, 1000);
+                                */
+                                
+                                $( document ).ajaxComplete(function( event, xhr, settings ) {
                                     //console.log(settings.url);
                                      if ( settings.url == "http://tema.dev.com/validacion_edicion_nivel" ) {
-                                           alert(settings.url );
+
+                                           //alert(settings.url );
+                                           console.log(event);
+                                           console.log(xhr);
+                                           console.log(settings);
                                         }
                                 });
-                                */
+                                
 
 
                                 jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );

@@ -542,7 +542,8 @@ ORDER BY parent.lft;
 
         foreach ($data['proyecto'] as $key => $value) {
           
-              
+              //inven_pdata_20170306082221OrAC795
+            if ($value->tabla!="20170306082221OrAC795"){
               $cons = 'SELECT nm as nombre FROM  inven_pdata_'. $value->tabla.' where  id = '.$value->id_nivel;
               $result = $this->db->query( $cons); 
 
@@ -552,6 +553,9 @@ ORDER BY parent.lft;
               $data["id"] = $value->id_nivel;
               $data["tabla"] = $value->tabla;
               $value->ruta = self::ruta_elemento($data); 
+
+
+            }
 
             
 

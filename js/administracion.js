@@ -1,4 +1,85 @@
 jQuery(document).ready(function($) {
+
+    //http://rocha.la/jQuery-slimScroll
+    //jQuery('#user').slimScroll();
+
+//var hash_url = window.location.pathname;
+//console.log(hash_url);
+
+
+//console.log( ($('input[name="id_p"]').val() !=undefined ) );
+
+   var miproy = 129; //$('input[name="id_proy"]').val().toString();
+   
+   jQuery('.scrollers.proyectos').slimScroll({
+        //width: '300px', //Anchura en píxeles del área scroll visible. Estirar hasta el padre si no se establece. Por defecto: none
+        height: '150px',   //Altura en píxeles del área scroll visible. También es compatible automático para ajustar la altura a igual contenedor primario. Defecto: 250px
+        
+        size: '10px', //Ancho en píxeles de la barra de desplazamiento. Defecto: 7px
+        position: 'left', //left o right. Establece la posición de la barra de desplazamiento. Defecto: right
+        color: '#ffcc00', // Color en hexadecimal de la barra de desplazamiento. Defecto: #000000
+        //alwaysVisible: true, //Desactiva u ocultar la barra de desplazamiento. Defecto: false
+        disableFadeOut: true,   //Desactiva la barra scroll automáticamente . true barra scroll no desaparece después de algún tiempo cuando el ratón está sobre el div slimscroll. 
+                                //Defecto: false
+        allowPageScroll: false, //Comprueba si la rueda del ratón deben desplazarse a la página cuando la barra llega a la parte superior o inferior del contenedor. 
+                               //Cuando se establece en true es desplaza la página. Defecto: false
+
+        //distance: '30px', //distancia en píxeles desde el borde del elemento padre que desea que aparezca la barra de desplazamiento. 
+                          //Se utiliza junto con la posición de la propiedad. Defecto:1px                               
+        
+        //start: 'top'
+        start: (  ($('input[name="id_proy"]').val() !=undefined ) ?  $('li.'+ miproy  )   : 'top' )
+            //$('li.6e78e365-f48f-11e6-b097-7071bce181c3'), //'top',  //$('#child_image_element'),                          
+        /*
+        
+        
+
+        
+        
+        railColor: '#222',
+        railOpacity: 0.3,
+        wheelStep: 10,
+        
+        
+        */
+    });
+
+   console.log( $('input[name="id_proy"]').val() );
+
+
+   jQuery('.scrollers.usuarios').slimScroll({
+        //width: '300px', //Anchura en píxeles del área scroll visible. Estirar hasta el padre si no se establece. Por defecto: none
+        height: '150px',   //Altura en píxeles del área scroll visible. También es compatible automático para ajustar la altura a igual contenedor primario. Defecto: 250px
+        
+        size: '10px', //Ancho en píxeles de la barra de desplazamiento. Defecto: 7px
+        position: 'left', //left o right. Establece la posición de la barra de desplazamiento. Defecto: right
+        color: '#ffcc00', // Color en hexadecimal de la barra de desplazamiento. Defecto: #000000
+        //alwaysVisible: true, //Desactiva u ocultar la barra de desplazamiento. Defecto: false
+        disableFadeOut: true,   //Desactiva la barra scroll automáticamente . true barra scroll no desaparece después de algún tiempo cuando el ratón está sobre el div slimscroll. 
+                                //Defecto: false
+        allowPageScroll: false, //Comprueba si la rueda del ratón deben desplazarse a la página cuando la barra llega a la parte superior o inferior del contenedor. 
+                               //Cuando se establece en true es desplaza la página. Defecto: false
+
+        //distance: '30px', //distancia en píxeles desde el borde del elemento padre que desea que aparezca la barra de desplazamiento. 
+                          //Se utiliza junto con la posición de la propiedad. Defecto:1px                               
+        
+        
+        start: (  ($('input[name="id_p"]').val() !=undefined ) ?  $('li.'+$('input[name="id_p"]').val())   : 'top' ),
+        
+        /*
+        
+        
+
+        
+        
+        railColor: '#222',
+        railOpacity: 0.3,
+        wheelStep: 10,
+        
+        
+        */
+    });
+
 submit_forzado =false;
 
    jQuery('body').on('click','.eliminar', function (e) { 

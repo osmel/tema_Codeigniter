@@ -1,5 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 
+<style>
+
+  .scrollers > .nav-item > a {
+    border-top: 1px solid #3d4957;
+    color: #b4bcc8;
+    background: #2b3643;
+    position: relative;
+    display: block;
+
+    margin: 0;
+    border: 0;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 300;
+
+    }
+
+</style>
+
 <?php $id_perfil=$this->session->userdata('id_perfil');  ?>
 
 <?php 
@@ -131,21 +151,16 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                         </a>
                                     </li>
 
-        
-                                    <li class="nav-item">
-                                        <a href="javascript:;" class="nav-link nav-toggle">
-                                            <i class="fa fa-newspaper-o"></i>
-                                            <span class="title">Detalles</span>
-                                            <span class="arrow"></span>
-                                        </a>
-                                        
-                                            <ul class="sub-menu">
+
+
+                                    <div  class="scrollers proyectos">
+                                      
                                                 <?php if ($proyectos) { ?>
                                                     <?php foreach ($proyectos as $proyecto) { ?>
                                                         <li nombre="<?php echo base64_encode($proyecto->proyecto); ?>" 
                                                      identificador="<?php echo base64_encode($proyecto->id); ?>" 
 
-                                                     class="nav-item context"  data-toggle="context" data-target="#context-menu">
+                                                     class="nav-item context <?php echo ($proyecto->id); ?>"  data-toggle="context" data-target="#context-menu">
                                                             <a href="<?php echo base_url(); ?>editar_proyecto/<?php echo base64_encode($proyecto->id); ?>" class="nav-link ">
                                                                     
                                                                     
@@ -156,21 +171,21 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                                             </a>
                                                         </li>
                                                     <?php } ?>    
-                                                <?php } ?>    
-                                            </ul>
-
-                                                <!--menu contextual-->
+                                                <?php } ?>     
+                                      
+                                       <!--menu contextual-->
                                                 <div id="context-menu" style="position: absolute; z-index: 9999; top: 423px; left: 350px;" class="">
                                                     <ul class="dropdown-menu" role="menu">
                                                        <li><a tabindex="-1" href="">Modificar</a></li>
                                                        <li class="divider"></li>
                                                        <li><a tabindex="-1" href="">Eliminar</a></li>
                                                     </ul>
-                                                </div>        
+                                                </div>  
 
 
-
-                                    </li>
+                                    </div>    
+                                
+        
 
                             <?php } ?>     
                                 
@@ -179,29 +194,30 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                 <li class="heading">
                                     <h3 class="uppercase">Usuarios</h3>
                                 </li>
-                                
-                           
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="icon-user"></i>
-                                        <span class="title">Listados</span>
-                                        <span class="arrow"></span>
-                                    </a>
-                                    <ul class="sub-menu">
+
+                                  
+                                    <div  class="scrollers usuarios">
+                                      
+
                                         <?php foreach ($usuarios as $usuario) { ?>
-                                            <li class="nav-item  ">
-                                                <a href="<?php echo base_url(); ?>editar_usuario/<?php echo $usuario->id; ?>" class="nav-link ">
+                                            <li class="nav-item <?php echo $usuario->id; ?>">
+                                                <a href="<?php echo base_url(); ?>editar_usuario/<?php echo $usuario->id; ?>" class="nav-link nav-toggle">
                                                     <i class="icon-user"></i>
                                                     <span style="<?php echo 'text-decoration:'.(($usuario->activo==0) ? 'line-through' : 'none');?>" class="title"><?php echo $usuario->nombre.' '.$usuario->apellidos; ?></span>
                                                     <span class="badge badge-success">6</span>
                                                 </a>
                                             </li>
                                         <?php } ?>    
-                                    </ul>
+                                      
 
-                                </li>
 
-                                <!--
+                                    </div>    
+                                
+                           
+                            <!--
+                             
+
+                                
                                 <li class="nav-item  ">
                                     <a href="#" class="nav-link nav-toggle">
                                         <i class="icon-users"></i>

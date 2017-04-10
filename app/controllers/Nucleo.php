@@ -10,12 +10,19 @@ class Nucleo extends CI_Controller {
 		$this->load->model('Modelo_proyecto', 'modelo_proyecto'); 
 	}
 
+
 	public function index(){
 		if ( $this->session->userdata( 'session' ) !== TRUE ){
 			$this->login();
 		} else {
 			$this->dashboard();
 		}
+	}
+
+	function facebook(){ 
+		
+		$this->load->view( 'facebook' );
+
 	}
 
 	public function login(){
