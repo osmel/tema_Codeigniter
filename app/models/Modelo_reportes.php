@@ -257,32 +257,32 @@ public function listado_todas_areas($data){
 
     $filtro="";        
 
-if  ($data['id_proyecto']!=0){
-  $filtro.= (($filtro!="") ? " and " : "") . " (proy.id = ".$data["id_proyecto"].") ";
-  $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.id";
-} 
+      if  ($data['id_proyecto']!=0){
+        $filtro.= (($filtro!="") ? " and " : "") . " (proy.id = ".$data["id_proyecto"].") ";
+        $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.id";
+      } 
 
-if  ($data['id_profundidad']!=-1){
-   $filtro.= (($filtro!="") ? " and " : "") . " (proy.profundidad = ".$data['id_profundidad'].") ";
-   $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.profundidad";
-}
+      if  ($data['id_profundidad']!=-1){
+         $filtro.= (($filtro!="") ? " and " : "") . " (proy.profundidad = ".$data['id_profundidad'].") ";
+         $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.profundidad";
+      }
 
-if  ($data['id_area']!=0){
-   $filtro.= (($filtro!="") ? " and " : "") . " (r.id_area = ".$data['id_area'].") ";
-   $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_area";
-}
+      if  ($data['id_area']!=0){
+         $filtro.= (($filtro!="") ? " and " : "") . " (r.id_area = ".$data['id_area'].") ";
+         $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_area";
+      }
 
-if  ($data['id_usuario']!=0){
-    $filtro.= (($filtro!="") ? " and " : "") . " (r.id_usuario = '".$data['id_usuario']."') ";  
-   // $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_usuario";
-}
-
-
-$filtro= (($filtro!="") ? " where " : "") . $filtro;
-$filtro_profundidad = $filtro;
+      if  ($data['id_usuario']!=0){
+          $filtro.= (($filtro!="") ? " and " : "") . " (r.id_usuario = '".$data['id_usuario']."') ";  
+         // $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "r.id_usuario";
+      }
 
 
-$filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro_agrupamiento;
+      $filtro= (($filtro!="") ? " where " : "") . $filtro;
+      $filtro_profundidad = $filtro;
+
+
+      $filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro_agrupamiento;
 
 
 
@@ -333,11 +333,13 @@ $filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro
       $sql .="
        ) r1
 
-         left join   ".$this->usuarios." u  on r1.id_usuario = u.id) r on proy.id_nivel = r.id_nivel
+         left join   ".$this->usuarios." u  on r1.id_usuario = u.id ) r on proy.id_nivel = r.id_nivel
          left join  ".$this->catalogo_areas."  e  on e.id = r.id_area
        ".$filtro_profundidad." 
         ".$filtro_agrupamiento." 
-      having r.nombre IS NOT NULL";
+      having r.nombre IS NOT NULL
+      ORDER BY r.nombre asc
+      ";
 
       
 
@@ -363,17 +365,26 @@ $filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro
             case 1: //super
             case 2: //Admin
                             // todos los usuarios
+                 
               break;
             case 3:
                   $this->db->where('u.id_cliente', $id_area);   
+                 
               break;
 
             default:
                  $this->db->where('u.id', $id);   
+                 
               break;
           }
-          
+
+           $this->db->where('u.activo', 1);   //solo usuarios activos
+
           $this->db->from($this->usuarios.' as u');
+
+           $this->db->order_by('nombre', 'asc');
+            $this->db->order_by('apellidos', 'asc');
+
           $result = $this->db->get();
           
           if ( $result->num_rows() > 0 )

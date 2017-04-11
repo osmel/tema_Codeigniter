@@ -51,6 +51,8 @@
 
 <input type="hidden" id="nombre" name="nombre" value="">
 
+<input type="hidden" id="id_scroll_proy" name="id_scroll_proy" value="<?php echo $id; ?>">
+
 
 
 			

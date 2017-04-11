@@ -3,6 +3,7 @@
 	
 
 			<input type="hidden" id="uid" name="uid" value="<?php echo $uid; ?>">		
+			<input type="hidden" id="id_scroll_user" name="id_scroll_user" value="<?php echo $id; ?>">
 
 
             <!-- Comienzo del contenedor -->

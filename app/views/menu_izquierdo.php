@@ -55,7 +55,7 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                 <!-- END SIDEBAR TOGGLER BUTTON -->
                                 <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
                         
-                        <!-- Buscador 
+                        <!-- Buscador
                                 <li class="sidebar-search-wrapper">
                                  
                                       <form class="sidebar-search" action="page_general_search_3.html" method="POST">
@@ -73,7 +73,7 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                     </form>
                                     
                                 </li>
-                       Fin del buscador -->        
+                        Fin del buscador -->        
 
                         <!-- Dashboard       
                                 <li class="nav-item start active open">
@@ -151,6 +151,57 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                         </a>
                                     </li>
 
+                                <!--<li class="sidebar-search-wrapper">
+                                 
+                                      <form class="sidebar-search" action="page_general_search_3.html" method="POST">
+                                        <a href="javascript:;" class="remove">
+                                            <i class="icon-close"></i>
+                                        </a>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Buscar...">
+                                            <span class="input-group-btn">
+                                                <a href="javascript:;" class="btn submit">
+                                                    <i class="icon-magnifier"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </form>
+                                    
+                                </li>        
+
+                                        <li class="sidebar-search-wrapper">
+                                            <label class="col-sm-3 control-label"></label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-cogs"></i>
+                                                    </span>
+                                                    <input type="text" id="typeahead_example_31" name="typeahead_example_3" class="form-control" />
+                                                </div>
+                                                <p class="help-block"></code>
+                                                </p>
+                                            </div>
+                                        </li>                    
+
+                                    -->        
+
+
+                                <li class="sidebar-search-wrapper">
+                                    <div class="sidebar-search" >
+                                        <div class="input-group">
+                                            <!-- <input type="text" id="typeahead_example_31" name="typeahead_example_3" class="form-control" /> -->
+
+                                            <input  type="text" name="editando_proyectos" idusuario="1" class="form-control buscar_elemento ttip" title="Campo predictivo. Escriba y seleccione el nombre de un proyecto." autocomplete="off" spellcheck="false" placeholder="Buscar Proyecto...">
+
+                                            <span class="input-group-btn">
+                                                <a class="btn submit">
+                                                    <i class="icon-magnifier"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                </li>        
 
 
                                     <div  class="scrollers proyectos">
@@ -194,6 +245,24 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                 <li class="heading">
                                     <h3 class="uppercase">Usuarios</h3>
                                 </li>
+
+                                 <li class="sidebar-search-wrapper">
+                                    <div class="sidebar-search" >
+                                        <div class="input-group">
+                                            <!-- <input type="text" id="typeahead_example_31" name="typeahead_example_3" class="form-control" /> -->
+
+                                            <input  type="text" name="editando_usuarios" idusuario="1" class="form-control buscar_usuarios ttip" title="Campo predictivo. Escriba y seleccione el nombre de un proyecto." autocomplete="off" spellcheck="false" placeholder="Buscar Usuarios...">
+
+                                            <span class="input-group-btn">
+                                                <a class="btn submit">
+                                                    <i class="icon-magnifier"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                </li>                            
+
 
                                   
                                     <div  class="scrollers usuarios">

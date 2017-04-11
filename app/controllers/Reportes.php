@@ -42,15 +42,12 @@ class Reportes extends CI_Controller {
               $elementos  = $this->modelo_reporte->listado_todas_areas($data);
             }
             break;
-        case "id_usuario":
-            
+        case "id_usuario":            
             if ($data['id_proyecto']!=0) {
                 $elementos  = $this->modelo_reporte->listado_usuarios($data);
             } else {
-              $elementos  = $this->modelo_reporte->listado_todo_usuarios($data);
+                $elementos  = $this->modelo_reporte->listado_todo_usuarios($data);
             }
-
-
 
             break;
         default:
@@ -208,13 +205,11 @@ class Reportes extends CI_Controller {
 	}
 
 ////////////////////////////////////////////////////////////////
-	//salida del sistema
+//salida del sistema
 	public function logout(){
 		$this->session->sess_destroy();
 		redirect('/');
 	}		
-
-
 
 }
 

@@ -4,6 +4,7 @@
 
 			<input type="hidden" id="uid" name="uid" value="<?php echo $uid; ?>">		
 
+			
 
             <!-- Comienzo del contenedor -->
 	            <div class="page-container">

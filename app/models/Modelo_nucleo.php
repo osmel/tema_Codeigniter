@@ -278,10 +278,15 @@
                    $this->db->where('u.id', $id);   
                 break;
             }
+
+            //$this->db->where('u.activo', 1);   
             
             
             $this->db->from($this->usuarios.' as u');
             $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');
+
+            $this->db->order_by('nombre', 'asc');
+            $this->db->order_by('apellidos', 'asc');
 
             $result = $this->db->get();
             

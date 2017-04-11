@@ -1,16 +1,9 @@
 jQuery(document).ready(function($) {
 
+    
+/////////////////////////Scrollers
     //http://rocha.la/jQuery-slimScroll
-    //jQuery('#user').slimScroll();
-
-//var hash_url = window.location.pathname;
-//console.log(hash_url);
-
-
-//console.log( ($('input[name="id_p"]').val() !=undefined ) );
-
-   var miproy = 129; //$('input[name="id_proy"]').val().toString();
-   
+       
    jQuery('.scrollers.proyectos').slimScroll({
         //width: '300px', //Anchura en píxeles del área scroll visible. Estirar hasta el padre si no se establece. Por defecto: none
         height: '150px',   //Altura en píxeles del área scroll visible. También es compatible automático para ajustar la altura a igual contenedor primario. Defecto: 250px
@@ -26,10 +19,8 @@ jQuery(document).ready(function($) {
 
         //distance: '30px', //distancia en píxeles desde el borde del elemento padre que desea que aparezca la barra de desplazamiento. 
                           //Se utiliza junto con la posición de la propiedad. Defecto:1px                               
-        
-        //start: 'top'
-        start: (  ($('input[name="id_proy"]').val() !=undefined ) ?  $('li.'+ miproy  )   : 'top' )
-            //$('li.6e78e365-f48f-11e6-b097-7071bce181c3'), //'top',  //$('#child_image_element'),                          
+       
+        start: (  ($('input[name="id_scroll_proy"]').val() !=undefined ) ?  $('li.'+ $('input[name="id_scroll_proy"]').val()  )   : 'top' )
         /*
         
         
@@ -44,41 +35,166 @@ jQuery(document).ready(function($) {
         */
     });
 
-   console.log( $('input[name="id_proy"]').val() );
+   console.log( $('input[name="id_scroll_user"]').val() );
 
 
    jQuery('.scrollers.usuarios').slimScroll({
-        //width: '300px', //Anchura en píxeles del área scroll visible. Estirar hasta el padre si no se establece. Por defecto: none
         height: '150px',   //Altura en píxeles del área scroll visible. También es compatible automático para ajustar la altura a igual contenedor primario. Defecto: 250px
         
         size: '10px', //Ancho en píxeles de la barra de desplazamiento. Defecto: 7px
         position: 'left', //left o right. Establece la posición de la barra de desplazamiento. Defecto: right
         color: '#ffcc00', // Color en hexadecimal de la barra de desplazamiento. Defecto: #000000
-        //alwaysVisible: true, //Desactiva u ocultar la barra de desplazamiento. Defecto: false
         disableFadeOut: true,   //Desactiva la barra scroll automáticamente . true barra scroll no desaparece después de algún tiempo cuando el ratón está sobre el div slimscroll. 
                                 //Defecto: false
         allowPageScroll: false, //Comprueba si la rueda del ratón deben desplazarse a la página cuando la barra llega a la parte superior o inferior del contenedor. 
                                //Cuando se establece en true es desplaza la página. Defecto: false
-
-        //distance: '30px', //distancia en píxeles desde el borde del elemento padre que desea que aparezca la barra de desplazamiento. 
-                          //Se utiliza junto con la posición de la propiedad. Defecto:1px                               
-        
-        
-        start: (  ($('input[name="id_p"]').val() !=undefined ) ?  $('li.'+$('input[name="id_p"]').val())   : 'top' ),
-        
-        /*
-        
-        
-
-        
-        
-        railColor: '#222',
-        railOpacity: 0.3,
-        wheelStep: 10,
-        
-        
-        */
+        start: (  ($('input[name="id_scroll_user"]').val() !=undefined ) ?  $('li.'+$('input[name="id_scroll_user"]').val())   : 'top' ),
+       
     });
+
+
+
+
+
+
+/////////////////////////buscador proytectos
+
+//buscador proyectos
+
+    var consulta_elemento = new Bloodhound({
+       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nombre'),
+       queryTokenizer: Bloodhound.tokenizers.whitespace,
+       remote: {
+            url: '/busqueda_predictiva?key=%QUERY',
+            replace: function ( e ) {
+                var q = '/busqueda_predictiva?key='+encodeURIComponent(jQuery('.buscar_elemento').typeahead("val"));
+                    q += '&nombre='+encodeURIComponent(jQuery('.buscar_elemento.tt-input').attr("name"));
+                    q += '&idusuario='+encodeURIComponent(jQuery('.buscar_elemento.tt-input').attr("idusuario"));
+                return  q;
+            }
+        },   
+    });
+
+
+
+    consulta_elemento.initialize();
+
+    jQuery('.buscar_elemento').typeahead(
+        {
+              hint: true,
+          highlight: true,
+          minLength: 1
+        },
+
+         {
+      
+      name: 'buscar_elemento',
+      displayKey: 'descripcion', //
+      source: consulta_elemento.ttAdapter(),
+       templates: {
+                //header: '<h4>'+jQuery('.buscar_proveedor_reporte').attr("name")+'</h4>',
+                suggestion: function (data) {  
+                    return '<p><strong>' + data.descripcion + '</strong></p>'; //+
+                    // '<div style="background-color:'+ '#'+data.hexadecimal_color + ';display:block;width:15px;height:15px;margin:0 auto;"></div>';
+
+           }
+        
+      }
+    });
+
+    jQuery('.buscar_elemento').on('typeahead:selected', function (e, datum,otro) {
+        key = datum.key;
+        console.log(datum);
+        if  (datum.valor=='proyectos') {
+            window.location.href = '/'+'editar_proyecto/'+jQuery.base64.encode(key);  
+        } else {  //usuarios
+            console.log(datum);
+        }
+        //
+    }); 
+
+    jQuery('.buscar_elemento').on('typeahead:closed', function (e) {
+
+        /*
+        comienzo=true;  //para indicar que start comience en 0;
+        var oTable =jQuery('#tabla_reporte').dataTable();
+        oTable._fnAjaxUpdate();
+        */
+
+    }); 
+
+
+
+
+//buscador usuarios
+
+    var consulta_usuarios = new Bloodhound({
+       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nombre'),
+       queryTokenizer: Bloodhound.tokenizers.whitespace,
+       remote: {
+            url: '/busqueda_predictiva?key=%QUERY',
+            replace: function ( e ) {
+                var q = '/busqueda_predictiva?key='+encodeURIComponent(jQuery('.buscar_usuarios').typeahead("val"));
+                    q += '&nombre='+encodeURIComponent(jQuery('.buscar_usuarios.tt-input').attr("name"));
+                    q += '&idusuario='+encodeURIComponent(jQuery('.buscar_usuarios.tt-input').attr("idusuario"));
+                return  q;
+            }
+        },   
+    });
+
+
+
+    consulta_usuarios.initialize();
+
+    jQuery('.buscar_usuarios').typeahead(
+        {
+              hint: true,
+          highlight: true,
+          minLength: 1
+        },
+
+         {
+      
+      name: 'buscar_usuarios',
+      displayKey: 'descripcion', //
+      source: consulta_usuarios.ttAdapter(),
+       templates: {
+                //header: '<h4>'+jQuery('.buscar_proveedor_reporte').attr("name")+'</h4>',
+                suggestion: function (data) {  
+                    return '<p><strong>' + data.descripcion + '</strong></p>'; //+
+                    // '<div style="background-color:'+ '#'+data.hexadecimal_color + ';display:block;width:15px;height:15px;margin:0 auto;"></div>';
+
+           }
+        
+      }
+    });
+
+    jQuery('.buscar_usuarios').on('typeahead:selected', function (e, datum,otro) {
+        key = datum.key;
+        console.log(datum);
+        if  (datum.valor=='proyectos') {
+            window.location.href = '/'+'editar_proyecto/'+jQuery.base64.encode(key);  
+        } else {  //usuarios
+            window.location.href = '/'+'editar_usuario/'+key;  
+        }
+        //
+    }); 
+
+    jQuery('.buscar_usuarios').on('typeahead:closed', function (e) {
+
+        /*
+        comienzo=true;  //para indicar que start comience en 0;
+        var oTable =jQuery('#tabla_reporte').dataTable();
+        oTable._fnAjaxUpdate();
+        */
+
+    }); 
+
+
+
+////////////////// Fin de reportes////////////////////////////////////////////////////////////
+
+
 
 submit_forzado =false;
 

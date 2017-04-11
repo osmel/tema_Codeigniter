@@ -230,5 +230,9 @@ $route['validacion_edicion_configuracion']     = 'catalogos/validacion_edicion_c
 $route['eliminar_configuracion/(:any)/(:any)'] = 'catalogos/eliminar_configuracion/$1/$2';
 $route['validar_eliminar_configuracion']    	 = 'catalogos/validar_eliminar_configuracion';
 
+$route['busqueda_predictiva']    	 = 'catalogos/busqueda_predictiva';
+
+
+
 
 

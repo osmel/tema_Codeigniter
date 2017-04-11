@@ -15,6 +15,40 @@ class Catalogos extends CI_Controller {
 
 
 
+  public function busqueda_predictiva(){
+
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+
+   
+       $data['key']=$_GET['key'];
+       $data['nombre']=$_GET['nombre'];
+       
+       if (isset($_GET['idusuario'])) { 
+        $data['idusuario']=$_GET['idusuario'];
+       } 
+
+       switch ($data['nombre']) {
+
+        case 'editando_proyectos':
+            $busqueda = $this->modelo_catalogo->buscador_proyectos($data);
+          break;
+        case 'editando_usuarios':
+            $busqueda = $this->modelo_catalogo->buscador_usuarios($data);
+              
+          break;
+
+
+       }
+       
+
+       echo $busqueda;
+    }  
+  }
+
+
+
   
 //***********************areas **********************************//
 

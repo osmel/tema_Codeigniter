@@ -129,13 +129,23 @@
 			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 			<script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
 
+
+			<!--busqueda sensitiva-->
+			<link rel="stylesheet" href="<?php echo base_url(); ?>js/bootstrap-3.3.1/dist/css/typeahead.js-bootstrap.css">
+				
+				<script type="text/javascript" src="<?php echo base_url(); ?>js/typeahead/dist/typeahead.jquery.min.js"></script>	
+				
+				<script type="text/javascript" src="<?php echo base_url(); ?>js/typeahead/dist/typeahead.bundle.js"></script>	
+
         
 
 			<!--
-					TREE
-			<script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-bootstrap-tagsinput.min.js" type="text/javascript"></script>-->
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+					componente para poner los nombres
+			<script src="<?php echo base_url(); ?>js/assets/pages/scripts/components-bootstrap-tagsinput.min.js" type="text/javascript"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script> 
+			-->
 			<script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
+
 
 			<script src="<?php echo base_url(); ?>js/jstree/dist/jstree.min.js" type="text/javascript"></script>
 

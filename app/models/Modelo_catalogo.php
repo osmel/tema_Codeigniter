@@ -43,6 +43,175 @@
 		}
 
 
+     public function coger_entorno( $data ){
+              
+            $this->db->select("c.id, c.entorno, c.tabla,c.profundidad");         
+            $this->db->from($this->catalogo_entornos.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   //$this->session->set_userdata('creando_entorno', $result->row()->tabla);
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }
+                    
+                $result->free_result();
+     }  
+
+
+  public function buscador_proyectos($data){
+
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id_session = $this->session->userdata('id');
+            $data["id"] = $this->session->userdata('entorno_activo');
+            $nombre_activo = self::coger_entorno($data)->entorno;
+            $profundidad_activo = self::coger_entorno($data)->profundidad;
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+
+            $this->db->select("c.id, c.proyecto, c.tabla, c.profundidad,c.importe");         
+            $this->db->select($data["id"]." as id_activo",false);         
+            $this->db->select("'".$nombre_activo."' as nombre_activo",false);         
+            $this->db->select("'".$profundidad_activo."' as profundidad_activo",false);   
+            
+            $this->db->select('(c.id_usuario= "'.$id_session.'") as dueno_real',false);              
+            $this->db->select('1 as dueno',false);  //1-todos tienen permiso a editar      
+
+            $this->db->from($this->catalogo_proyectos.' As c');
+            $this->db->join($this->registro_proyecto.' As r', 'r.id_proyecto = c.id', 'LEFT');
+
+            $max_entornos = $profundidad_activo; //4; //maximos entornos configurados(cantidad de tablas con nivel2..4)
+            $cond_niveles ='';
+            for ($i=2; $i <= $max_entornos; $i++) { 
+               $this->db->join($this->db->dbprefix('registro_nivel'.$i).' As n'.$i, 'n'.$i.'.id_proyecto = c.id', 'LEFT');
+               $cond_niveles .= ' OR (LOCATE("'.$id_session.'",n'.$i.'.id_val)>0)' ;
+            }
+
+
+              switch ($id_perfil) {
+                  case 1: //super
+                  case 2: //Admin
+                   $where ='(
+                            (c.id_entorno= '.$id_entorno.')
+                             and (c.proyecto LIKE  "%'.$data['key'].'%") 
+                          )'; 
+                   
+
+                    break;
+                  case 3: //lider
+                        $where ='(
+                          ( (c.id_usuario = "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  '.$cond_niveles.' )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        ) and (c.proyecto LIKE  "%'.$data['key'].'%") '; 
+                        
+                    break;
+
+                    case 4: //trabajadores
+                        $where ='(
+                          ( (c.id_usuario= "'.$id_session.'") OR
+                          (LOCATE("'.$id_session.'",r.id_val)>0)  '.$cond_niveles.' )
+                          AND (c.id_entorno= '.$id_entorno.')
+                        ) and (c.proyecto LIKE  "%'.$data['key'].'%")'; 
+                        
+                    break;              
+
+              }         
+             $this->db->where($where);
+
+              $this->db->order_by('proyecto', 'asc');
+              
+
+             $this->db->group_by('c.id');     
+
+
+
+
+              $result = $this->db->get();
+              if ( $result->num_rows() > 0 ) {
+                  foreach ($result->result() as $row) 
+                      {
+                            $dato[]= array(
+                                       "value"=>$row->proyecto,
+                                       "key"=>$row->id,
+                                       "descripcion"=>$row->proyecto,
+                                       "valor"=>"proyectos",
+                                    );
+                      }
+                      return json_encode($dato);
+              }   
+              else 
+                 return False;
+              $result->free_result();
+
+  }  
+     
+      public function buscador_usuarios( $data ){
+
+            $id_perfil=$this->session->userdata('id_perfil');
+            $id=$this->session->userdata('id');
+            $id_area=$this->session->userdata('id_area');
+
+            $this->db->select('u.id, nombre,  apellidos,activo, salario');
+
+            $this->db->select( "AES_DECRYPT( email,'{$this->key_hash}') AS email", FALSE );
+            $this->db->select( "AES_DECRYPT( telefono,'{$this->key_hash}') AS telefono", FALSE );
+
+            $this->db->select('p.id_perfil,p.perfil,p.operacion');
+
+            
+            switch ($id_perfil) {
+              case 1: //super
+              case 2: //Admin
+                  $this->db->or_like('nombre',  $data['key'], 'both'); 
+                  $this->db->or_like('apellidos',  $data['key'], 'both'); 
+                              // todos los usuarios
+                break;
+              case 3:
+                    $this->db->where('u.id_cliente', $id_area);   
+                  $this->db->or_like('nombre',  $data['key'], 'both'); 
+                  $this->db->or_like('apellidos',  $data['key'], 'both'); 
+
+                break;
+
+              default:
+                   $this->db->where('u.id', $id);   
+                  $this->db->or_like('nombre',  $data['key'], 'both'); 
+                  $this->db->or_like('apellidos',  $data['key'], 'both'); 
+                break;
+            }
+            
+            
+            $this->db->from($this->usuarios.' as u');
+            $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');
+
+            $this->db->order_by('nombre', 'asc');
+            $this->db->order_by('apellidos', 'asc');
+
+            $result = $this->db->get();
+            
+              if ( $result->num_rows() > 0 ) {
+                  foreach ($result->result() as $row) 
+                      {
+                            $dato[]= array(
+                                       "value"=>$row->nombre.' '.$row->apellidos,
+                                       "key"=>$row->id,
+                                       "descripcion"=>$row->nombre.' '.$row->apellidos,
+                                       "valor"=>"usuarios",
+                                    );
+                      }
+                      return json_encode($dato);
+              }   
+              else 
+                 return False;
+              $result->free_result();
+
+        }     
+
+
+
  //determina si areas, cargos o perfiles estan ocupados por algún usuario
 
       public function en_uso($data) {

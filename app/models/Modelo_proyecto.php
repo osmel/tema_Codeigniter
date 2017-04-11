@@ -847,6 +847,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
                           
              $this->db->where($where);
+             $this->db->order_by('proyecto', 'asc');
 
              $this->db->group_by('c.id');
 
