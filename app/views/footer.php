@@ -119,7 +119,7 @@
 		<!-- paginador de fecha -->
 
 		
-        <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.min.js" type="text/javascript"></script>
+        <script src="<?php echo base_url(); ?>js/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/assets/pages/scripts/ui-datepaginator.min.js" type="text/javascript"></script>			
         
 

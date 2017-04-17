@@ -125,6 +125,15 @@ function listado_fechas( ){
 
   } 
 
+
+
+  function horas_paginador(  ){
+           $data['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
+           $dato = $this->modelo_proyecto->horas_paginador($data); 
+           echo json_encode($dato);
+
+  } 
+
   
           //print_r($_POST);
           //return false;

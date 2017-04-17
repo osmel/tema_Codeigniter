@@ -271,7 +271,7 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
         
 
        if (fecha[0].length !=0) {
-        console.log("asdas");
+        //console.log("asdas");
 
                var fi = fecha[0]; //"28-02-2017 0:00";
                var fo = fecha[1]; //"02-03-2017 0:00";

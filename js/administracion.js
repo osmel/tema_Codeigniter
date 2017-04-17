@@ -280,8 +280,17 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
 
             //fecha más reciente que puede seleccionarse
             endDate: moment().clone().startOf("day"), 
+            //injectStyle:false,
+
+
+            /*fechapag: function(fecha) {
+                return 'osmel';
+
+            },*/
 
             onSelectedDateChanged: function(event, date) {
+                //event.preventDefault();
+
                  fechapaginador = moment(date).format("YYYY-MM-DD");
                         submit_forzado =true;    
                         jQuery('form').trigger('submit');
@@ -343,7 +352,42 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                     });
                                   
                  
-            }
+            },
+
+
+
+
+            ondatosEnVivo: function(event,fecha) {
+                var fechapag = moment(fecha.m).format("YYYY-MM-DD");
+
+               
+                if (!(fecha.isSelected))
+              
+
+                $.ajax({
+                        url: "/horas_paginador",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                             fechapaginador: fechapag //.toString() 
+                         },
+                        success: function(datos){
+                             fe = (datos.sum_horas ==null) ? fecha.text : fecha.text+''+'<br/>'+datos.sum_horas+'';
+                             //fe="osmel";
+                             
+                             $('a[data-moment="'+fechapag+'"]').html(fe);
+                             return false;
+                        }
+                  });       
+            
+
+
+
+
+
+            },
+
+
 
     });
 

@@ -326,7 +326,6 @@
 
 
 
-
      public function listado_nivel_proyectos($data){
               
             $id_session = $this->session->userdata('id');  
@@ -638,6 +637,31 @@ ORDER BY parent.lft;
         }
 
         return $data['proyecto'];
+  }  
+
+
+public function horas_paginador($data){
+            $id_session = $this->session->userdata('id');
+            $id_entorno = $this->session->userdata('entorno_activo');
+            $this->db->select("sum(r.horas) as sum_horas",false);
+            $this->db->from($this->registro_user_proy.' as r');
+            $where = '(
+                    (
+                      (r.id_usuario= "'.$id_session.'") AND
+                      (r.id_entorno = '.$id_entorno.' ) AND
+                      ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  =  "'.$data['fechapaginador'].'" ) 
+                     )
+            )';   
+
+            $this->db->where($where);
+            $result = $this->db->get();
+              if ( $result->num_rows() > 0 ) {
+                return $result->row();
+              }  else {
+                return null;
+              }
+                $result->free_result();
+
   }  
 
 

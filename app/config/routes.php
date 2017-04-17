@@ -159,6 +159,9 @@ $route['listado_usuarios_json']			     = 'administracion/listado_usuarios_json';
 //registro usuario
 $route['validar_registro_usuario']    	 = 'administracion/validar_registro_usuario';
 $route['ajax_user_proy_json']    	 = 'administracion/ajax_user_proy_json';
+$route['horas_paginador']    	 = 'administracion/horas_paginador';
+
+
 $route['listado_usuarios_niveles']			     = 'administracion/listado_usuarios_niveles';
 
 
