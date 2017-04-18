@@ -435,25 +435,31 @@
         $id_session = $this->session->userdata('id');
         for ($i=0; $i < count($data["id_user_proy"] ); $i++) { 
           //$this->db->set( 'id', 0 );  
-          $this->db->set( 'id_entorno', $data['id_entorno'][$i] );  
-          $this->db->set( 'id_proyecto', $data['id_proyecto'][$i] );  
-          
-          $this->db->set( 'identificador', $data['identificador'][$i] );  
-          $this->db->set( 'id_nivel', $data['id_nivel'][$i] );  
-          $this->db->set( 'profundidad', $data['profundidad'][$i] );  
 
-          $this->db->set( 'descripcion', $data['descripcion'][$i]);  
-          $this->db->set( 'horas', $data['hora'][$i] );  
-          $this->db->set( 'id_usuario', $id_session );  
-          $this->db->set( 'fecha', $data['fechapaginador'] );  
+          if ($data['hora'][$i] !=0) { //que guarde los que tengan valor 
 
-          if  (!($data['id_user_proy'][$i])) {
-              $this->db->insert($this->registro_user_proy );  
-              $data['id_user_proy'][$i] = $this->db->insert_id(); //obtener el id
-          } else {
-            $this->db->where('id', $data['id_user_proy'][$i]  );  
-            $this->db->update($this->registro_user_proy );  
+                $this->db->set( 'id_entorno', $data['id_entorno'][$i] );  
+                $this->db->set( 'id_proyecto', $data['id_proyecto'][$i] );  
+                
+                $this->db->set( 'identificador', $data['identificador'][$i] );  
+                $this->db->set( 'id_nivel', $data['id_nivel'][$i] );  
+                $this->db->set( 'profundidad', $data['profundidad'][$i] );  
+
+                $this->db->set( 'descripcion', $data['descripcion'][$i]);  
+                $this->db->set( 'horas', $data['hora'][$i] );  
+                $this->db->set( 'id_usuario', $id_session );  
+                $this->db->set( 'fecha', $data['fechapaginador_anterior'] );  
+
+                if  (!($data['id_user_proy'][$i])) {
+                    $this->db->insert($this->registro_user_proy );  
+                    $data['id_user_proy'][$i] = $this->db->insert_id(); //obtener el id
+                } else {
+                  $this->db->where('id', $data['id_user_proy'][$i]  );  
+                  $this->db->update($this->registro_user_proy );  
+                }            
+
           }
+
           
         }  
         return $data;
@@ -640,7 +646,38 @@ ORDER BY parent.lft;
   }  
 
 
+
 public function horas_paginador($data){
+            $id_session = $this->session->userdata('id');
+            $id_entorno = $this->session->userdata('entorno_activo');
+            $this->db->select('DATE_FORMAT((r.fecha),"%Y-%m-%d") as fecha',false);
+            $this->db->select("sum(r.horas) as sum_horas",false);
+            $this->db->from($this->registro_user_proy.' as r');
+            $where = '(
+                    (
+                      (r.id_usuario= "'.$id_session.'") AND
+                      (r.id_entorno = '.$id_entorno.' ) AND
+                      ( DATE_FORMAT((r.fecha),"%Y-%m-%d")  >="'.$data['fecha_inicio'].'" AND  DATE_FORMAT((r.fecha),"%Y-%m-%d")  <="'.$data['fecha_final'].'" ) 
+
+
+                     )
+            )';   
+
+            $this->db->where($where);
+            $this->db->group_by('fecha');
+
+            $result = $this->db->get();
+              if ( $result->num_rows() > 0 ) {
+                return $result->result();
+              }  else {
+                return null;
+              }
+                $result->free_result();
+
+  }  
+
+
+public function horas_paginador1111($data){
             $id_session = $this->session->userdata('id');
             $id_entorno = $this->session->userdata('entorno_activo');
             $this->db->select("sum(r.horas) as sum_horas",false);

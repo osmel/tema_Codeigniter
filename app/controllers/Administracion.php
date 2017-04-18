@@ -26,21 +26,6 @@ class Administracion extends CI_Controller {
 
 
 
-  public function validar_registro_usuario(){
-
-    if ($this->session->userdata('session') !== TRUE) {
-      redirect('/');
-    } else {
-
-        $data = $_POST;
-        $data['fechapaginador']    = date("Y-m-d", strtotime($this->input->post('fechapaginador')) ); 
-          
-        $data         =   $this->security->xss_clean($data);  
-        $guardar            = $this->modelo_proyecto->actualizar_reg_user_proy( $data );
-        
-        echo json_encode($guardar);
-    }
-  }  
 
 
 
@@ -101,6 +86,33 @@ function listado_fechas( ){
   
 }
 
+  public function validar_registro_usuario(){
+
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('/');
+    } else {
+
+        $data = $_POST;
+        $data['fechapaginador']    = date("Y-m-d", strtotime($this->input->post('fechapaginador')) ); 
+        $data['fechapaginador_anterior']    = date("Y-m-d", strtotime($this->input->post('fechapaginador_anterior')) ); 
+        $data['forzado']           = $this->input->post('forzado') ; 
+          
+        $data         =   $this->security->xss_clean($data);  
+        $guardar            = $this->modelo_proyecto->actualizar_reg_user_proy( $data );
+        
+        if  ($data['forzado']==0)  {  //sino fue forzado la respuesta es esta
+            echo json_encode($guardar);  
+        } else {
+            echo  self::ajax_user_proy_json();
+        }
+
+
+        
+    }
+  }  
+
+
+
   function ajax_user_proy_json(  ){
 
           
@@ -114,26 +126,33 @@ function listado_fechas( ){
 
            $dato['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
            $dato['fechaanterior'] = date('Y-m-d', strtotime ( '-1 day' , strtotime($this->input->post('fechapaginador')) )  ); 
-           $data['datos']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
+           $data['datos1']['proyectos']= $this->modelo_proyecto->listado_registro_usuario($dato); 
+           $data['datos1']['fecha_pag'] = self::horas_pag();
+           return json_encode($data['datos1']);
 
-           echo json_encode($data['datos']['proyectos']);
-            //$data['id']        = $this->input->post('id');
-            
-            //$usuario_json = $this->modelo_proyecto->listado_usuarios_json($data);
-
-            //echo $usuario_json;
 
   } 
 
 
 
-  function horas_paginador(  ){
+  function horas_pag(  ){
+           $data['fecha_inicio'] = date('Y-m-d', strtotime ( '-6 day' , strtotime($this->input->post('fechapaginador')) )  ); 
+           $data['fecha_final'] = date('Y-m-d', strtotime ( '+6 day' , strtotime($this->input->post('fechapaginador')) )  ); 
            $data['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
-           $dato = $this->modelo_proyecto->horas_paginador($data); 
-           echo json_encode($dato);
+           $data['datos']['fecha_pag'] = $this->modelo_proyecto->horas_paginador($data); 
+           return ($data['datos']['fecha_pag']);
 
   } 
 
+
+function horas_paginador(  ){
+           
+           $data['fecha_inicio'] = date('Y-m-d', strtotime ( '-6 day' , strtotime($this->input->post('fechapaginador')) )  ); 
+           $data['fecha_final'] = date('Y-m-d', strtotime ( '+6 day' , strtotime($this->input->post('fechapaginador')) )  ); 
+           $data['fechapaginador'] = date('Y-m-d', strtotime($this->input->post('fechapaginador')) ); 
+           $data['datos']['fecha_pag'] = $this->modelo_proyecto->horas_paginador($data); 
+           echo json_encode ($data['datos']['fecha_pag']);
+  } 
   
           //print_r($_POST);
           //return false;

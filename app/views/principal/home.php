@@ -5,6 +5,10 @@
 	.pagina-contenido{
 		min-height:  !important;
 	}
+
+	.dp-item-lg {
+		     padding: 0px 0!important; 
+	}
 </style>
 
 
@@ -49,7 +53,9 @@
 								<div class="row">
 									  <div class="col-md-10 col-md-offset-1">	<!-- Centrar -->								
 											
-				                            <div id="fecha_paginador"> </div>
+				                            <fieldset disabled>
+				                            	<div id="fecha_paginador"> </div>
+				                            </fieldset>	
 
 											<div class="col-sm-3 col-md-3">
 									             <h3>Proyectos</h3>

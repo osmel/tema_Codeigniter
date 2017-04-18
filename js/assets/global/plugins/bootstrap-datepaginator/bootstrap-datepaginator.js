@@ -182,7 +182,7 @@
 			event.preventDefault();
 			var target = $(event.target);
 			var classList = target.attr('class');
-			console.log(classList);
+			//console.log(classList);
 
 			//if (classList)
 			 {
@@ -406,7 +406,7 @@
 
 				//https://itsybitsybytes.com/changing-the-language-for-the-bootstrap-date-paginator-plugin/
 				this.$element.trigger('datosEnVivo', [data.items[data.items.length-1]]); //osmel
-				//console.log(data.items.length);
+				//console.log("osmel");
 				//console.log(data.items[data.items.length-1].text);
 			}
 

@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
         */
     });
 
-   console.log( $('input[name="id_scroll_user"]').val() );
+  // console.log( $('input[name="id_scroll_user"]').val() );
 
 
    jQuery('.scrollers.usuarios').slimScroll({
@@ -241,6 +241,8 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
     var fechapaginador = new Date();
     var fechapaginador_anterior = new Date();
 
+    var ocurre_evento = false;
+
     $('#fecha_paginador').datepaginator({
                 
             
@@ -264,14 +266,14 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
             
 
             //Altura y ancho del componente
-            size: 'small',  //Altura del componente paginador."small, normal, large".
+            size: 'large',  //Altura del componente paginador."small, normal, large".
             //width: 200, //ancho del contenedo. 
 
 
             //anchuras 
             itemWidth: 60, //anchura para cada de "elemento"
             selectedItemWidth: 140, //anchura para "elemento seleccionado"
-            navItemWidth: 40, //Anchura para los "elementos de navegación" flechas izquierda y derecha(left and right arrows)
+            navItemWidth: 30, //Anchura para los "elementos de navegación" flechas izquierda y derecha(left and right arrows)
                 
             
             //resaltar fecha "hoy" y "seleccionada"
@@ -288,134 +290,78 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
 
             },*/
 
-            onSelectedDateChanged: function(event, date) {
-                //event.preventDefault();
-
-                 fechapaginador = moment(date).format("YYYY-MM-DD");
-                        submit_forzado =true;    
-                        jQuery('form').trigger('submit');
-                        fechapaginador_anterior = moment(date).format("YYYY-MM-DD");  
-
-                   $.ajax({
-                        url: "/ajax_user_proy_json",
-                        type: 'POST',
-                        dataType: "json",
-                        data: {
-                             fechapaginador: fechapaginador //.toString() 
-                         },
-                        success: function(data){
-                            //console.log(data);
-                            //fecha anterior de donde viene
-                          //console.log($('#fecha_paginador .dp-selected').attr('data-moment'));
-                          //console.log($('#fecha_paginador .dp-selected'));
-                            total=0;                          
-                            $.each(data, function( i, value ) {
-                                //console.log(i+' '+value.reg_user.descripcion);
-                                //console.log(i+' '+value.reg_user.id);
-                                $('.id_user_proy'+(i)).val( (value.reg_user!=null) ? value.reg_user.id : null  ) ;
-
-                                $('.id_entorno'+(i)).val( value.id_activo ) ;
-                                $('.id_proyecto'+(i)).val( value.id_proyecto ) ;
-
-                                $('.id_nivel'+(i)).val( value.id_nivel ) ;
-                                $('.profundidad'+(i)).val( value.profundidad ) ;
-
-
-                                //$('.identificador'+(i)).val( value.identificador[i] ) ;
-
-
-                            //$('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
-                            //$('.id_entorno'+(i)).val( data.id_entorno[i] ) ;
-                            //$('.id_proyecto'+(i)).val( data.id_proyecto[i] ) ;
-                            /*
-                            $('.identificador'+(i)).val( data.identificador[i] ) ;
-                            $('.id_nivel'+(i)).val( data.id_nivel[i] ) ;
-                            $('.profundidad'+(i)).val( data.profundidad[i] ) ;
-                            */
-
-
-
-                                $('.hr_anterior'+(i)).val( (value.anterior!=null) ? (value.anterior.hr_anterior) : 0 ) ;
-
-                                $('.hora'+(i)).val( (value.reg_user!=null) ? value.reg_user.horas : 0 ) ;
-                                $('.descripcion'+(i)).val( (value.reg_user!=null) ? value.reg_user.descripcion : null ) ;
-
-                                total=total+ parseFloat(( (value.reg_user!=null) ? value.reg_user.horas : 0 )); 
-                        
-                        
-
-                     
-                            });
-
-                            $('#total').text( number_format(total, 2, '.', ','));
-                        } 
-                    });
-                                  
-                 
-            },
-
-
-
-
-            ondatosEnVivo: function(event,fecha) {
-                var fechapag = moment(fecha.m).format("YYYY-MM-DD");
-
-               
-                if (!(fecha.isSelected))
-              
-
-                $.ajax({
-                        url: "/horas_paginador",
-                        type: 'POST',
-                        dataType: "json",
-                        data: {
-                             fechapaginador: fechapag //.toString() 
-                         },
-                        success: function(datos){
-                             fe = (datos.sum_horas ==null) ? fecha.text : fecha.text+''+'<br/>'+datos.sum_horas+'';
-                             //fe="osmel";
-                             
-                             $('a[data-moment="'+fechapag+'"]').html(fe);
-                             return false;
-                        }
-                  });       
-            
-
-
-
-
-
-            },
-
 
 
     });
 
 
+
+  
+  
+    fechapaginador = moment( $.now()).format("YYYY-MM-DD");
+    fechapaginador_anterior = moment( $.now()).format("YYYY-MM-DD");
+
+
+ $.ajax({
+        url: "/horas_paginador",
+        type: 'POST',
+        dataType: "json",
+        data: {
+             fechapaginador: fechapaginador //.toString() 
+         },
+        success: function(datos){
+
+            if (datos) {
+                 $.each(datos, function( i, value ) {
+                        $('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/>'+value.sum_horas);
+                 });   
+
+            }
+        }
+  });       
+
+
+$('#fecha_paginador').on('datosEnVivo', function(event, date) {
+
+                  console.log(date);
+
+});
+
+$('#fecha_paginador').on('selectedDateChanged', function(event, date) {
+                  fechapaginador = moment(date).format("YYYY-MM-DD");
+                  submit_forzado =true;    
+                  jQuery('form').trigger('submit');
+                  fechapaginador_anterior = moment(date).format("YYYY-MM-DD");  
+                  console.log(date);
+
+});
+
+
+
     
 
 
-             fechapaginador = moment( $.now()).format("YYYY-MM-DD");
-    fechapaginador_anterior = moment( $.now()).format("YYYY-MM-DD");
-
+   
 
     //$('#fecha_paginador').trigger( "onSelectedDateChanged" );
 
 /////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_registro_usuario', function (e) {
-  
+        jQuery('#fecha_paginador').css('pointer-events','none');
+
           if (!submit_forzado) {
+
                 jQuery(this).ajaxSubmit({
                     dataType: "json",
                     data: {
-                         fechapaginador: fechapaginador //.toString() 
+                         fechapaginador: fechapaginador, //.toString() 
+                         fechapaginador_anterior: fechapaginador_anterior,
+                         forzado : 0,
                      },
                     success: function(data){
                        total =0;   
                         for (var i = 0; i < data.id_user_proy.length; i++) {
-                            //console.log(data.id_user_proy[i]);
-                            //console.log( $('.id_user_proy'+(i)).val() );
-
+                            
                             //oculto
                             //alert(data.id_user_proy[i]);
                             $('.id_user_proy'+(i)).val( data.id_user_proy[i] ) ;
@@ -434,25 +380,77 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
                             total=total+ parseFloat(data.hora[i]); 
                         }
                         $('#total').text( number_format(total, 2, '.', ','));
+
+                        jQuery('#fecha_paginador').css('pointer-events','inherit');
                     } 
                 });
                 return false;
            } else {
 
+               // console.log("a"+fechapaginador);  //actual
+                //console.log("b"+fechapaginador_anterior);  //anterior
+
+                if (fechapaginador!=fechapaginador_anterior)
                 jQuery(this).ajaxSubmit({
                     dataType: "json",
                     data: {
-                         fechapaginador: fechapaginador_anterior //.toString() 
+                         fechapaginador: fechapaginador, //.toString() 
+                         fechapaginador_anterior: fechapaginador_anterior,
+                         forzado : 1,
                      },
                     success: function(data){
+
+                         total=0;                          
+                                        $.each(data.proyectos, function( i, value ) {
+                                            $('.id_user_proy'+(i)).val( (value.reg_user!=null) ? value.reg_user.id : null  ) ;
+
+                                            $('.id_entorno'+(i)).val( value.id_activo ) ;
+                                            $('.id_proyecto'+(i)).val( value.id_proyecto ) ;
+
+                                            $('.id_nivel'+(i)).val( value.id_nivel ) ;
+                                            $('.profundidad'+(i)).val( value.profundidad ) ;
+
+                                            $('.hr_anterior'+(i)).val( (value.anterior!=null) ? (value.anterior.hr_anterior) : 0 ) ;
+
+                                            $('.hora'+(i)).val( (value.reg_user!=null) ? value.reg_user.horas : 0 ) ;
+                                            $('.descripcion'+(i)).val( (value.reg_user!=null) ? value.reg_user.descripcion : null ) ;
+
+                                            total=total+ parseFloat(( (value.reg_user!=null) ? value.reg_user.horas : 0 )); 
+                                    
+
+                                        });
+
+                                        $('#total').text( number_format(total, 2, '.', ','));
+
+
+
+                                        submit_forzado =false; 
+
+                                        if (data.fecha_pag) {
+                                             $.each(data.fecha_pag, function( i, value ) {
+                                                    //$('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/><span style="color:red;">'+value.sum_horas+'</span>');
+                                                    //$('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/><p style="color:red;">'+value.sum_horas+'</p>');
+                                                    $('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/>'+value.sum_horas);
+                                             });   
+
+                                        }
+
+                                jQuery('#fecha_paginador').css('pointer-events','inherit');
+
+                                return false;
+
+
                     } 
                 });
                 return false;            
 
            }
+
+
     }); 
 
 
+//$('a').click(function(e){e.preventDefault();});
 
 
 /////////////////////////Submit nuevo proyecto
