@@ -244,9 +244,9 @@ jQuery(document).ready(function($) {
                                      if ( settings.url == "http://tema.dev.com/validacion_edicion_nivel" ) {
 
                                            //alert(settings.url );
-                                           console.log(event);
-                                           console.log(xhr);
-                                           console.log(settings);
+                                           //console.log(event);
+                                           //console.log(xhr);
+                                           //console.log(settings);
                                         }
                                 });
                                 
@@ -315,8 +315,8 @@ jQuery(document).ready(function($) {
                                                                                 texto+='</div>';
 
 
-
-                                                                                texto+='<div class="form-group">';
+                                                                                //  datos de cada participante en el proyecto
+                                                                                texto+='<div class="form-group" style="display:none;">';
                                                                                     
                                                                                     texto+='<div class="col-sm-3 col-md-3">';
                                                                                            if(datum.datos != false){
@@ -445,9 +445,11 @@ jQuery(document).ready(function($) {
                                                                               remote: {
                                                                                     url:  '/buscador?key=%QUERY', 
                                                                                     replace: function () {
-                                                                                        var q = '/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
-                                                                                            //q += '&nombre='+encodeURIComponent(jQuery('#etiq_usuarios.tt-input').attr("name"));
-                                                                                        return  q;
+                                                                                        
+                                                                                         var num = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size();
+                                                                                            var q = '/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
+                                                                                                q += '&num='+num;
+                                                                                        return  q;        
                                                                                     }
                                                                                 },   
 
@@ -460,6 +462,10 @@ jQuery(document).ready(function($) {
                                                                             elt.tagsinput({
                                                                               itemValue: 'id', //id
                                                                               itemText: 'nombre',  //nombre
+                                                                                itemNum: 'num',  //nombre
+                                                                                  tagClass: function(item) {
+                                                                                        return (  item.num == parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size())-1 ? 'tag label label-danger etiqactiva' : 'tag label label label-info');
+                                                                                  },                                                                                 
                                                                               typeaheadjs: {
                                                                                 name: 'usuarios',
                                                                                 displayKey: 'nombre',
@@ -476,11 +482,19 @@ jQuery(document).ready(function($) {
                                                                                 //console.log(jQuery.parseJSON(datum.datos.json_items));
                                                                                
                                                                                 $.each((jQuery.parseJSON(datum.datos.json_items)), function( index, value ) {
-                                                                                  elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
+                                                                                  //elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
+                                                                                    elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre,"num":value.num}); 
+
+
                                                                                 });
+
+                                                                                elt.tagsinput('refresh');
                                                                                
                                                                              }   
                                                                           }
+
+
+
 
 
 

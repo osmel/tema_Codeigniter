@@ -939,10 +939,11 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
               $result = $this->db->get();
               if ( $result->num_rows() > 0 ) {
-                  foreach ($result->result() as $row) 
+                  foreach ($result->result()  as $key => $row) 
                       {
                             $dato[]= array("id"=>$row->id, 
                                             "nombre"=>$row->nombre, 
+                                            "num"=>(int)$data["num"], 
                                     );
                       }
                       return json_encode($dato);

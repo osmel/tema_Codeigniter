@@ -231,9 +231,7 @@
 																</div>
 
 																<!--costo -->
-																
-
-																<div class="form-group">
+																<div class="form-group" style="display:none;">
 																	
 																	<!--costo -->
 																	<div class="col-sm-3 col-md-3">
@@ -287,7 +285,10 @@
 																		<em>Fecha Final.</em>
 																	</div>	
 
-															</div>	
+																</div>	
+
+
+
 						                                </div>    
 													</div>	
 	                                            </div>

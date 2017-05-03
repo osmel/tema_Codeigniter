@@ -17,7 +17,8 @@ class Administracion extends CI_Controller {
       redirect('/');
     } else {
        $data['key']=$_GET['key'];
-	   $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
+       $data['num']=$_GET['num'];
+	     $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
 
        echo $busqueda;
     }  
@@ -64,6 +65,16 @@ function listado_niveles( ){
                     } else { //niveles desde el 2-n
                       $data['datos'] = $this->modelo_proyecto->listado_nivel($data); 
                    }
+
+
+                    //para colocar el valor "num"  
+                        $user_json = array();
+                        foreach (json_decode($data['datos']->json_items, true) as $key => $value) {
+                          $value['num'] = $key;
+                          $user_json[] = $value;
+                        }
+                        $data['datos']->json_items = json_encode($user_json);
+
                     
                 $data['tabla'] = $this->session->userdata('creando_proyecto');   
                $data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
@@ -426,8 +437,14 @@ function listado_usuarios_json(  ){
           $data['id']        = $this->input->post('id');
           
           $usuario_json = $this->modelo_proyecto->listado_usuarios_json($data);
+          
+          $user_json = array();
+          foreach (json_decode($usuario_json, true) as $key => $value) {
+            $value['num'] = $key;
+            $user_json[] = $value;
+          }
 
-          echo $usuario_json;
+          echo json_encode($user_json);
 
 } 
 

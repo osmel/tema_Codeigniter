@@ -104,11 +104,11 @@ jQuery(document).ready(function($) {
 
     jQuery('.buscar_elemento').on('typeahead:selected', function (e, datum,otro) {
         key = datum.key;
-        console.log(datum);
+        //console.log(datum);
         if  (datum.valor=='proyectos') {
             window.location.href = '/'+'editar_proyecto/'+jQuery.base64.encode(key);  
         } else {  //usuarios
-            console.log(datum);
+            //console.log(datum);
         }
         //
     }); 
@@ -171,7 +171,7 @@ jQuery(document).ready(function($) {
 
     jQuery('.buscar_usuarios').on('typeahead:selected', function (e, datum,otro) {
         key = datum.key;
-        console.log(datum);
+        //console.log(datum);
         if  (datum.valor=='proyectos') {
             window.location.href = '/'+'editar_proyecto/'+jQuery.base64.encode(key);  
         } else {  //usuarios
@@ -323,7 +323,7 @@ Jorge 32683212-21d2-11e5-aa7c-04015a6da701 jorge_espinosa@iniciativatextil.com N
 
 $('#fecha_paginador').on('datosEnVivo', function(event, date) {
 
-                  console.log(date);
+                  //console.log(date);
 
 });
 
@@ -332,7 +332,7 @@ $('#fecha_paginador').on('selectedDateChanged', function(event, date) {
                   submit_forzado =true;    
                   jQuery('form').trigger('submit');
                   fechapaginador_anterior = moment(date).format("YYYY-MM-DD");  
-                  console.log(date);
+                  //console.log(date);
 
 });
 
@@ -620,13 +620,14 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
                         //console.log(data);
                         //console.log(data);
                         $.each(data, function( index, value ) {
-                          elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre});
+                          elt.tagsinput('add', {"id":value.id ,"nombre":value.nombre,"num":value.num}); ////elt.tagsinput('add', {"id":"ad5cdc8b-33f9-11e6-b036-04015a6da701","nombre":"Antonio"});
                         });
                     }
                 } 
             });
 
 /////////////////////////buscar usuarios
+//https://www.npmjs.com/package/ng2-tag-input  este es para angular
 
     var consulta_usuarios = new Bloodhound({
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nombre'), //'text'
@@ -634,8 +635,10 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
       remote: {
             url:  '/buscador?key=%QUERY', 
             replace: function () {
+              //console.log(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size());
+              var num = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size();
                 var q = '/buscador?key='+encodeURIComponent(jQuery('.bs-etiquetas_usuarios .tt-input').typeahead("val")); 
-                    //q += '&nombre='+encodeURIComponent(jQuery('#etiq_usuarios.tt-input').attr("name"));
+                    q += '&num='+num;
                 return  q;
             }
         },   
@@ -649,16 +652,93 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
     elt.tagsinput({
       itemValue: 'id', //id
       itemText: 'nombre',  //nombre
+      itemNum: 'num',  //nombre
+       //focusClass: 'my-focus-osmel',
+
+      tagClass: function(item) {
+                                                              
+            return (  item.num == parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size())-1 ? 'tag label label-danger etiqactiva' : 'tag label label label-info');
+        /*  switch (item.nombre) {
+            case 'Osmel'   : return 'tag label label-info label-danger';
+            default:
+               return 'tag label label label-info';
+
+          }
+          */
+      },       
+
+
+      
       typeaheadjs: {
         name: 'usuarios',
         displayKey: 'nombre',
         source: consulta_usuarios.ttAdapter()
       }
+
     });
 
-    //elt.tagsinput('add', {"id":"ad5cdc8b-33f9-11e6-b036-04015a6da701","nombre":"Antonio"});
 
+jQuery('body').on('click','span.label', function (e) {
+   
+    jQuery('span.label').removeClass('label-danger etiqactiva');
+    jQuery('span.label').removeClass('label-info');
+    jQuery('span.label').addClass('label-info');
+    jQuery(this).addClass('label-danger etiqactiva');
+    
+  });
+
+
+
+
+
+
+
+  //Durante la inicialización, las etiquetas predefinidas que se añaden harán que este evento,  se dispare
+  jQuery('body').on('itemAddedOnInit',elt, function (e) {
+    // event.item: contiene el elemento
+    //console.log('actualizando');
+  });
+
+
+  //Se dispara justo antes que un elemento se agregue.
+  jQuery('body').on('beforeItemAdd',elt, function (e) {
+    // event.item: contiene el elemento
+    // event.cancel: establece en true para evitar que se agregue el elemento
+        
+  });
+
+
+  //Se dispara justo despues que un elemento se agrega.
+  jQuery('body').on('itemAdded',elt, function (e) {
+    // event.item: contiene el elemento
+
+    /*jQuery('span.label').removeClass('label-danger etiqactiva');
+    jQuery('span.label').removeClass('label-info');
+    jQuery('span.label').addClass('label-info');*/
+    //jQuery(this).addClass('label-danger etiqactiva');
+
+    elt.tagsinput('refresh');
+
+       
+  });
+      
+
+
+  //Se dispara justo antes que un elemento se elimina.
+  jQuery('body').on('beforeItemRemove',elt, function (e) {
+    // event.item: contiene el elemento
+    // event.cancel: establece en true para evitar que se elimine el elemento
+        
+  });
+
+  //Se dispara justo despues que un elemento se elimina.
+  jQuery('body').on('itemRemoved',elt, function (e) {
+    // event.item: contiene el elemento
+      elt.tagsinput('refresh');
+       
+  });
             
+elt.tagsinput('focus');            
 
 //jQuery('.fecha').datepicker({ dateFormat: 'dd-mm-yyyy'});
 
