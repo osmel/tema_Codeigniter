@@ -171,6 +171,9 @@ $route['listado_fechas']    	 			= 'administracion/listado_fechas';
 
 
 
+//buscar costo
+
+$route['busqueda_costo']    	 			= 'administracion/busqueda_costo';
 
 /////////////////Catalogos/////////////////
 

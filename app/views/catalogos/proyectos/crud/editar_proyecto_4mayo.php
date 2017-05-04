@@ -237,8 +237,8 @@
 																	<div class="col-sm-3 col-md-3">
 																			<?php 
 																				$nomb_nom='';
-																				if (isset($costo ->costo )) 
-																				 {	$nomb_nom = $costo ->costo ;}
+																				if (isset($proy_salvado ->costo )) 
+																				 {	$nomb_nom = $proy_salvado ->costo ;}
 																			?>
 																		<input value="<?php echo  set_value('costo',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="costo" name="costo" placeholder="0.00">
 
@@ -249,8 +249,8 @@
 																	<div class="col-sm-3 col-md-3">
 																			<?php 
 																				$nomb_nom='';
-																				if (isset($costo ->tiempo_disponible )) 
-																				 {	$nomb_nom = $costo ->tiempo_disponible ;}
+																				if (isset($proy_salvado ->tiempo_disponible )) 
+																				 {	$nomb_nom = $proy_salvado ->tiempo_disponible ;}
 																			?>
 																		<input value="<?php echo  set_value('tiempo_disponible',$nomb_nom); ?>" restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00">
 
@@ -261,9 +261,9 @@
 																	<div class="col-sm-3 col-md-3">
 																		<?php 
 																			$nomb_nom='';
-																			if (isset($costo ->fecha_inicial )) 
-																			if (strtotime($costo ->fecha_inicial )>0) 
-																			 {	$nomb_nom = $costo ->fecha_inicial ;}
+																			if (isset($proy_salvado ->fecha_inicial )) 
+																			if (strtotime($proy_salvado ->fecha_inicial )>0) 
+																			 {	$nomb_nom = $proy_salvado ->fecha_inicial ;}
 																			
 																		?>
 																		<input value="<?php echo  set_value('fecha_inicial',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY">
@@ -276,9 +276,9 @@
 																	<div class="col-sm-3 col-md-3">
 																		<?php 
 																			$nomb_nom='';
-																			if (isset($costo ->fecha_final )) 
-																			if (strtotime($costo ->fecha_final )>0)  
-																			 {	$nomb_nom = $costo ->fecha_final ;}
+																			if (isset($proy_salvado ->fecha_final )) 
+																			if (strtotime($proy_salvado ->fecha_final )>0)  
+																			 {	$nomb_nom = $proy_salvado ->fecha_final ;}
 																			
 																		?>
 																		<input value="<?php echo  set_value('fecha_final',$nomb_nom); ?>" type="text" class="fecha  input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY">

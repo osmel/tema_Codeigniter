@@ -453,79 +453,6 @@ $('#fecha_paginador').on('selectedDateChanged', function(event, date) {
 //$('a').click(function(e){e.preventDefault();});
 
 
-/////////////////////////Submit nuevo proyecto
-    jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {
-            
-            var $element = $("#etiq_usuarios");
-            var val = $element.val();
-
-                 id_val = (JSON.stringify(val));
-            json_items =(JSON.stringify($element.tagsinput('items')));
-
-        
-
-            jQuery(this).ajaxSubmit({
-                data: {
-                         id_val: id_val, 
-                     json_items: json_items 
-                 },
-                success: function(data){
-                    
-                    if(data != true){
-                        jQuery('#foo').css('display','none');
-                        jQuery('#messages').css('display','block');
-                        jQuery('#messages').addClass('alert-danger');
-                        jQuery('#messages').html(data);
-                        return "error";
-                    }else{
-                            $catalogo = e.target.name;
-                            
-
-
-                                        /*
-
-                                        $.ajax({
-                                            url: "/listado_fechas",
-                                            type: 'POST',
-                                            dataType: "json",
-                                            data: {
-                                                        id_nivel: $("#id_nivel").val(),
-                                                     profundidad: $("#profundidad").val(),
-                                                     id_cat_proy: $("input[name=id]").val(),
-                                                     id_reg_proy: $("#id_proy").val(),
-                                             },
-                                            success: function(datu){
-
-                                                        $('.fecha_ini').datepicker('setStartDate', (datu.suma.inicial_start!=null) ? new Date (datu.suma.inicial_start.valueOf()) : - Infinity);
-                                                        $('.fecha_ini').datepicker('setEndDate', (datu.suma.inicial_end!=null) ? new Date (datu.suma.inicial_end.valueOf()): Infinity);
-
-                                                        $('.fecha_fin').datepicker('setStartDate', (datu.suma.final_start!=null) ? new Date (datu.suma.final_start.valueOf()) : - Infinity);
-                                                        $('.fecha_fin').datepicker('setEndDate', (datu.suma.final_end!=null) ? new Date (datu.suma.final_end.valueOf()): Infinity);
-
-
-                                               }
-                                        });  
-
-                                        */
-
-
-
-
-
-
-
-
-
-
-                             if (!(e.isTrigger)) { //si fue una presion real del boton guardar
-                                window.location.href = '/'+$catalogo;   
-                             }   
-                    }
-                } 
-            });
-            return false;
-    }); 
-
 
 /////////////////////////validar costo
 
@@ -679,11 +606,57 @@ jQuery('.hora_decimal[restriccion="decimal"]').bind('keypress paste', function (
 
 
 jQuery('body').on('click','span.label', function (e) {
-   
+    jQuery('form').submit();
+
     jQuery('span.label').removeClass('label-danger etiqactiva');
     jQuery('span.label').removeClass('label-info');
     jQuery('span.label').addClass('label-info');
     jQuery(this).addClass('label-danger etiqactiva');
+
+    //console.log(  parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size())-1   );
+    //console.log( jQuery(this).itemValue );
+    //console.log(  jQuery(this).index()   );
+
+    var indice = jQuery(this).index();
+    var arreglo = jQuery(this).parent().siblings("input").val().split(",");
+    //console.log( arreglo[indice]  );
+
+      $.ajax({
+                url: "/busqueda_costo",
+                type: 'POST',
+                dataType: "json",
+                data: {
+                    id_user_seleccion: arreglo[indice], 
+                    id_registro: jQuery("#id_proy").val(),
+                    id_nivel: jQuery("#id_nivel").val(),
+                 },
+                success: function(data){
+                    
+                    if  (data.costo != false ) {
+                        
+                        jQuery("#costo").val(data.costo.costo);
+                        jQuery("#tiempo_disponible").val(data.costo.tiempo_disponible);
+                        jQuery("#fecha_inicial").val(data.costo.fecha_inicial);
+                        jQuery("#fecha_final").val(data.costo.fecha_final);
+                        
+                       
+
+                    } else {
+                      
+                        jQuery("#costo").val("");
+                        jQuery("#tiempo_disponible").val("");
+                        jQuery("#fecha_inicial").val("");
+                        jQuery("#fecha_final").val("");
+                        
+                    }
+
+
+                    
+                } 
+            });
+
+
+
     
   });
 
@@ -705,6 +678,7 @@ jQuery('body').on('click','span.label', function (e) {
     // event.item: contiene el elemento
     // event.cancel: establece en true para evitar que se agregue el elemento
         
+  
   });
 
 
@@ -717,6 +691,8 @@ jQuery('body').on('click','span.label', function (e) {
     jQuery('span.label').addClass('label-info');*/
     //jQuery(this).addClass('label-danger etiqactiva');
 
+
+    //jQuery('form').submit();
     elt.tagsinput('refresh');
 
        
@@ -728,17 +704,79 @@ jQuery('body').on('click','span.label', function (e) {
   jQuery('body').on('beforeItemRemove',elt, function (e) {
     // event.item: contiene el elemento
     // event.cancel: establece en true para evitar que se elimine el elemento
+    jQuery('form').submit();
+    
+      
         
   });
 
   //Se dispara justo despues que un elemento se elimina.
   jQuery('body').on('itemRemoved',elt, function (e) {
     // event.item: contiene el elemento
+      //jQuery('form').submit();
+
       elt.tagsinput('refresh');
+
+
        
   });
             
 elt.tagsinput('focus');            
+
+
+
+
+
+
+
+/////////////////////////Submit nuevo proyecto
+    jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {
+            
+            var $element = $("#etiq_usuarios");
+            var val = $element.val();
+
+                 id_val = (JSON.stringify(val));
+            json_items =(JSON.stringify($element.tagsinput('items')));
+
+
+             var arreglo = elt.val().split(",");
+
+             var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
+             console.log(arreglo[span.index()] );
+             
+
+
+            jQuery(this).ajaxSubmit({
+                dataType : "json",
+                data: {
+                         id_val: id_val, 
+                     json_items: json_items,
+                      id_user_seleccion: arreglo[span.index()] 
+                 },
+                success: function(data){
+                    
+                    if(data.exito != true){
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                        return "error";
+                    }else{
+                            $catalogo = e.target.name;
+                            
+                             if (!(e.isTrigger)) { //si fue una presion real del boton guardar
+                                window.location.href = '/'+$catalogo;   
+                             }  else {  //si fue provocado
+                                    
+                             } 
+                    }
+                } 
+            });
+            return false;
+    }); 
+
+
+
 
 //jQuery('.fecha').datepicker({ dateFormat: 'dd-mm-yyyy'});
 

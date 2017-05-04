@@ -41,6 +41,8 @@
               $this->registro_nivel5                         = $this->db->dbprefix('registro_nivel5');
               $this->registro_nivel6                         = $this->db->dbprefix('registro_nivel6');
 
+              $this->registro_costos                         = $this->db->dbprefix('registro_costos');
+
               
               
 
@@ -49,6 +51,62 @@
 		}
 
 
+
+ public function obtener_costo($data){
+              
+            $id_session = $this->session->userdata('id');  
+            $this->db->select("c.id_registro, c.id_user_seleccion");      
+            
+            $this->db->select("c.costo, c.tiempo_disponible, c.id_nivel");         
+            
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_final) > 0 THEN DATE_FORMAT((c.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final", FALSE);
+            
+            $this->db->from($this->registro_costos.' As c');
+
+            $this->db->where('c.id_registro',$data['id_registro']);
+            $this->db->where('c.id_user_seleccion',  $data['id_user_seleccion']);  //usuario que estan seleccionando
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+     }   
+
+ public function get_costo($data){
+              
+            $id_session = $this->session->userdata('id');  
+                          
+            //$this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
+            //$this->db->select("c.id_usuario");       
+
+            $this->db->select("c.id_registro, c.id_user_seleccion");      
+            
+            $this->db->select("c.costo, c.tiempo_disponible");         
+            
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
+            $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_final) > 0 THEN DATE_FORMAT((c.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final", FALSE);
+            
+            $this->db->from($this->registro_costos.' As c');
+
+            $this->db->where('c.id_registro',$data['id_reg_proy']);
+            $this->db->where('c.id_user_seleccion',  $data['costo']['id']);  //usuario que estan seleccionando
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->row();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+     }         
 
 
 
@@ -1316,10 +1374,13 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
             $this->db->select("c.id, c.proyecto, c.tabla,c.profundidad");         
 
             //$this->db->select("");         
-            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad, r.costo, r.tiempo_disponible,c.importe");         
+            $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad,r.id_nivel");     
+            /*
+            $this->db->select("r.costo, r.tiempo_disponible,c.importe");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
             $this->db->select("DATE_FORMAT((r.fecha_inicial),'%d-%m-%Y') as fecha_inicial",false);
             $this->db->select("DATE_FORMAT((r.fecha_final),'%d-%m-%Y') as fecha_final",false);
+            */
             
             $this->db->select("r.contrato_firmado, r.pago_anticipado, r.factura_enviada");
             $this->db->select("r.id_val, r.json_items");
@@ -1379,55 +1440,17 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
            
 
 
-        //editar
-        public function editar_proyecto_borrar( $data ){
-
-          $id_session = $this->session->userdata('id');
-          //$this->db->set( 'id_usuario',  $id_session );
-          $this->db->set( 'id_user_cambio',  $id_session );
-          $this->db->set( 'proyecto', $data['proyecto'] );  
-          $this->db->set( 'importe', $data['importe'] );  
-          //$this->db->set( 'tabla', $data['tabla'] );  
-          $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
-
-          $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
-          $ruta = self::ruta($this->session->userdata('creando_proyecto'));
-          $this->db->set( 'profundidad', $profundidad );  
-          $this->db->set( 'ruta', $ruta );  
-          $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
-
-          $this->db->where('id', $data['id'] );
-          $this->db->update($this->catalogo_proyectos );
-            
-            
-              
-          $data['id_entorno'] = $this->session->userdata('entorno_activo');
-          self::editar_registro_proyecto( $data );
-              
-
-           if ($this->db->affected_rows() > 0){
-                    $data['fila_insertada'] = $data['id'];
-                    $data['operacion'] = 'm';
-                    self::bitacora_proyecto($data);   
-
-                    return TRUE;
-                } else {
-                    return TRUE;
-                }
-                $result->free_result();
-        }    
-
+   
 
 
         public function editar_proyecto( $data ){
 
           $id_session = $this->session->userdata('id');
-          //$this->db->set( 'id_usuario',  $id_session );
+          
           $this->db->set( 'id_user_cambio',  $id_session );
           $this->db->set( 'proyecto', $data['proyecto'] );  
           $this->db->set( 'importe', $data['importe'] );  
 
-          //$this->db->set( 'tabla', $data['tabla'] );  
           $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
 
           $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
@@ -1443,6 +1466,8 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
               
           $data['id_entorno'] = $this->session->userdata('entorno_activo');
           self::editar_registro_proyecto( $data );
+          self::editar_costo_proyecto( $data );
+          
               
 
            if ($this->db->affected_rows() > 0){
@@ -1458,6 +1483,53 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
         }    
 
 
+
+        public function editar_costo_proyecto( $data ){
+
+          $id_session = $this->session->userdata('id');
+
+            $this->db->from($this->registro_costos.' As c');
+            $this->db->where('c.id_registro',$data['id_registro']);
+            $this->db->where('c.id_user_seleccion',  $data['id_user_seleccion']);  //usuario que estan seleccionando
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            
+            $resultado = $this->db->get( );
+
+
+            $this->db->set( 'id_user_cambio',  $id_session );  //quien realizo el cambio
+            $this->db->set( 'id_entorno', $data['id_entorno'] );
+            $this->db->set( 'id_proyecto', $data['id'] );
+            $this->db->set( 'id_nivel', $data['id_nivel'] );
+            $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+            $this->db->set( 'costo', $data['costo'] );  
+            $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
+            $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
+            $this->db->set( 'fecha_final', $data['fecha_final'] );  
+            $this->db->set( 'id_registro', $data['id_proy'] );  
+            $this->db->set( 'id_user_seleccion', $data['id_user_seleccion'] );  
+
+                
+            if ($resultado->num_rows() > 0){
+                    $this->db->where('id_registro',$data['id_registro']);
+                    $this->db->where('id_user_seleccion',  $data['id_user_seleccion']);  //usuario que estan seleccionando
+                    $this->db->where('id_nivel',$data['id_nivel']);
+
+                   $this->db->update($this->registro_costos );
+            } else {
+                    $this->db->insert($this->registro_costos );
+             }                    
+
+             return TRUE;
+
+            /*if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();          
+                */
+
+         } 
 
 
          public function editar_registro_proyecto( $data ){
@@ -1471,13 +1543,10 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
           $this->db->set( 'descripcion', $data['descripcion'] );  
           
-          $this->db->set( 'costo', $data['costo'] );  
-          $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           //$this->db->set( 'importe', $data['importe'] );  
-          $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
-          $this->db->set( 'fecha_final', $data['fecha_final'] );  
+
 
           /*$this->db->set( 'privacidad', $data['privacidad'] );  
           $this->db->set( 'contrato_firmado', $data['contrato_firmado'] );  
@@ -1532,7 +1601,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
         public function editar_registro_nivel( $data ){
 
           $id_session = $this->session->userdata('id');
-          //$this->db->set( 'id_usuario',  $id_session );
+          
           
           $this->db->set( 'id_user_cambio',  $id_session );
 
@@ -1543,14 +1612,15 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
           $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
+
+          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+          
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
-          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
-          //$this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
-          
+
           $this->db->set( 'id_val', $data['id_val'] );  
           $this->db->set( 'json_items', $data['json_items'] );  
 
@@ -1565,6 +1635,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->where('id', $data['id'] );
           $this->db->update($this->catalogo_proyectos );
 
+          self::editar_costo_nivel( $data );
 
 
             if ($this->db->affected_rows() > 0){
@@ -1575,21 +1646,6 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
                 $result->free_result();          
 
          } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1607,23 +1663,27 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'id_nivel', $data['id_nivel'] );
           $this->db->set( 'profundidad', $data['profundidad'] );
 
-          //$this->db->set( 'nombre', $data['proyecto'] );  
+          
           $this->db->set( 'nombre', $data['nombre'] );  
           $this->db->set( 'descripcion', $data['descripcion'] );  
+          
+
+          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
           $this->db->set( 'costo', $data['costo'] );  
           $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
-          $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
-          //$this->db->set( 'importe', $data['importe'] );  
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
+          
+          
+          
           
           $this->db->set( 'id_val', $data['id_val'] );  
           $this->db->set( 'json_items', $data['json_items'] );  
 
           $this->db->insert($this->db->dbprefix('registro_nivel'.$data["profundidad"]));
 
-
+          self::editar_costo_nivel( $data );
 
             if ($this->db->affected_rows() > 0){
                     return TRUE;
@@ -1636,7 +1696,44 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
 
 
+ public function editar_costo_nivel( $data ){
 
+          $id_session = $this->session->userdata('id');
+
+            $this->db->from($this->registro_costos.' As c');
+            $this->db->where('c.id_registro',$data['id_registro']);
+            $this->db->where('c.id_user_seleccion',  $data['id_user_seleccion']);  //usuario que estan seleccionando
+            $this->db->where('c.id_nivel',$data['id_nivel']);
+            
+            $resultado = $this->db->get( );
+
+
+            $this->db->set( 'id_user_cambio',  $id_session );  //quien realizo el cambio
+            $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo')  );
+            $this->db->set( 'id_proyecto', $data['id'] );
+            $this->db->set( 'id_nivel', $data['id_nivel'] );
+            $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
+            $this->db->set( 'costo', $data['costo'] );  
+            $this->db->set( 'tiempo_disponible', $data['tiempo_disponible'] );  
+            $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
+            $this->db->set( 'fecha_final', $data['fecha_final'] );  
+            $this->db->set( 'id_registro', $data['id_proy'] );  
+            $this->db->set( 'id_user_seleccion', $data['id_user_seleccion'] );  
+
+                
+            if ($resultado->num_rows() > 0){
+                    $this->db->where('id_registro',$data['id_registro']);
+                    $this->db->where('id_user_seleccion',  $data['id_user_seleccion']);  //usuario que estan seleccionando
+                    $this->db->where('id_nivel',$data['id_nivel']);
+
+                   $this->db->update($this->registro_costos );
+            } else {
+                    $this->db->insert($this->registro_costos );
+             }                    
+
+             return TRUE;
+
+         } 
 
 
 

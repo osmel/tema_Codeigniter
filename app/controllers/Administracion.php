@@ -58,7 +58,7 @@ function listado_niveles( ){
                    $data['id_proyecto']     = $this->input->post('id_cat_proy');
                    $data['id_reg_proy']     = $this->input->post('id_reg_proy');
                    $data['id_nivel']        = $this->input->post('id_nivel');
-          $data['profundidad']              = $this->input->post('profundidad');
+                   $data['profundidad']     = $this->input->post('profundidad');
 
                     if ($data['id_nivel']==1){ //root
                       $data['datos'] = $this->modelo_proyecto->listado_nivel_proyectos($data); 
@@ -75,6 +75,15 @@ function listado_niveles( ){
                         }
                         $data['datos']->json_items = json_encode($user_json);
 
+                        //para buscar detalles costo, tiempo disponible y fechas
+                        $data['costo']= $value;  //este es el ultimo valor 
+                        if ($data['costo']) {
+                            $data['costo'] = $this->modelo_proyecto->get_costo($data);                
+
+                        }
+                        
+                        //print_r($data['costo']);
+
                     
                 $data['tabla'] = $this->session->userdata('creando_proyecto');   
                $data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
@@ -84,6 +93,17 @@ function listado_niveles( ){
 
 
 
+
+function busqueda_costo( ){
+
+        $data['id_user_seleccion']     = $this->input->post('id_user_seleccion');
+        $data['id_registro']          = $this->input->post('id_registro'); 
+        $data['id_nivel']          = $this->input->post('id_nivel'); 
+
+       $data['costo'] = $this->modelo_proyecto->obtener_costo($data);  
+       echo json_encode($data);
+
+}  
 
 function listado_fechas( ){
                      $data['id_proyecto']   = $this->input->post('id_cat_proy');
@@ -469,6 +489,36 @@ function listado_usuarios_json(  ){
   	   
   			//lo pase 
   			if ( $data['proy_salvado'] !== FALSE ){       
+
+                        //print_r($data['proy_salvado']); die;
+                        //para colocar el valor "num"  
+                        $user_json = array();
+                        foreach (json_decode($data['proy_salvado']->json_items, true) as $key => $value) {
+                          $value['num'] = $key;
+                          $value['id_user_seleccion'] = $value['id'];
+                          $value['id_registro'] = $data['proy_salvado']->id_proy;
+                          $value['id_nivel'] = $data['proy_salvado']->id_nivel;
+                          
+                          $user_json[] = $value;
+                        }
+                        $data['proy_salvado']->json_items = json_encode($user_json);
+
+                        //para buscar detalles costo, tiempo disponible y fechas
+                        $data['costo']= $value;  //este es el ultimo valor 
+                        
+
+                        if ($data['costo']) {
+                            $data['costo'] = $this->modelo_proyecto->obtener_costo($data['costo']);                
+
+                        }
+
+                        //stdClass Object ( [id_registro] => 84 [id_user_seleccion] => d6ce3eff-f48f-11e6-b097-7071bce181c3 [costo] => 5.00 [tiempo_disponible] => 0.00 [fecha_creacion] => 06-04-2017 [fecha_inicial] => [fecha_final] => )
+                       // print_r($data['costo']); die;
+                        
+
+
+
+
   	       			$this->session->set_userdata('creando_proyecto', $data['proy_salvado']->tabla);
   	       	}		
 
@@ -536,10 +586,16 @@ function validacion_edicion_nivel(){
           
         if ($this->form_validation->run() === TRUE){
 
+
+
           $data['id']           = $this->input->post('id');  //catalogo_proyecto
           $data['id_proy']       = $this->input->post('id_proy'); //registro_proyecto
           $data['id_nivel']       = $this->input->post('id_nivel'); //registro_proyecto
           $data['profundidad']       = $this->input->post('profundidad'); //registro_proyecto
+
+          $data['id_user_seleccion']           = $this->input->post('id_user_seleccion');  //usuario seleccionado
+
+          $data['id_registro']           = $this->input->post('id_proy');  //usuario seleccionado
 
           $data['nombre']         = $this->input->post('nombre'); //nombre_proyecto o niveles
           $data['proyecto']         = $this->input->post('proyecto'); //nombre_proyecto o niveles
@@ -552,6 +608,8 @@ function validacion_edicion_nivel(){
           $data['fecha_final']     = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
           $data['id_val']        = $this->input->post('id_val');  //participantes_proyectos o niveles
           $data['json_items']      = $this->input->post('json_items'); //participantes_proyectos o niveles
+
+
 
            $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
            //if ( $existe !== TRUE ){
@@ -576,21 +634,36 @@ function validacion_edicion_nivel(){
 
               //if ( $guardar !== FALSE ){
               if ( true ){  
+
+        /*                
+        $data['id_user_seleccion']     = $this->input->post('id_user_seleccion');
+        $data['id_registro']          = $this->input->post('id_registro'); 
+        $data['id_nivel']          = $this->input->post('id_nivel'); 
+        */
+                //$dato['costo'] = $this->modelo_proyecto->obtener_costo($data);  
+
+
+
                // $this->session->set_userdata('creando_proyecto', "0");   //listo para crear otro proyecto
-                echo true;
+                $dato['exito'] = true;
               } else {
-                echo '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+                $dato['exito'] = '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+
+                
+
               }
 
            } else {
-              echo '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
+              $dato['exito'] = '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
            }  
 
 
       } else {      
-        echo validation_errors('<span class="error">','</span>');
+        $dato['exito'] = validation_errors('<span class="error">','</span>');
       }
     }
+
+    echo json_encode($dato);
   }
   
 

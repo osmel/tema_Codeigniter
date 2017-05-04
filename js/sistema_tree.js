@@ -193,6 +193,7 @@ jQuery(document).ready(function($) {
                             $.get('/crear_nodo?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
                                 .done(function (d) {
                                     data.instance.set_id(data.node, d.id);
+
                                     //$("#nombre").val(data.node.text);
                                 })
                                 .fail(function () {
@@ -219,6 +220,7 @@ jQuery(document).ready(function($) {
                        
 
                         .on('changed.jstree', function (e, data) {
+                            
                             if(data && data.selected && data.selected.length) {
                                 //console.log(data.node.parents.length);
                                 //console.log(data.selected);
@@ -256,6 +258,7 @@ jQuery(document).ready(function($) {
                                 jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
                                 jQuery(this).parent().parent().parent().siblings().css('display','block');   
 
+
                                 switch (data.node.parents.length) {
                                     case 1:    
                                     case 2:
@@ -270,12 +273,17 @@ jQuery(document).ready(function($) {
                                                          profundidad: data.node.parents.length,
                                                          id_cat_proy: $("input[name=id]").val(),
                                                          id_reg_proy: $("#id_proy").val(),
+                                                         
                                                  },
                                                 success: function(datum){
+
+                                                       // console.log(datum.datos.json_items);
 
                                                             $("#id_nivel").val(data.node.id);
                                                             $("#profundidad").val(data.node.parents.length);
 
+
+                                                            //cuadrante 2
                                                             texto= '<div class="portlet light bordered">';
                                                                         texto+='<div class="portlet-title">';
                                                                             texto+='<div class="caption">';
@@ -315,15 +323,15 @@ jQuery(document).ready(function($) {
                                                                                 texto+='</div>';
 
 
-                                                                                //  datos de cada participante en el proyecto
-                                                                                texto+='<div class="form-group" style="display:none;">';
+                                                                                //  datos costos cada participante en el proyecto
+                                                                                //style="display:none;"
+
+                                                                                  
+                                                                                texto+='<div class="form-group" id="costos" >';
                                                                                     
                                                                                     texto+='<div class="col-sm-3 col-md-3">';
-                                                                                           if(datum.datos != false){
-                                                                                                $costo=datum.datos["costo"];
-                                                                                            } else {
-                                                                                                $costo='';
-                                                                                            }    
+
+                                                                                            $costo=(datum.costo==false) ? "" : datum.costo.costo;
 
                                                                                         texto+='<input value="'+$costo+'" restriccion="decimal" type="text" class="form-control ttip" ';
 
@@ -335,11 +343,8 @@ jQuery(document).ready(function($) {
 
 
                                                                                     texto+='<div class="col-sm-3 col-md-3">';
-                                                                                           if(datum.datos != false){
-                                                                                                $tiempo_disponible=datum.datos["tiempo_disponible"];
-                                                                                            } else {
-                                                                                                $tiempo_disponible='';
-                                                                                            }    
+
+                                                                                             $tiempo_disponible=(datum.costo==false) ? "" : datum.costo.tiempo_disponible;
                                                                                         
                                                                                         texto+='<input value="'+$tiempo_disponible+'" restriccion="decimal" type="text" class="form-control ttip" ';
                                                                                                 texto+='title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00"> ';
@@ -349,30 +354,23 @@ jQuery(document).ready(function($) {
 
                                                                                     
                                                                                     texto+='<div class="input-daterange input-group col-sm-3 col-md-3"" id="datepicker">';
-                                                                                     if(datum.datos != false){
-                                                                                                $fecha_inicial=datum.datos["fecha_inicial"];
-                                                                                            } else {
-                                                                                                $fecha_inicial='';
-                                                                                           }    
+                                                                                     
+                                                                                            $fecha_inicial= (datum.costo==false) ? "" : datum.costo.fecha_inicial;
                                                                                         texto+='<input value="'+$fecha_inicial+'" type="text" class="fecha_ini input-sm form-control" id="fecha_inicial" name="fecha_inicial" placeholder="DD-MM-YYYY" />';
 
-                                                                                        //texto+='<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+                                                                                        
                                                                                         texto+='<span class="input-group-addon">to</span>';
 
-                                                                                        if(datum.datos != false){
-                                                                                                $fecha_final=datum.datos["fecha_final"];
-                                                                                            } else {
-                                                                                                $fecha_final='';
-                                                                                           }  
-                                                                                        //texto+='<input type="text" class="input-sm form-control" name="end" />';
+                                                                                           $fecha_final= (datum.costo==false) ? "" : datum.costo.fecha_final;
+                                                                                        
                                                                                         texto+='<input value="'+$fecha_final+'" type="text" class="fecha_final input-sm form-control" id="fecha_final" name="fecha_final" placeholder="DD-MM-YYYY" />';
-                                                                                        //texto+='<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+                                                                                        
 
                                                                                     texto+='</div>';
 
                                                                                 texto+='</div> ';
 
-
+                                                                            
 
 
 
