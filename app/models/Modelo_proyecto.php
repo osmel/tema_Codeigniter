@@ -1521,14 +1521,6 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
              return TRUE;
 
-            /*if ($this->db->affected_rows() > 0){
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }
-                $result->free_result();          
-                */
-
          } 
 
 
@@ -1545,14 +1537,8 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           
 
           $this->db->set( 'fecha_creacion', $data['fecha_creacion'] );  
-          //$this->db->set( 'importe', $data['importe'] );  
+          
 
-
-          /*$this->db->set( 'privacidad', $data['privacidad'] );  
-          $this->db->set( 'contrato_firmado', $data['contrato_firmado'] );  
-          $this->db->set( 'pago_anticipado', $data['pago_anticipado'] );  
-          $this->db->set( 'factura_enviada', $data['factura_enviada'] );  
-          */
           $this->db->set( 'id_val', $data['id_val'] );  
           $this->db->set( 'json_items', $data['json_items'] );  
 
@@ -1569,6 +1555,51 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
                 $result->free_result();          
 
          } 
+
+
+        public function eliminar_elemento_proy( $data ){
+
+          $id_session = $this->session->userdata('id');
+          
+          $this->db->set( 'id_val', $data['id_val'] );  
+          $this->db->set( 'json_items', $data['json_items'] );  
+
+          $this->db->where('id', $data['id_proy'] );
+          $this->db->update($this->registro_proyecto );
+
+
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();          
+
+         } 
+
+
+    public function eliminar_elemento_nivel( $data ){
+
+          $id_session = $this->session->userdata('id');
+
+          $this->db->set( 'id_val', $data['id_val'] );  
+          $this->db->set( 'json_items', $data['json_items'] );  
+
+          $this->db->where('id_proyecto',$data['id']);
+          $this->db->where('id_nivel',$data['id_nivel']);
+          $this->db->where('profundidad',$data['profundidad']);
+          $this->db->where('id_entorno', $this->session->userdata('entorno_activo') );
+          $this->db->update($this->db->dbprefix('registro_nivel'.$data["profundidad"]));
+
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();          
+
+         }          
+
 
 
 

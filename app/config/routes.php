@@ -175,6 +175,10 @@ $route['listado_fechas']    	 			= 'administracion/listado_fechas';
 
 $route['busqueda_costo']    	 			= 'administracion/busqueda_costo';
 
+
+$route['actualizando_elem']    	 			= 'administracion/actualizando_elem';
+$route['eliminar_elem']    	 			= 'administracion/eliminar_elem';
+
 /////////////////Catalogos/////////////////
 
 //Cargos
