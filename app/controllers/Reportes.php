@@ -83,6 +83,12 @@ class Reportes extends CI_Controller {
  } 
 
  
+public function procesando_rep_general_detalle(){
+         $data=$_POST;
+         print_r($this->modelo_reporte->procesando_rep_general_detalle($data));    
+
+ } 
+ 
                      
   public function listado_general(){
     

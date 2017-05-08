@@ -810,6 +810,13 @@ jQuery('body').on('click','span.label', function (e) {
 
 
 
+ /*
+ jQuery('span.label').removeClass('label-danger etiqactiva');
+                              jQuery('span.label').removeClass('label-info');
+                              jQuery('span.label').addClass('label-info');
+   console.log(parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size())-1);
+*/
+
  
  
 

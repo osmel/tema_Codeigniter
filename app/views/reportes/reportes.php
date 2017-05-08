@@ -1,5 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php $this->load->view( 'header' , $datos ); ?>
+<style type="text/css">
+	td.details-control {
+	    background: url('../img/details_open.png') no-repeat center center;
+	    cursor: pointer;
+	}
+	tr.shown td.details-control {
+	    background: url('../img/details_close.png') no-repeat center center;
+	}
+
+</style>
 
 <?php
  	if (!isset($retorno)) {

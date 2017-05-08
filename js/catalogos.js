@@ -149,7 +149,7 @@ function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id
 
 
 
-var table =  jQuery('#tabla_rep_general').dataTable( {
+var tabla =  jQuery('#tabla_rep_general').dataTable( {
         "pagingType": "full_numbers",
         "processing": true,
         "serverSide": true,
@@ -225,31 +225,39 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
 
         "columnDefs": [ 
 
-        {
-            "targets": 39, //(jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1  !== 'undefined') ? (jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1) : 9 ,
-            
-        },
-        
+                      {
+                          "targets": 39, //(jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1  !== 'undefined') ? (jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1) : 9 ,
+                          
+                      },
+
+                      { 
+                        "className":      'details-control',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
 
                     { 
                         "render": function ( data, type, row ) {    
                           var color=(row[0]==1) ? "red" : "black";
                           return '<span style="color:'+color+';">'+'-'.repeat(row[3])+''+row[4]+'</span>';
                         },
-                        "targets": [0] 
+                        "targets": [1] 
                     },
 
                     { 
                         "render": function ( data, type, row ) {
-                                return row[5]+' '+row[6] ;
+                                //return row[5]+' '+row[6] ;
+                                return 'Usuarios('+row[5]+')' ;
                         },
-                        "targets": [1] 
+                        "targets": [2] 
                     },     
 
 
                 { 
                      "visible": false,
-                    "targets": [2,3,4,5,6,7,8]
+                    "targets": [3,4,5,6,7,8]
                 }                                   
 
 
@@ -260,7 +268,7 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
     "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
         var d = new Date();
         var n = d.getMonth()+1;
-        var arreglo = ['Proyectos', 'Usuarios','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+        var arreglo = ['','Proyectos', 'Usuarios','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
         
         
         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
@@ -297,11 +305,11 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
 
         var encabezado ='';
     
-        console.log(aData );
+       // console.log(aData );
         if (aData.length !=0) {
             for (var i=0; i<=arreglo.length-(31-aData[0][8]); i++) { //cant_colum
                      encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
-                }
+            }
 
                 nHead.innerHTML='<tr role="row">'+encabezado+'</tr>'
         }    
@@ -311,6 +319,113 @@ var table =  jQuery('#tabla_rep_general').dataTable( {
 
        
     });  
+
+
+
+    // Add event listener for opening and closing details
+    jQuery('#tabla_rep_general tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = jQuery('#tabla_rep_general').DataTable().row( tr );
+        //console.log(row);
+  
+          //console.log($('#tabla_rep_general').DataTable().row( tr ).data());
+          //console.log(tabla.row());
+
+        
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            //si la fila esta "cerrada" entonces "abrirla"
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
+
+
+function format ( d ) {
+      console.log(d);
+
+      //["1", "1", "113", "0", "Estrategas Digitales", "Luis", "Diaz", "10000.00", "7", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    // `d` is the original data object for the row
+
+                  /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        
+                        
+                        
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                     */   
+
+
+
+                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+
+     $.ajax({
+            url: "/procesando_rep_general_detalle",
+            type: 'POST',
+            dataType: "json",
+            data: {
+                 
+            
+                  fecha_inicial : fecha[0],
+                  fecha_final : fecha[1],
+
+                 id_proyecto: d[2],
+                 id_profundidad: d[3],
+                 id_area: d[0], //id_nivel
+
+
+                  id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
+
+
+                 //id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+
+             },
+            success: function(datos){
+              console.log(datos);
+
+                /*
+                if (datos) {
+                     $.each(datos, function( i, value ) {
+                            $('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/>'+value.sum_horas);
+                     });   
+
+                }*/
+            }
+      });
+
+
+
+    return '<table cellpadding="5" cellspacing="0" border="0">'+
+          '<tr>'+
+              '<td></td>'+
+              '<td></td>'+
+              '<td><span>'+d[5]+' '+d[6]+'</span></td>'+
+
+          '</tr>'+
+       
+          '</table>';
+    }
+
+/*
+
+'<tr>'+
+            '<td>Extension number:</td>'+
+            '<td>calderon</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Información Extra:</td>'+
+            '<td>Y algunos detalles para la (imagen etc)...</td>'+
+        '</tr>'+
+*/
 
 
    Date.prototype.addDays = function(days) {
