@@ -638,8 +638,6 @@ jQuery('body').on('click','span.label', function (e) {
                         jQuery("#tiempo_disponible").val(data.costo.tiempo_disponible);
                         jQuery("#fecha_inicial").val(data.costo.fecha_inicial);
                         jQuery("#fecha_final").val(data.costo.fecha_final);
-                        
-                       
 
                     } else {
                       
@@ -649,20 +647,11 @@ jQuery('body').on('click','span.label', function (e) {
                         jQuery("#fecha_final").val("");
                         
                     }
-
-
                     
                 } 
             });
-
-
-
     
   });
-
-
-
-
 
 
 
@@ -693,8 +682,62 @@ jQuery('body').on('click','span.label', function (e) {
     //jQuery(this).addClass('label-danger etiqactiva');
 
 
+    //elt.tagsinput('refresh');
     //jQuery('form').submit();
-    elt.tagsinput('refresh');
+    //
+
+                            //actualzar los datos seleccionados  
+                            console.log(e.item);
+
+                                /*
+                                       //señalar en rojo el ultimo elemento
+                                      jQuery('span.label').removeClass('label-danger etiqactiva');
+                                      jQuery('span.label').removeClass('label-info');
+                                      jQuery('span.label').addClass('label-info');
+                           
+                                      //var pos = (parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size()));
+                                      //var elem = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span:nth-child('+pos+')') ;
+                                      //elem.addClass('label-danger etiqactiva');
+                                      jQuery(this).addClass('label-danger etiqactiva');
+                                      */
+
+                            $.ajax({
+                                url: "/busqueda_costo",
+                                type: 'POST',
+                                dataType: "json",
+                                data: {
+                                    id_user_seleccion: e.item.id, //id_user_seleccion, 
+                                    id_registro: jQuery("#id_proy").val(),
+                                    id_nivel: jQuery("#id_nivel").val(),
+                                 },
+                                success: function(data){
+                                    
+                                    if  (data.costo != false ) {
+                                        
+                                        jQuery("#costo").val(data.costo.costo);
+                                        jQuery("#tiempo_disponible").val(data.costo.tiempo_disponible);
+                                        jQuery("#fecha_inicial").val(data.costo.fecha_inicial);
+                                        jQuery("#fecha_final").val(data.costo.fecha_final);
+                                        
+                                       
+
+                                    } else {
+                                      
+                                        jQuery("#costo").val("");
+                                        jQuery("#tiempo_disponible").val("");
+                                        jQuery("#fecha_inicial").val("");
+                                        jQuery("#fecha_final").val("");
+                                        
+                                    }
+
+                                    elt.tagsinput('refresh');
+                                    
+                                } 
+                            });    
+
+
+
+
 
        
   });
@@ -706,45 +749,26 @@ jQuery('body').on('click','span.label', function (e) {
   jQuery('body').on('beforeItemRemove',elt, function (e) {
     // event.item: contiene el elemento
     // event.cancel: establece en true para evitar que se elimine el elemento
+  
+        var data = {};
+        $("form").serializeArray().map(function(x){
+          data[x.name] = x.value;}
+        ); 
 
-    //Antes de remover lo pinto de rojo para que sea el objetivo señalado para hacer submit
-  /*
-    jQuery('span.label').removeClass('label-danger etiqactiva');
-    jQuery('span.label').removeClass('label-info');
-    jQuery('span.label').addClass('label-info');
-    jQuery(this).addClass('label-danger etiqactiva');
+        var $element = $("#etiq_usuarios");
+        var val = $element.val();
 
-      id_user_sel = e.item.id;
-*/
-      
-
-   //jQuery('form').submit();
-
-    var data = {};
-    $("form").serializeArray().map(function(x){
-        data[x.name] = x.value;}
-      ); 
-
-     var $element = $("#etiq_usuarios");
-            var val = $element.val();
-
-                 id_val = (JSON.stringify(val));
-            json_items =(JSON.stringify($element.tagsinput('items')));
+             id_val = (JSON.stringify(val));
+        json_items =(JSON.stringify($element.tagsinput('items')));
 
 
-    
+
          var arreglo = elt.val().split(",");
+         var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
+         var id_user_seleccion =  arreglo[span.index()];
 
-             var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
-             //console.log(arreglo[span.index()] );
-             //var id_user_seleccion = (arreglo[span.index()] !=undefined) ? arreglo[span.index()] : id_user_sel;
-             var id_user_seleccion =  arreglo[span.index()];
-
-
-
-
-          //actualizando primero el elemento donde estoy parado
-          if (id_user_seleccion!=e.item.id)
+         //actualizando primero el elemento donde estoy parado
+         if (id_user_seleccion!=e.item.id)
          $.ajax({
               url: "/actualizando_elem",
               type: 'POST',
@@ -757,89 +781,38 @@ jQuery('body').on('click','span.label', function (e) {
                 fecha_creacion: jQuery('fecha_creacion').val(),  
                 proyecto: jQuery('proyecto').val(),  
                 id_user_seleccion: id_user_seleccion, //e.item.id,
-                    /*
-                    id:
-                    crea_multiple_simple:
-                    depth_arbol:
-                    ambito_app:
-                    profundidad:
-                    id_nivel:
-                    dueno:
-                    id_proy:
-                    nombre:
-                    id_scroll_proy:
-                    proyecto:
-                    fecha_creacion:
-                    importe:
-                    descripcion:
-                    costo:
-                    tiempo_disponible:
-                    fecha_inicial:
-                    fecha_final:
-                    id_val:
-                    json_items:
-                    id_user_seleccion:
-                    */
                },
               success: function(datos){
-
-                  /*if (datos) {
-                       $.each(datos, function( i, value ) {
-                              $('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/>'+value.sum_horas);
-                       });   
-
-                  }*/
+                //
               }
         });       
-
-   
-
-    
-
-    
-    
-      
         
   });
+
 
   //Se dispara justo despues que un elemento se elimina.
   jQuery('body').on('itemRemoved',elt, function (e) {
     // event.item: contiene el elemento
-      //jQuery('form').submit();
 
     var $element = $("#etiq_usuarios");
-            var val = $element.val();
-
-                 id_val = (JSON.stringify(val));
+               var val = $element.val();
+                id_val = (JSON.stringify(val));
             json_items =(JSON.stringify($element.tagsinput('items')));
 
-     /*       
-    console.log(id_val);        
-    console.log(json_items);
-    console.log(e.item.id);
-    */
-    
-    //eliminar elemento
-
-    //console.log(  JSON.parse(JSON.stringify({json_items}))  );
-    //console.log(  JSON.parse(json_items).length  );
-
-   // elt.tagsinput('refresh');
+            //señalar en rojo el ultimo elemento
+            jQuery('span.label').removeClass('label-danger etiqactiva');
+            jQuery('span.label').removeClass('label-info');
+            jQuery('span.label').addClass('label-info');
+ 
+            var pos = (parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size()));
+            var elem = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span:nth-child('+pos+')') ;
+            elem.addClass('label-danger etiqactiva');
 
 
- jQuery('span.label').removeClass('label-danger etiqactiva');
-                              jQuery('span.label').removeClass('label-info');
-                              jQuery('span.label').addClass('label-info');
-   console.log(parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size())-1);
 
-var pos = (parseInt(jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label').size()));
-//:nth-child(pos)
-var elem = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span:nth-child('+pos+')') ;
-elem.addClass('label-danger etiqactiva');
+ 
+ 
 
-
-    if (false)
-    
     $.ajax({
               url: "/eliminar_elem",
               type: 'POST',
@@ -861,29 +834,12 @@ elem.addClass('label-danger etiqactiva');
 
                             /*
                             elt.tagsinput('refresh');
-
+                            */
                              var arreglo = elt.val().split(",");
-                             var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
-                             var id_user_seleccion =  arreglo[span.index()];
-                             */
-    
-
-
-                              jQuery('span.label').removeClass('label-danger etiqactiva');
-                              jQuery('span.label').removeClass('label-info');
-                              jQuery('span.label').addClass('label-info');
-                              //jQuery('span.label').index(JSON.parse(json_items).length-1).addClass('label-danger etiqactiva');
-                              
-
-                              var pos = JSON.parse(json_items).length-1;
-                              //var pos=0;
-                              //console.log(  jQuery('span.label:gt('+pos+')')   );
-                              var elem = jQuery('.objeto_como_tags > > .bootstrap-tagsinput > span.label-info:gt('+pos+')') ;
-                              elem.addClass('label-danger etiqactiva');
-
-
-
-                            /* 
+                             //var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
+                             var id_user_seleccion =  arreglo[pos-1];
+                          
+                            //actualzar los datos seleccionados  
                             $.ajax({
                                 url: "/busqueda_costo",
                                 type: 'POST',
@@ -917,10 +873,10 @@ elem.addClass('label-danger etiqactiva');
                                     
                                 } 
                             });
+                            
 
 
-
-                            */
+                            
 
 
                 
