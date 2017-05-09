@@ -40,12 +40,12 @@ jQuery(document).ready(function($) {
                    'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                    'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
                    'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
-                   'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                   'Este mes': [moment().startOf('month'), moment()], //moment().endOf('month')
                    'Ultimo Mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
               },
               format: 'DD-MM-YYYY',
 
-              
+
                //"startDate": "22-02-2017",
                //"endDate": "28-02-2017",
                //minDate: "01-02-2017",
@@ -270,6 +270,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
     "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
         var d = new Date();
         var n = d.getMonth()+1;
+        console.log(n);
         var arreglo = ['','Proyectos', 'Usuarios Asociados','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
         
         
@@ -288,6 +289,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
 
                 var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
 
+                //console.log(dateArray.length );
                 for (i = 0; i < dateArray.length; i ++ ) {
                     /*
                     console.log (dateArray[i]);
@@ -297,7 +299,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                     console.log (dateArray[i].getUTCDate());
                     */
                     
-                     arreglo[i+2] = dateArray[i].getUTCDate()+'/'+dateArray[i].getMonth();
+                     arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
                 }    
 
 
@@ -309,6 +311,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
     
        // console.log(aData );
         if (aData.length !=0) {
+          //console.log(arreglo.length+'  '+aData[0][8]);
             for (var i=0; i<=arreglo.length-(31-aData[0][8]); i++) { //cant_colum
                      encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
             }
@@ -388,7 +391,8 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                                              var fo = fecha[1]; //"02-03-2017 0:00";
                                               var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
                                               for (i = 0; i < dateArray.length; i ++ ) {
-                                                   arreglo[i+2] = dateArray[i].getUTCDate()+'/'+dateArray[i].getMonth();
+                                                   //arreglo[i+2] = dateArray[i].getUTCDate()+'/'+dateArray[i].getMonth();
+                                                   arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
                                               }    
                                      }
 
