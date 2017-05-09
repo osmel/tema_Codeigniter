@@ -82,8 +82,8 @@
 									dependencia="id_area">
 											<option value="-1">Todos</option>
 											
-											<?php  for ($i=0; $i < $datos['entornos'][0]->profundidad_activo ; $i++) {    ?>
-													<option value="<?php echo $i ?>"> Nivel <?php echo $i+1; ?></option>
+											<?php  for ($i=1; $i < $datos['entornos'][0]->profundidad_activo+1 ; $i++) {    ?>
+													<option value="<?php echo $i ?>"> Nivel <?php echo $i; ?></option>
 											<?php } ?>
 									</select>
 								</div>

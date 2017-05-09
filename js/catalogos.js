@@ -165,7 +165,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                         
                         
                         d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
-                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : -1;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
                         d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
                         d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
                         
@@ -207,7 +207,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                 };
 
 
-                console.log(settings.json.intervalo);
+                //console.log(settings.json.intervalo);
             
             for (var i = 9; i <= (intVal(settings.json.intervalo)+10); i++) {
                     api.column(i).visible(true);      
@@ -338,94 +338,74 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
         }
         else {
             //si la fila esta "cerrada" entonces "abrirla"
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
+            //row.child( format(row.data()) ).show();
+            //tr.addClass('shown');
+
+            var d= row.data();
+            var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+
+                 $.ajax({
+                        url: "/procesando_rep_general_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                             
+                        
+                              fecha_inicial : fecha[0],
+                              fecha_final : fecha[1],
+
+                             id_proyecto: d[2],
+                             id_profundidad: d[3],
+                             id_proy: d[6], //id_nivel
+
+
+                              id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
+
+
+                             id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+
+                         },
+                        success: function(datos){
+                          
+
+                            $cad='<table cellpadding="5" cellspacing="0" border="0">';
+                                if (datos.data) {
+
+                                      $.each(datos.data, function( i, value ) {
+                                        
+                                          if (value[5]!=null){
+                                              $cad +='<tr>';
+                                                     $cad +='<td></td>';
+                                                     $cad +='<td></td>';
+                                                     $cad +='<td><span>'+value[5]+' '+value[6]+'</span></td>';
+                                                      for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
+                                                               $cad +='<td><span>'+value[i]+'</span></td>';
+                                                      }
+
+                                              $cad +='</tr>';  
+                                          }
+                                     });   
+
+                                }
+                            $cad+='</table>';  
+
+                            row.child( $cad ).show();
+                            tr.addClass('shown');
+
+                        }
+                  });
+
+
+
+
         }
     } );
 
 
-function format ( d ) {
-      console.log(d);
-
-      //["1", "1", "113", "0", "Estrategas Digitales", "Luis", "Diaz", "10000.00", "7", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-    // `d` is the original data object for the row
-
-                  /*
-                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                        d.fecha_inicial = fecha[0];
-                        d.fecha_final = fecha[1];
-                        
-                        
-                        
-                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
-                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : -1;    
-                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
-                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
-                     */   
 
 
 
-                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
 
-     $.ajax({
-            url: "/procesando_rep_general_detalle",
-            type: 'POST',
-            dataType: "json",
-            data: {
-                 
-            
-                  fecha_inicial : fecha[0],
-                  fecha_final : fecha[1],
-
-                 id_proyecto: d[2],
-                 id_profundidad: d[3],
-                 id_area: d[0], //id_nivel
-
-
-                  id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
-
-
-                 //id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
-
-             },
-            success: function(datos){
-              console.log(datos);
-
-                /*
-                if (datos) {
-                     $.each(datos, function( i, value ) {
-                            $('a[data-moment="'+value.fecha+'"]').html($('a[data-moment="'+value.fecha+'"]').html()+'<br/>'+value.sum_horas);
-                     });   
-
-                }*/
-            }
-      });
-
-
-
-    return '<table cellpadding="5" cellspacing="0" border="0">'+
-          '<tr>'+
-              '<td></td>'+
-              '<td></td>'+
-              '<td><span>'+d[5]+' '+d[6]+'</span></td>'+
-
-          '</tr>'+
-       
-          '</table>';
-    }
-
-/*
-
-'<tr>'+
-            '<td>Extension number:</td>'+
-            '<td>calderon</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>Información Extra:</td>'+
-            '<td>Y algunos detalles para la (imagen etc)...</td>'+
-        '</tr>'+
-*/
 
 
    Date.prototype.addDays = function(days) {
