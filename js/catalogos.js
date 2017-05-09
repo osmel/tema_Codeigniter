@@ -44,10 +44,12 @@ jQuery(document).ready(function($) {
                    'Ultimo Mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
               },
               format: 'DD-MM-YYYY',
-               "startDate": "22-02-2017",
-               "endDate": "28-02-2017",
-               minDate: "01-02-2017",
-               maxDate: "28-02-2017",
+
+              
+               //"startDate": "22-02-2017",
+               //"endDate": "28-02-2017",
+               //minDate: "01-02-2017",
+               //maxDate: "28-02-2017",
 
               //http://www.daterangepicker.com/
               //maxDate: "-3d",
@@ -249,7 +251,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                     { 
                         "render": function ( data, type, row ) {
                                 //return row[5]+' '+row[6] ;
-                                return 'Usuarios('+row[5]+')' ;
+                                return '('+row[5]+')' ;
                         },
                         "targets": [2] 
                     },     
@@ -268,7 +270,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
     "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
         var d = new Date();
         var n = d.getMonth()+1;
-        var arreglo = ['','Proyectos', 'Usuarios','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+        var arreglo = ['','Proyectos', 'Usuarios Asociados','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
         
         
         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
@@ -325,6 +327,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
     // Add event listener for opening and closing details
     jQuery('#tabla_rep_general tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
         var row = jQuery('#tabla_rep_general').DataTable().row( tr );
         //console.log(row);
   
@@ -367,19 +370,51 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                          },
                         success: function(datos){
                           
-
-                            $cad='<table cellpadding="5" cellspacing="0" border="0">';
+                            //cellpadding="5" border="0"
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
                                 if (datos.data) {
 
+                                    //encabezado
+
+                                     var d = new Date();
+                                     var n = d.getMonth()+1;
+                                     var arreglo = ['','', '','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+                                      
+                                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                                     var   fecha_inicial = fecha[0];
+                                     var   fecha_final = fecha[1];
+                                     if (fecha[0].length !=0) {
+                                             var fi = fecha[0]; //"28-02-2017 0:00";
+                                             var fo = fecha[1]; //"02-03-2017 0:00";
+                                              var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
+                                              for (i = 0; i < dateArray.length; i ++ ) {
+                                                   arreglo[i+2] = dateArray[i].getUTCDate()+'/'+dateArray[i].getMonth();
+                                              }    
+                                     }
+
+
+
+                                     var encabezado ='';
+                                    for (var i=0; i<=arreglo.length-(31-datos.intervalo); i++) { //cant_colum
+                                          if (i<2) {  //quitar border 
+                                              encabezado +='<th class="text-center cursora" style="border:0px;" width="22%">'+arreglo[i]+'</th>';
+                                          } else {
+                                            encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
+                                          }
+
+                                             
+                                    }
+                                    $cad+='<tr style="color:#2ab4c0;" role="row">'+encabezado+'</tr>';
+                                    //console.log(encabezado);
                                       $.each(datos.data, function( i, value ) {
                                         
                                           if (value[5]!=null){
                                               $cad +='<tr>';
-                                                     $cad +='<td></td>';
-                                                     $cad +='<td></td>';
-                                                     $cad +='<td><span>'+value[5]+' '+value[6]+'</span></td>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[5]+' '+value[6]+'</span></td>';
                                                       for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
-                                                               $cad +='<td><span>'+value[i]+'</span></td>';
+                                                               $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
                                                       }
 
                                               $cad +='</tr>';  
@@ -390,7 +425,11 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                             $cad+='</table>';  
 
                             row.child( $cad ).show();
+                            //jQuery('.tabla_hija').parent().css('padding','12px 0px 12px 0px');
+                            //jQuery('.tabla_hija').parent().css('margin','0px');
                             tr.addClass('shown');
+
+
 
                         }
                   });

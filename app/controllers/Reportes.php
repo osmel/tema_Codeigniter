@@ -34,6 +34,7 @@ class Reportes extends CI_Controller {
             break;
         case "id_profundidad":
             $elementos  = $this->modelo_reporte->listado_niveles($data);
+
             break;
         case "id_area":
             if ($data['id_proyecto']!=0) {
@@ -52,6 +53,8 @@ class Reportes extends CI_Controller {
             break;
         default:
     }
+
+    //print_r($elementos);die;
 
 
                       /*

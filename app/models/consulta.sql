@@ -79,6 +79,7 @@ select id_nivel, nombre, tabla, id_entorno,
                                                                        ) n
                                                                 WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))
                                                                       and id_entorno=1 and id_proyecto=113 
+                                                                      and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = 'd86270f7-f22e-11e6-8df6-7071bce181c3'
 
 
 
@@ -97,6 +98,7 @@ select id_nivel, nombre, tabla, id_entorno,
                                                                        ) n
                                                                 WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))
                                                                       and id_entorno=1 and id_proyecto=113 
+                                                                      and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = 'd86270f7-f22e-11e6-8df6-7071bce181c3'
 
                                                   union 
 
@@ -114,6 +116,7 @@ select id_nivel, nombre, tabla, id_entorno,
                                                                        ) n
                                                                 WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))
                                                                       and id_entorno=1 and id_proyecto=113 
+                                                                      and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = 'd86270f7-f22e-11e6-8df6-7071bce181c3'
 
 
 
@@ -133,6 +136,7 @@ select id_nivel, nombre, tabla, id_entorno,
                                                                        ) n
                                                                 WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))
                                                                       and id_entorno=1 and id_proyecto=113 
+                                                                      and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = 'd86270f7-f22e-11e6-8df6-7071bce181c3'
 
 
                                                   union 
@@ -151,6 +155,7 @@ select id_nivel, nombre, tabla, id_entorno,
                                                                        ) n
                                                                 WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))
                                                                       and id_entorno=1 and id_proyecto=113 
+                                                                      and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = 'd86270f7-f22e-11e6-8df6-7071bce181c3'
 
 
 
@@ -162,7 +167,9 @@ select id_nivel, nombre, tabla, id_entorno,
                                     left join inven_usuarios u on r1.id_usuario = u.id  and u.activo=1
                             				left join inven_registro_user_proy h on h.id_usuario = r1.id_usuario and h.id_entorno = r1.id_entorno
                                                                              and h.id_proyecto = r1.id_proyecto and h.id_nivel = r1.id_nivel and ( DATE_FORMAT((h.fecha),'%d-%m-%Y') >= '01-05-2017' 
-                                                                             AND DATE_FORMAT((h.fecha),'%d-%m-%Y') <= '08-05-2017' ) 
+                                                                             AND DATE_FORMAT((h.fecha),'%d-%m-%Y') <= '08-05-2017' )
+
+                 where (r1.id_usuario = 'd86270f7-f22e-11e6-8df6-7071bce181c3')                                                                                 
 
               ) r
               on proy.id_nivel = r.id_nivel

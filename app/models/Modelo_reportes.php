@@ -127,9 +127,9 @@ public function altura_arbol( $data ){
       
 
       $arreglo = array();
-      for ($i=0; $i < $altura_arbol+1; $i++) { 
+      for ($i=1; $i < $altura_arbol+2; $i++) { 
         $arreglo[$i]["id"] =  $i;
-        $arreglo[$i]["nombre"] ="Nivel ".($i+1);
+        $arreglo[$i]["nombre"] ="Nivel ".($i);
 
       }
 
@@ -169,14 +169,22 @@ public function listado_todas_areas($data){
        $filtro_agrupamiento = " group by r.id_area ";
       if  ($data['id_profundidad']!=-1){
          //$filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
-         $filtro_profundidad = " where proy.profundidad =".$data['id_profundidad']; 
+         $filtro_profundidad = " where proy.profundidad =". (((int)$data['id_profundidad'])-1); 
          $filtro_agrupamiento = " group by proy.profundidad,r.id_area ";
       }
+
+      //return $filtro_profundidad;
 
 
       $tabla_struct  = $this->db->dbprefix('pstruct_'.$tabla);
       $tabla_data  = $this->db->dbprefix('pdata_'.$tabla);
 
+ /*
+ SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+    FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+     SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
+                        FROM inven_registro_nivel".$i."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+*/
       $sql ="  select r.id_area id, e.area nombre, proy.profundidad
         from (
           select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno  from (
@@ -200,14 +208,38 @@ public function listado_todas_areas($data){
       select u.id_cliente id_area, r1.id_nivel, r1.id_usuario
        from 
        (SELECT  id_nivel,
-        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-       FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+             SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario
+                         FROM ".$this->registro_proyecto ." 
+                              t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+
+
+
+
 
               for ($i=2; $i <= 5; $i++) { 
                      $sql .=" union
                       SELECT id_nivel,
-                        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-                        FROM inven_registro_nivel".$i."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+                             SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario
+                                           
+                                 FROM inven_registro_nivel".$i."  
+                                t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+
               }
 
       $sql .="
@@ -263,7 +295,7 @@ public function listado_todas_areas($data){
       } 
 
       if  ($data['id_profundidad']!=-1){
-         $filtro.= (($filtro!="") ? " and " : "") . " (proy.profundidad = ".$data['id_profundidad'].") ";
+         $filtro.= (($filtro!="") ? " and " : "") . " (proy.profundidad = ".(((int)$data['id_profundidad'])-1).") ";
          $filtro_agrupamiento.= (($filtro_agrupamiento!="") ? "," : "") . "proy.profundidad";
       }
 
@@ -283,13 +315,6 @@ public function listado_todas_areas($data){
 
 
       $filtro_agrupamiento= (($filtro_agrupamiento!="") ? " group by " : "") . $filtro_agrupamiento;
-
-
-
-
-
-
-
 
 
 
@@ -320,14 +345,34 @@ public function listado_todas_areas($data){
       select u.id_cliente id_area, r1.id_nivel, r1.id_usuario, u.nombre, u.apellidos
        from 
        (SELECT  id_nivel,
-        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-       FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+           SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario
+                         FROM ".$this->registro_proyecto ." 
+                              t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+
 
               for ($i=2; $i <= 5; $i++) { 
                      $sql .=" union
                       SELECT id_nivel,
-                        SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-                        FROM inven_registro_nivel".$i."  WHERE id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario
+                                           
+                                 FROM inven_registro_nivel".$i."  
+                                t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$id_entorno." and id_proyecto=".$data["id_proyecto"];
               }
 
       $sql .="
@@ -397,9 +442,7 @@ public function listado_todas_areas($data){
 
 
 
-/*
-  $data['id_proyecto']
-*/
+
 
     public function procesando_rep_general($data) {
 
@@ -428,7 +471,6 @@ public function listado_todas_areas($data){
         if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
               $data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
               $data['fecha_final'] = date('d-m-Y', strtotime('today') );  //dia de hoy
-              // $cond_fecha ="";
         }
 
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
@@ -460,28 +502,42 @@ public function listado_todas_areas($data){
             $proyectos = $result->result();
 
 
+            
                 $filtro="";        
-            if  ($data['id_usuario']!=0){
-                $filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
+            if  ($data['id_usuario']!="0"){
+                $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_usuario = '".$data['id_usuario']."') ";  
             }
 
             if  ($data['id_proyecto']!=0){
-              $filtro.= (($filtro!="") ? " and " : "") . " (id_proyecto = '".$data["id_proyecto"]."') ";
+              $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_proyecto = '".$data["id_proyecto"]."') ";
             } 
 
 
             if  ($data['id_area']!=0){
-               $filtro.= (($filtro!="") ? " and " : "") . " (id_area = ".$data['id_area'].") ";
+               $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
             }
 
             if  ($data['id_profundidad']!=-1){
-               $filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
+               $filtro.= (($filtro!="") ? " and " : "") . " (r1.profundidad = ".$data['id_profundidad'].") ";
             }
 
             $filtro= (($filtro!="") ? " where " : "") . $filtro;
+            
 
+            //where (r1.id_proyecto = '113') and (u.id_cliente = 1) and (r1.profundidad = 0)
 
 //$filtro=" ";
+
+              /*
+
+            $filtro="";        
+            if  ($data['id_usuario']!="0"){
+                //$filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
+              //$filtro.=  " and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."' ";  
+                //$filtro.=  " and  id_usuario = '".$data['id_usuario']."' ";  
+                // $filtro.=  " and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."' ";
+                 //print_r($filtro); die;
+            }*/
 
 
 
@@ -542,6 +598,7 @@ public function listado_todas_areas($data){
                                            r1.id, r1.id_entorno, r1.id_proyecto,r1.profundidad, r1.id_nivel, 
                                            r1.id_val, r1.json_items, 
                                            r1.id_usuario, 
+                                           
                                            r1.costo, r1.tiempo_disponible,  r1.fecha_creacion, r1.fecha_inicial, r1.fecha_final
                          from 
                          (
@@ -590,31 +647,19 @@ public function listado_todas_areas($data){
                           h.id_entorno = r1.id_entorno and 
                           h.id_proyecto = r1.id_proyecto and 
                           h.id_nivel = r1.id_nivel ".$cond_fecha.
+                          $filtro.
                          ") r 
                         on proy.id_nivel = r.id_nivel
 
                         ) todo 
-                        ".$filtro."                           
+                                               
                           
                          GROUP BY 
                         id_nivel, profundidad,  id_entorno,   id_proyecto, id_val, json_items
-                        LIMIT ".$inicio.",".$largo." 
+                      LIMIT ".$inicio.",".$largo."       
                         
                 ";
-
-                /*
-                 id, nombre, id_usuario,tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, costo,
-                     nomb, apellidos, salario,  id_area
-
-
-
-                id_nivel, profundidad, nombre, tabla, id_entorno, id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, nomb, apellidos, salario, id_area
-  
-                */
-
-                //
-                //LIMIT 0 OFFSET 10
-              
+                
 
                $result = $this->db->query( $sql); 
 
@@ -647,8 +692,15 @@ public function listado_todas_areas($data){
                                 }
 
                                 foreach ($arreglo_fechas as $key1 => $value1) {
+                                  
+                                  if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
                                     $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
-                                }    
+                                  } else {
+                                    $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.$row->{ "a".strtotime($arreglo_fechas[$key1]) }.'</span>';
+                                  }
+
+                                }   
+
                       }
 
             }
@@ -748,23 +800,22 @@ public function total_rep_general($data) {
             $result = $this->db->query( $cons); 
             $proyectos = $result->result();
 
-
-                $filtro="";        
-            if  ($data['id_usuario']!=0){
-                $filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
+            $filtro="";        
+            if  ($data['id_usuario']!="0"){
+                $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_usuario = '".$data['id_usuario']."') ";  
             }
 
             if  ($data['id_proyecto']!=0){
-              $filtro.= (($filtro!="") ? " and " : "") . " (id_proyecto = '".$data["id_proyecto"]."') ";
+              $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_proyecto = '".$data["id_proyecto"]."') ";
             } 
 
 
             if  ($data['id_area']!=0){
-               $filtro.= (($filtro!="") ? " and " : "") . " (id_area = ".$data['id_area'].") ";
+               $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
             }
 
             if  ($data['id_profundidad']!=-1){
-               $filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
+               $filtro.= (($filtro!="") ? " and " : "") . " (r1.profundidad = ".$data['id_profundidad'].") ";
             }
 
             $filtro= (($filtro!="") ? " where " : "") . $filtro;
@@ -777,7 +828,118 @@ public function total_rep_general($data) {
                 $tabla_struct  = $this->db->dbprefix('pstruct_'.$value->tabla);
                 $tabla_data  = $this->db->dbprefix('pdata_'.$value->tabla);
 
-                
+
+$sql=" select 
+                        id_nivel, nombre, tabla, id_entorno, 
+                        nomb, apellidos, salario, id_area,
+                        id, id_proyecto, profundidad,
+                        id_val, json_items, 
+                        id_usuario, 
+                        costo, tiempo_disponible, fecha_creacion, fecha_inicial,fecha_final "; 
+                            
+                            foreach ($arreglo_fechas as $key1 => $value1) {
+                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                            }
+
+                            
+
+
+                 $sql .="   from (
+                         select proy.id_nivel,  proy.nombre,  proy.tabla, proy.id_entorno, 
+                                 r.nombre nomb, r.apellidos, r.salario , r.id_area, 
+                                 r.horas, r.fecha, 
+                                 r.id, r.id_proyecto, r.profundidad,
+                                 r.id_val, r.json_items, 
+                                 r.id_usuario,
+                                 r.costo, r.tiempo_disponible,  r.fecha_creacion, r.fecha_inicial, r.fecha_final
+
+                          from (
+                            select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno 
+                            from (
+                                select profundidad.id id_nivel, profundidad.depth profundidad,
+                                CONCAT( REPEAT(  ' ', (profundidad.depth+1)*2 ) , data.nm ) nombre1,
+                                 data.nm  nombre
+                                 from (
+                                    SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
+                                    FROM ".$tabla_struct." AS nodo,
+                                            ".$tabla_struct." AS padre
+                                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                    GROUP BY nodo.id
+                                    ORDER BY nodo.lft
+                                ) profundidad
+                                INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+                             ) e, ".$this->catalogo_proyectos." as p
+                            WHERE p.id_entorno=".$value->id_entorno." and  p.tabla='".$value->tabla."'
+                            )
+                         proy  inner join 
+                        (
+                        select u.nombre, u.apellidos, u.id_cliente id_area, u.salario,
+                                           h.horas, h.fecha, 
+                                           r1.id, r1.id_entorno, r1.id_proyecto,r1.profundidad, r1.id_nivel, 
+                                           r1.id_val, r1.json_items, 
+                                           r1.id_usuario, 
+                                           r1.costo, r1.tiempo_disponible,  r1.fecha_creacion, r1.fecha_inicial, r1.fecha_final
+                         from 
+                         (
+                          SELECT id, id_entorno, id_proyecto, profundidad, id_nivel, id_val, json_items,
+                                      SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario, 
+                                       costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final  
+                         FROM ".$this->registro_proyecto ." 
+                              t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$value->id_entorno." and id_proyecto=".$value->id_proyecto."
+                                   ";
+
+
+                          
+
+
+                          for ($i=2; $i <= 5; $i++) { 
+                             $sql .=" union
+                                     SELECT id, id_entorno, id_proyecto, profundidad, id_nivel, id_val, json_items,
+                                            SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario, 
+                                            costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final  
+                                 FROM inven_registro_nivel".$i."  
+                                t CROSS JOIN 
+                                  (
+                                     SELECT a.N + b.N * 10 + 1 n
+                                       FROM 
+                                      (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+                                     ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+                                      ORDER BY n
+                                  ) n
+                                   WHERE n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', '')))   and id_entorno=".$value->id_entorno." and id_proyecto=".$value->id_proyecto."
+                                   ";
+
+                          }
+
+                          $sql .="
+                        ) r1 
+                          left join  ".$this->usuarios." u  on r1.id_usuario = u.id  and u.activo=1
+                          left join  ".$this->registro_user_proy." h  on h.id_usuario = r1.id_usuario and 
+                          h.id_entorno = r1.id_entorno and 
+                          h.id_proyecto = r1.id_proyecto and 
+                          h.id_nivel = r1.id_nivel ".$cond_fecha.
+                          $filtro.
+                         ") r 
+                        on proy.id_nivel = r.id_nivel
+
+                        ) todo 
+                                               
+                          
+                         GROUP BY 
+                        id_nivel, profundidad,  id_entorno,   id_proyecto, id_val, json_items
+                      
+                        
+                ";                
+
+       /*         
 
                 $sql=" select 
                         id_nivel, profundidad, nombre, tabla, id_entorno,
@@ -850,7 +1012,7 @@ public function total_rep_general($data) {
                         id_nivel, profundidad, nombre, tabla, id_entorno, id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, nomb, apellidos, salario, id_area
                        
                 ";
-
+*/
               
 
               $result = $this->db->query( $sql); 
@@ -1121,7 +1283,12 @@ public function total_rep_general($data) {
                                 }
 
                                 foreach ($arreglo_fechas as $key1 => $value1) {
-                                    $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
+                                    
+                                    if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                                      $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
+                                    } else {
+                                      $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.$row->{ "a".strtotime($arreglo_fechas[$key1]) }.'</span>';
+                                    }
                                 }    
                       }
 
