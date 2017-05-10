@@ -686,7 +686,7 @@ public function listado_todas_areas($data){
                                       8=>$intervalo_dia->format('%a'),
                                     );
 
-                                for ($i=0; $i <31 ; $i++) { 
+                                for ($i=0; $i <=31 ; $i++) { 
                                    //$dato[$key][9+$i] = 0;
                                     $dato[count($dato)-1][9+$i] = 0;
                                 }
@@ -1277,7 +1277,7 @@ $sql=" select
                                       8=>$intervalo_dia->format('%a'),
                                     );
 
-                                for ($i=0; $i <31 ; $i++) { 
+                                for ($i=0; $i <=31 ; $i++) { 
                                    //$dato[$key][9+$i] = 0;
                                     $dato[count($dato)-1][9+$i] = 0;
                                 }

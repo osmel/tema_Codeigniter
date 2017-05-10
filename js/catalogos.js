@@ -45,14 +45,17 @@ jQuery(document).ready(function($) {
               },
               format: 'DD-MM-YYYY',
 
+               "dateLimit": {
+                    "days": 30   //0--30(31dias) http://www.daterangepicker.com/
+                },
 
                //"startDate": "22-02-2017",
                //"endDate": "28-02-2017",
                //minDate: "01-02-2017",
-               //maxDate: "28-02-2017",
+               maxDate: moment(), //"28-02-2017",
 
               //http://www.daterangepicker.com/
-              //maxDate: "-3d",
+              //maxDate: "+3d",
              //maxDate: moment(),
             separator: ' / ',
             
@@ -98,7 +101,19 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario ").on('change', fun
 });
 
 
+/*
+mayo
+https://docs.google.com/spreadsheets/d/1ELcpavkeulNBRHQ4-kjPueQ4SDjbWrFrsOfddUTIooU/edit#gid=1165817805
+abril
+https://docs.google.com/spreadsheets/d/1qbvPZlhAs2GxDZJoMNGQm5g81GcEX0OU_3Fm13qOS_4/edit#gid=1165817805
+marzo
+https://docs.google.com/spreadsheets/d/1HPpDbup0KguyRubFbGQfcSYjtVsnCNDYiuClEeZkudw/edit#gid=1165817805
+febrero
+https://docs.google.com/spreadsheets/d/1US4JFXvm7f9CGFs7PBpih9nSDLncNzGJrumGo67gCY4/edit#gid=1165817805
+Enero
+https://docs.google.com/spreadsheets/d/135uE1ysrFvZ4GtAJFHomkaj96ofD6JunagQxBVZte7M/edit#gid=1165817805
 
+*/
 
 function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia) {
         
@@ -215,7 +230,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                     api.column(i).visible(true);      
                 }        
 
-            for (var i = (intVal(settings.json.intervalo)+10); i <= 39; i++) {
+            for (var i = (intVal(settings.json.intervalo)+10); i <= 40; i++) {
                     api.column(i).visible(false);      
                 }    
 
@@ -228,7 +243,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
         "columnDefs": [ 
 
                       {
-                          "targets": 39, //(jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1  !== 'undefined') ? (jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1) : 9 ,
+                          "targets": 40, //(jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1  !== 'undefined') ? (jQuery('#tabla_rep_general').dataTable().fnSettings().aoData[0]._aData.length-1) : 9 ,
                           
                       },
 
@@ -270,7 +285,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
     "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
         var d = new Date();
         var n = d.getMonth()+1;
-        console.log(n);
+        
         var arreglo = ['','Proyectos', 'Usuarios Asociados','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
         
         
@@ -301,8 +316,6 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                     
                      arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
                 }    
-
-
        }
 
 
@@ -428,11 +441,13 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                                 }
                             $cad+='</table>';  
 
-                            row.child( $cad ).show();
-                            //jQuery('.tabla_hija').parent().css('padding','12px 0px 12px 0px');
-                            //jQuery('.tabla_hija').parent().css('margin','0px');
-                            tr.addClass('shown');
-
+                            
+                            if (datos.data[0][5]!="") {
+                                  row.child( $cad ).show();
+                                      //jQuery('.tabla_hija').parent().css('padding','12px 0px 12px 0px');
+                                      //jQuery('.tabla_hija').parent().css('margin','0px');
+                                  tr.addClass('shown');
+                            }      
 
 
                         }
