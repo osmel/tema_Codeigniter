@@ -66,14 +66,106 @@ function listado_niveles( ){
                       $data['datos'] = $this->modelo_proyecto->listado_nivel($data); 
                    }
 
+                    /*
+                    SELECT * FROM `inven_registro_nivel2` WHERE id_proyecto= 113
+                      and id_nivel= 7
+                      and profundidad= 2
+                      and id_entorno=1
+
+
+------------
+          SELECT count(*) , id_entorno, id_proyecto,id_nivel, profundidad,   fecha, id_usuario, horas, identificador,  descripcion
+          FROM  inven_registro_user_proy_old 
+          WHERE id_usuario =  "f963a139-122e-11e6-8df6-7071bce181c3"
+
+          group by 
+           id_entorno, id_proyecto, id_nivel, profundidad, id_usuario, fecha
+            having  count(*)>1
+           order by id_entorno, id_proyecto, id_nivel, profundidad, id_usuario, fecha                
+
+
+marisa
+b3728c39-f48f-11e6-b097-7071bce181c3
+rebeca
+f963a339-222e-11e6-8df6-7071bce181c3
+lucero
+e24edcf7-f48d-11e6-b097-7071bce181c3
+
+sandra
+6e78e365-f48f-11e6-b097-7071bce181c3
+
+deni
+dd60b583-1885-11e7-a4da-46dd36118324
+ariadna
+f963a139-122e-11e6-8df6-7071bce181c3
+ilse
+f963a439-322e-11e6-8df6-7071bce181c3
+
+
+
+id_entorno, id_proyecto,id_nivel, profundidad,   fecha, id_usuario, horas, identificador,  descripcion 
+
+
+SELECT *
+FROM `inven_registro_user_proy_old` 
+      WHERE           
+                      id_entorno =1
+                      and id_proyecto= 130
+                      and id_nivel= 1
+                      and profundidad= 1
+                      and fecha = '2017-04-26 00:00:00'
+                      and    id_usuario =  "f963a139-122e-11e6-8df6-7071bce181c3"
+  
+
+
+
+
+
+          SELECT  *
+          FROM  inven_registro_user_proy_old 
+          
+
+          group by 
+           id_entorno, id_proyecto, id_nivel, profundidad, id_usuario, fecha
+            
+           order by id_entorno, id_proyecto, id_nivel, profundidad, id_usuario, fecha                
+
+
+
+
+
+
+
+SELECT *
+FROM `inven_registro_user_proy_old` 
+      WHERE           
+                      id_entorno =1
+                      and id_proyecto= 122
+                      and id_nivel= 1
+                      and profundidad= 1
+                      
+                      and fecha = '2017-04-27 00:00:00'
+                      and id_usuario="dd60b583-1885-11e7-a4da-46dd36118324"
+
+
+
+                    */
+
+                  // print_r($data['datos']);die;
 
                     //para colocar el valor "num"  
                         $user_json = array();
-                        foreach (json_decode($data['datos']->json_items, true) as $key => $value) {
-                          $value['num'] = $key;
-                          $user_json[] = $value;
+                        if ($data['datos']!=false) {
+
+
+                          foreach (json_decode($data['datos']->json_items, true) as $key => $value) {
+                            $value['num'] = $key;
+                            $user_json[] = $value;
+                          }
+                          $data['datos']->json_items = json_encode($user_json);
+                        } else {
+                          $data['datos'] = false;
                         }
-                        $data['datos']->json_items = json_encode($user_json);
 
                         //para buscar detalles costo, tiempo disponible y fechas
                         $data['costo']= (isset($value)) ? $value : false;  //este es el ultimo valor 
