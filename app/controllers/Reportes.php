@@ -27,52 +27,26 @@ class Reportes extends CI_Controller {
 
     $data['dependencia']        = $this->input->post('dependencia');
 
+    //r.id_entorno, r.id_proyecto, r.id_nivel, r.id_area, ca.area, r.id_usuario, r.nombre nom, r.apellidos, cp.proyecto
 
-    switch ($data['dependencia']) {
-        case "id_proyecto": //nunca será una dependencia
-            $elementos  = $this->modelo_reporte->listado_proyectos();
-            break;
-        case "id_profundidad":
-            $elementos  = $this->modelo_reporte->listado_niveles($data);
+    $data['campos'] = ',r.id_proyecto identificador, cp.proyecto nombre';  
+    $data['tipo'] = 'id_proyecto';
+    $elementos['id_proyecto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+    
+    $data['campos'] = ',r.id_nivel identificador, CONCAT("Nivel ",r.id_nivel) nombre';  
+    $data['tipo'] = 'id_nivel';
+    $elementos['id_profundidad']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
-            break;
-        case "id_area":
-            if ($data['id_proyecto']!=0) {
-                $elementos  = $this->modelo_reporte->listado_areas($data);
-            } else {
-              $elementos  = $this->modelo_reporte->listado_todas_areas($data);
-            }
-            break;
-        case "id_usuario":            
-            if ($data['id_proyecto']!=0) {
-                $elementos  = $this->modelo_reporte->listado_usuarios($data);
-            } else {
-                $elementos  = $this->modelo_reporte->listado_todo_usuarios($data);
-            }
+    $data['campos'] = ',r.id_area identificador, ca.area nombre';  
+    $data['tipo'] = 'id_area';
+    $elementos['id_area']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
-            break;
-        default:
-    }
+    $data['campos'] = ',r.id_usuario identificador, r.nombre nombre';  
+    $data['tipo'] = 'id_usuario';
+    $elementos['id_usuario']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
-    //print_r($elementos);die;
+    echo json_encode($elementos);
 
-
-                      /*
-                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
-                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
-                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
-                      $data['areas'] = $this->modelo_catalogo->listado_areas();  
-                      */
-
-
-      $variables = array();
-    if ($elementos != false)  {     
-         foreach( (json_decode(json_encode($elementos))) as $clave =>$valor ) {
-              array_push($variables,array('nombre' => $valor->nombre, 'identificador' => $valor->id));  
-       }
-    }  
-
-     echo json_encode($variables);
   }
 
 

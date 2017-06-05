@@ -85,7 +85,7 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario ").on('change', fun
 
         if (dependencia !="") {     
             //limpiar la dependencia
-            jQuery("#"+dependencia).html(''); 
+            //jQuery("#"+dependencia).html(''); 
             //cargar la dependencia
             cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia);
         }
@@ -95,7 +95,7 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario ").on('change', fun
     var hash_url = window.location.pathname;
     if  ( (hash_url=="/general") )   {  
        var oTable =jQuery('#tabla_rep_general').dataTable();
-       oTable._fnAjaxUpdate();
+       //oTable._fnAjaxUpdate();
     }   
 
 });
@@ -133,6 +133,8 @@ function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id
                 type : 'POST',
                 dataType : 'json',
                 success : function(data) {
+                    /*  
+
                       //console.log(dependencia);
                       if (dependencia == "id_profundidad")  {
                         jQuery("#"+dependencia).append('<option value="-1" >Todos</option>'); //Seleccione '+nombre+'
@@ -153,7 +155,9 @@ function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id
                     
                     jQuery("#"+dependencia).trigger('change');
 
-                    return false;
+                    */
+
+                    //return false;
                 },
                 error : function(jqXHR, status, error) {
                 },
