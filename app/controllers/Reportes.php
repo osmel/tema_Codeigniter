@@ -29,19 +29,20 @@ class Reportes extends CI_Controller {
 
     //r.id_entorno, r.id_proyecto, r.id_nivel, r.id_area, ca.area, r.id_usuario, r.nombre nom, r.apellidos, cp.proyecto
 
-    $data['campos'] = ',r.id_proyecto identificador, cp.proyecto nombre';  
+    $data['campos'] = ',r.id_proyecto identificador, cp.proyecto nombre,'.$data['id_proyecto'].' activo';  
     $data['tipo'] = 'id_proyecto';
     $elementos['id_proyecto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
     
-    $data['campos'] = ',r.id_nivel identificador, CONCAT("Nivel ",r.id_nivel) nombre';  
+    //echo json_encode($elementos); die;
+    $data['campos'] = ',r.id_nivel identificador, CONCAT("Nivel ",r.id_nivel) nombre,'.$data['id_profundidad'].' activo';  
     $data['tipo'] = 'id_nivel';
     $elementos['id_profundidad']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
-    $data['campos'] = ',r.id_area identificador, ca.area nombre';  
+    $data['campos'] = ',r.id_area identificador, ca.area nombre,'.$data['id_area'].' activo';  
     $data['tipo'] = 'id_area';
     $elementos['id_area']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
-    $data['campos'] = ',r.id_usuario identificador, r.nombre nombre';  
+    $data['campos'] = ',r.id_usuario identificador, r.nombre nombre,"'.$data['id_usuario'].'" activo';  
     $data['tipo'] = 'id_usuario';
     $elementos['id_usuario']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 

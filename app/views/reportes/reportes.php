@@ -61,9 +61,9 @@
 								<label for="proyecto" class="col-sm-12 col-md-12">Proyecto</label>
 								<div class="col-sm-12 col-md-12">
 									<select name="id_proyecto" id="id_proyecto" class="form-control ttip" title="Seleccione la proyecto a consultar."
-									 dependencia="id_profundidad">
+									 dependencia="">
 
-											<option value="0">Todos</option>
+											<option value="-1">Todos</option>
 											<?php if ( $datos['proyectos']) { ?>
 											<?php foreach ( $datos['proyectos'] as $proyecto ){ ?>
 													<option value="<?php echo $proyecto->id; ?>"><?php echo $proyecto->proyecto; ?></option>
@@ -79,12 +79,10 @@
 								<label for="estructura" class="col-sm-12 col-md-12">Niveles</label>
 								<div class="col-sm-12 col-md-12">
 									<select name="id_profundidad" id="id_profundidad" class="form-control ttip" title="Seleccione la estructura a consultar."
-									dependencia="id_area">
+									dependencia="">
 											<option value="-1">Todos</option>
 											
-											<?php  for ($i=1; $i < $datos['entornos'][0]->profundidad_activo+1 ; $i++) {    ?>
-													<option value="<?php echo $i ?>"> Nivel <?php echo $i; ?></option>
-											<?php } ?>
+											
 									</select>
 								</div>
 							</div>
@@ -100,12 +98,9 @@
 								<label for="area" class="col-sm-12 col-md-12">Área</label>
 								<div class="col-sm-12 col-md-12">
 									<select name="id_area" id="id_area" class="form-control ttip" title="Seleccione la area a consultar."
-									dependencia="id_usuario">
-											<option value="0">Todos</option>
-											<?php if ( $areas) { ?>
-											<?php foreach ( $areas as $area ){ ?>
-													<option value="<?php echo $area->id; ?>"><?php echo $area->area; ?></option>
-											<?php } } ?>
+									dependencia="">
+											<option value="-1">Todos</option>
+											
 									</select>
 								</div>
 							</div>
@@ -119,11 +114,8 @@
 								<div class="col-sm-12 col-md-12">
 									<select name="id_usuario" id="id_usuario" class="form-control ttip" title="Seleccione la persona a consultar."
 									dependencia="">
-											<option value="0">Todos</option>
-											<?php if ( $datos['usuarios']) { ?>
-											<?php foreach ( $datos['usuarios'] as $usuario ){ ?>
-													<option value="<?php echo $usuario->id; ?>"><?php echo $usuario->nombre; ?></option>
-											<?php } } ?>
+											<option value="-1">Todos</option>
+											
 									</select>
 								</div>
 							</div>

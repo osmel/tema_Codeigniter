@@ -56,18 +56,21 @@ public function listado_proyectos_dependiente($data){
               n.n <= 1 + (LENGTH(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 )) - LENGTH(REPLACE(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', ''))) and       
               id_entorno=".$id_entorno;        
 
-      if ( ($data['id_proyecto']!=0) && ($data['tipo'] !='id_proyecto') ) {
+      if ( ($data['id_proyecto']!="-1") && ($data['tipo'] !='id_proyecto') ) {
         $filtro.= (($filtro!="") ? " and " : "") . " (t.id_proyecto = ".$data["id_proyecto"].") ";
       } 
-      if  (($data['id_profundidad']!=-1)  && ($data['tipo'] !='id_nivel') ) {
-         $filtro.= (($filtro!="") ? " and " : "") . " (t.id_nivel = ".(((int)$data['id_profundidad'])-1).") ";
+      if  (($data['id_profundidad']!="-1")  && ($data['tipo'] !='id_nivel') ) {
+         //return $data['id_profundidad'];
+         $filtro.= (($filtro!="") ? " and " : "") . " (t.id_nivel = ".(((int)$data['id_profundidad'])).") ";//-1
       }
-      if  ( ($data['id_area']!=0) && ($data['tipo'] !='id_area') ) {
+      if  ( ($data['id_area']!="-1") && ($data['tipo'] !='id_area') ) {
          $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
       }
-      if ( ($data['id_usuario']!=0) && ($data['tipo'] !='id_usuario') ) {
-          $filtro.= (($filtro!="") ? " and " : "") . " ( (SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."') ";  
+      if ( ($data['id_usuario']!="-1") && ($data['tipo'] !='id_usuario') ) {
+          $filtro.= (($filtro!="") ? " and " : "") . "  (SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."') ";  
       }
+
+
 
       //r.id_entorno, r.id_proyecto, r.id_nivel, r.id_area, ca.area, r.id_usuario, r.nombre nom, r.apellidos, cp.proyecto
       $sql ="";
@@ -535,9 +538,6 @@ public function listado_todas_areas($data){
           $id_session = $this->session->userdata('id');      
           $id_perfil=$this->session->userdata('id_perfil');
 
-      
-
-
 
         if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
               $data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
@@ -561,12 +561,6 @@ public function listado_todas_areas($data){
               $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
           } while($data['fecha_inicial'] <= $data['fecha_final']);
 
-
-
-
-
-
-
              $cons = 'SELECT id id_proyecto, id_entorno, tabla  FROM  '.$this->catalogo_proyectos .' as c where  
               c.id_entorno='.$this->session->userdata('entorno_activo'); //c.id='.$data['id_proyecto'].' AND
             $result = $this->db->query( $cons); 
@@ -575,20 +569,20 @@ public function listado_todas_areas($data){
 
             
                 $filtro="";        
-            if  ($data['id_usuario']!="0"){
+            if  ($data['id_usuario']!="-1"){
                 $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_usuario = '".$data['id_usuario']."') ";  
             }
 
-            if  ($data['id_proyecto']!=0){
+            if  ($data['id_proyecto']!="-1"){
               $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_proyecto = '".$data["id_proyecto"]."') ";
             } 
 
 
-            if  ($data['id_area']!=0){
+            if  ($data['id_area']!="-1"){
                $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
             }
 
-            if  ($data['id_profundidad']!=-1){
+            if  ($data['id_profundidad']!="-1"){
                $filtro.= (($filtro!="") ? " and " : "") . " (r1.profundidad = ".$data['id_profundidad'].") ";
             }
 
@@ -872,20 +866,20 @@ public function total_rep_general($data) {
             $proyectos = $result->result();
 
             $filtro="";        
-            if  ($data['id_usuario']!="0"){
+            if  ($data['id_usuario']!="-1"){
                 $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_usuario = '".$data['id_usuario']."') ";  
             }
 
-            if  ($data['id_proyecto']!=0){
+            if  ($data['id_proyecto']!="-1"){
               $filtro.= (($filtro!="") ? " and " : "") . " (r1.id_proyecto = '".$data["id_proyecto"]."') ";
             } 
 
 
-            if  ($data['id_area']!=0){
+            if  ($data['id_area']!="-1"){
                $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
             }
 
-            if  ($data['id_profundidad']!=-1){
+            if  ($data['id_profundidad']!="-1"){
                $filtro.= (($filtro!="") ? " and " : "") . " (r1.profundidad = ".$data['id_profundidad'].") ";
             }
 
@@ -1010,81 +1004,7 @@ $sql=" select
                         
                 ";                
 
-       /*         
-
-                $sql=" select 
-                        id_nivel, profundidad, nombre, tabla, id_entorno,
-                        id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                        nomb, apellidos, salario, id_area"; 
-                            
-                            foreach ($arreglo_fechas as $key1 => $value1) {
-                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
-                            }
-
-                            
-
-
-                 $sql .="   from (
-                        select proy.id_nivel, proy.profundidad, proy.nombre, proy.id identificador, proy.tabla, proy.id_entorno,
-                        r.id_usuario, r.id, r.id_proyecto,  r.costo, r.tiempo_disponible, r.fecha_creacion, r.fecha_inicial, r.fecha_final, r.id_val, r.json_items,
-                        r.nombre nomb, r.apellidos, r.salario , r.id_area, r.horas, r.fecha
-                          from (
-                            select e.id_nivel, e.profundidad, e.nombre, p.id, p.tabla, id_entorno  from (
-                                select profundidad.id id_nivel, profundidad.depth profundidad,
-                                CONCAT( REPEAT(  ' ', (profundidad.depth+1)*2 ) , data.nm ) nombre1,
-                                 data.nm  nombre
-                                 from (
-                                    SELECT nodo.id, (COUNT(padre.id) - 1) AS depth
-                                    FROM ".$tabla_struct." AS nodo,
-                                            ".$tabla_struct." AS padre
-                                    WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
-                                    GROUP BY nodo.id
-                                    ORDER BY nodo.lft
-                                ) profundidad
-                                INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
-                             ) e, ".$this->catalogo_proyectos." as p
-                            WHERE p.id_entorno=".$value->id_entorno." and  p.tabla='".$value->tabla."'
-                            )
-                         proy  inner join 
-
-
-
-
-                        (
-                        select u.nombre, u.apellidos, u.salario, u.id_cliente id_area, r1.id, r1.id_entorno, r1.id_proyecto, r1.id_nivel, r1.costo, r1.tiempo_disponible, r1.fecha_creacion, r1.fecha_inicial,
-                        r1.fecha_final, r1.id_val, r1.json_items, r1.id_usuario, h.horas, h.fecha
-                         from 
-                         (SELECT id, id_entorno, id_proyecto, id_nivel, costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                          SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-                         FROM ".$this->registro_proyecto ."  WHERE id_entorno=".$value->id_entorno." and id_proyecto=".$value->id_proyecto;
-
-
-                          for ($i=2; $i <= 5; $i++) { 
-                             $sql .=" union
-                              SELECT id, id_entorno, id_proyecto, id_nivel, costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items,
-                                SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END) id_usuario
-                                FROM inven_registro_nivel".$i."  WHERE id_entorno=".$value->id_entorno." and id_proyecto=".$value->id_proyecto;
-                          }
-
-                          $sql .="
-                        ) r1 
-                          left join  ".$this->usuarios." u  on r1.id_usuario = u.id
-                          left join  ".$this->registro_user_proy." h  on h.id_usuario = r1.id_usuario and 
-                          h.id_entorno = r1.id_entorno and 
-                          h.id_proyecto = r1.id_proyecto and 
-                          h.id_nivel = r1.id_nivel ".$cond_fecha.
-                         ") r 
-                        on proy.id_nivel = r.id_nivel
-
-                        ) todo 
-                        ".$filtro."                           
-                          
-                         GROUP BY 
-                        id_nivel, profundidad, nombre, tabla, id_entorno, id_usuario, id,  id_proyecto,  costo, tiempo_disponible, fecha_creacion, fecha_inicial, fecha_final, id_val, json_items, nomb, apellidos, salario, id_area
-                       
-                ";
-*/
-              
+                   
 
               $result = $this->db->query( $sql); 
 
@@ -1103,21 +1023,7 @@ $sql=" select
 
     public function procesando_rep_general_detalle($data) {
 
-        /*
-        $cant_filtrada = array();
-        $cant_filtrada = self::total_rep_general($data);
-
-        $total_registros =0;
-        foreach ($cant_filtrada as $llave => $valor) {
-             $total_registros +=$valor;
-        }
-        */
-
-      
-          //$cadena = addslashes($data['search']['value']);
-          //$inicio = $data['start'];
-          //$largo = $data['length'];
-        
+    
 
           $id_session = $this->session->userdata('id');      
           $id_perfil=$this->session->userdata('id_perfil');
@@ -1163,25 +1069,25 @@ $sql=" select
 
 
     $filtro="";        
-    if  ($data['id_usuario']!=0){
+    if  ($data['id_usuario']!="-1"){
         $filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
     }
 
-    if  ($data['id_proyecto']!=0){
+    if  ($data['id_proyecto']!="-1"){
       $filtro.= (($filtro!="") ? " and " : "") . " (id_proyecto = '".$data["id_proyecto"]."') ";
     } 
 
 
-    if  ($data['id_area']!=0){
+    if  ($data['id_area']!="-1"){
        $filtro.= (($filtro!="") ? " and " : "") . " (id_area = ".$data['id_area'].") ";
     }
 
-    if  ($data['id_profundidad']!=-1){
+    if  ($data['id_profundidad']!="-1"){
        $filtro.= (($filtro!="") ? " and " : "") . " (profundidad = ".$data['id_profundidad'].") ";
     }
 
     //"id_proy" --> para especificar uno en particualar
-    if  ($data['id_proy']!=-1){
+    if  ($data['id_proy']!="-1"){
        $filtro.= (($filtro!="") ? " and " : "") . " (id = ".$data['id_proy'].") ";
     }
 

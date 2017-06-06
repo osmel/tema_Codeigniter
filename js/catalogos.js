@@ -71,33 +71,22 @@ jQuery(document).ready(function($) {
 
 
 
-jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario ").on('change', function(e) {
-        
-        var campo = jQuery(this).attr("name");   
+jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', function(e) {
 
+        var campo = jQuery(this).attr("name");   
         var id_proyecto = jQuery('#id_proyecto').val();
         var id_profundidad = jQuery('#id_profundidad').val();
         var id_area = jQuery('#id_area').val();
         var id_usuario = jQuery('#id_usuario').val();
-
         var dependencia = jQuery(this).attr("dependencia"); 
 
-
-        if (dependencia !="") {     
-            //limpiar la dependencia
-            //jQuery("#"+dependencia).html(''); 
-            //cargar la dependencia
-            cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia);
-        }
-
-
-    //cuando cambie uno que refresh tabla
-    var hash_url = window.location.pathname;
-    if  ( (hash_url=="/general") )   {  
-       var oTable =jQuery('#tabla_rep_general').dataTable();
-       //oTable._fnAjaxUpdate();
-    }   
-
+        cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia);
+        //cuando cambie uno que refresh tabla
+        var hash_url = window.location.pathname;
+        if  ( (hash_url=="/general") )   {  
+           var oTable =jQuery('#tabla_rep_general').dataTable();
+           oTable._fnAjaxUpdate();
+        }   
 });
 
 
@@ -128,36 +117,18 @@ function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id
                     id_usuario:id_usuario,                    
                     dependencia:dependencia
                 },
-
-
                 type : 'POST',
                 dataType : 'json',
                 success : function(data) {
-                    /*  
-
-                      //console.log(dependencia);
-                      if (dependencia == "id_profundidad")  {
-                        jQuery("#"+dependencia).append('<option value="-1" >Todos</option>'); //Seleccione '+nombre+'
-                      } else {
-                        jQuery("#"+dependencia).append('<option value="0" >Todos</option>'); //Seleccione '+nombre+'   
-                      }
-                     
-                    
-                    if (data != "[]") {
-                        
-                        jQuery.each(data, function (i, valor) {
-                            if (valor.nombre !== null) {
-                                 jQuery("#"+dependencia).append('<option value="' + valor.identificador + '">' + valor.nombre + '</option>');     
-                            }
+                        jQuery.each(data, function (dep, valor) {
+                            jQuery("#"+dep).html(''); 
+                            jQuery("#"+dep).append('<option value="-1" >Todos</option>'); //+valor.nombre+   '+$elArray[dep]+'
+                                jQuery.each(valor, function (i, value) {
+                                    jQuery("#"+dep).append('<option '+ ( ((value.identificador).toString()==(value.activo).toString()) ? 'selected' : '') +' value="' + value.identificador + '" >' + value.nombre + '</option>');                                        
+                                });
                         });
 
-                    }   
-                    
-                    jQuery("#"+dependencia).trigger('change');
-
-                    */
-
-                    //return false;
+                    return false;
                 },
                 error : function(jqXHR, status, error) {
                 },
@@ -342,6 +313,12 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
        
     });  
 
+
+
+var hash_url = window.location.pathname;
+    if  ( (hash_url=="/general"))   {  
+        jQuery("#id_proyecto").trigger('change');
+    }  
 
 
     // Add event listener for opening and closing details
