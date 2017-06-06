@@ -104,6 +104,7 @@ jQuery(document).ready(function($) {
                             obj = inst.get_node(data.reference);
 
                         //eliminar: solo el dueno o el super_administrador aunque no sea el dueno        
+                        /* Aqui activo eliminar
                         if ( ($("#dueno").val() ==1) || ($("#perfil_activo").val() ==1)  ) {
                             if (obj.id!=1) { //sino es la raiz puede eliminarlo
                                 if(inst.is_selected(obj)) {
@@ -113,7 +114,7 @@ jQuery(document).ready(function($) {
                                     inst.delete_node(obj);
                                 }
                             }
-                        }   
+                        }   */
 
 
                     }
@@ -170,7 +171,7 @@ jQuery(document).ready(function($) {
 
 
 
-            "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow" ],
+            "plugins" : [ "contextmenu","search", "state", "types", "wholerow" ], // "dnd", 
             //dnd: arrastrar y soltar
             //types: añadir tipos predefinidos para grupos de nodos
             //state: guarda todos los nodos abiertos y seleccionados 

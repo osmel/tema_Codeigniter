@@ -59,9 +59,9 @@ public function listado_proyectos_dependiente($data){
       if ( ($data['id_proyecto']!="-1") && ($data['tipo'] !='id_proyecto') ) {
         $filtro.= (($filtro!="") ? " and " : "") . " (t.id_proyecto = ".$data["id_proyecto"].") ";
       } 
-      if  (($data['id_profundidad']!="-1")  && ($data['tipo'] !='id_nivel') ) {
+      if  (($data['id_profundidad']!="-1")  && ($data['tipo'] !='profundidad') ) {
          //return $data['id_profundidad'];
-         $filtro.= (($filtro!="") ? " and " : "") . " (t.id_nivel = ".(((int)$data['id_profundidad'])).") ";//-1
+         $filtro.= (($filtro!="") ? " and " : "") . " (t.profundidad = ".(((int)$data['id_profundidad'])).") ";//-1
       }
       if  ( ($data['id_area']!="-1") && ($data['tipo'] !='id_area') ) {
          $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
@@ -74,8 +74,8 @@ public function listado_proyectos_dependiente($data){
 
       //r.id_entorno, r.id_proyecto, r.id_nivel, r.id_area, ca.area, r.id_usuario, r.nombre nom, r.apellidos, cp.proyecto
       $sql ="";
-      $sql .="select r.id_entorno, r.id_proyecto, r.id_nivel, r.id_area, r.nombre nom, r.id_usuario".$data['campos']." from (
-                  SELECT  t.id_proyecto, t.id_nivel,
+      $sql .="select r.id_entorno, r.id_proyecto, r.profundidad, r.id_area, r.nombre nom, r.id_usuario".$data['campos']." from (
+                  SELECT  t.id_proyecto, t.profundidad,
                       SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario, 
                        t.id_entorno,  u.id_cliente id_area, u.nombre, u.apellidos
                   FROM   ".$this->registro_proyecto ."  t 
@@ -86,12 +86,12 @@ public function listado_proyectos_dependiente($data){
                         (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b 
                         ORDER BY n
                      ) n
-                  left join inven_usuarios u on u.id= SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) and u.activo=1" 
+                  inner join inven_usuarios u on u.id= SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) and u.activo=1" 
                   .$filtro;
 
                   for ($i=2; $i <= 5; $i++) { 
                          $sql .=" union
-                          SELECT  t.id_proyecto, t.id_nivel,
+                          SELECT  t.id_proyecto, t.profundidad,
                           SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) id_usuario, 
                             t.id_entorno, u.id_cliente id_area, u.nombre, u.apellidos
                                      FROM inven_registro_nivel".$i."  
@@ -103,13 +103,13 @@ public function listado_proyectos_dependiente($data){
                                          ,(SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
                                           ORDER BY n
                                       ) n
-                                      left join inven_usuarios u on u.id= SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) and u.activo=1"
+                                      inner join inven_usuarios u on u.id= SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) and u.activo=1"
                                         .$filtro;
 
               }
       $sql .= ") r ";
-      $sql .= " left join  ".$this->catalogo_proyectos."  cp  on cp.id = r.id_proyecto ";
-      $sql .= " left join  ".$this->catalogo_areas."  ca  on ca.id = r.id_area ".$filtro_agrupamiento;
+      $sql .= " inner join  ".$this->catalogo_proyectos."  cp  on cp.id = r.id_proyecto ";
+      $sql .= " inner join  ".$this->catalogo_areas."  ca  on ca.id = r.id_area ".$filtro_agrupamiento;
       $sql .= " having nom IS NOT NULL";
       $sql .= " ORDER BY ".$data['tipo']." asc";
 

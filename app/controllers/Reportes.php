@@ -34,8 +34,8 @@ class Reportes extends CI_Controller {
     $elementos['id_proyecto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
     
     //echo json_encode($elementos); die;
-    $data['campos'] = ',r.id_nivel identificador, CONCAT("Nivel ",r.id_nivel) nombre,'.$data['id_profundidad'].' activo';  
-    $data['tipo'] = 'id_nivel';
+    $data['campos'] = ',r.profundidad identificador, CONCAT("Nivel ",r.profundidad) nombre,'.$data['id_profundidad'].' activo';  
+    $data['tipo'] = 'profundidad';
     $elementos['id_profundidad']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
 
     $data['campos'] = ',r.id_area identificador, ca.area nombre,'.$data['id_area'].' activo';  
