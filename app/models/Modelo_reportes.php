@@ -198,8 +198,6 @@ public function altura_arbol( $data ){
         $altura_arbol =  3;  
       }
 
-      
-
       $arreglo = array();
       for ($i=1; $i < $altura_arbol+2; $i++) { 
         $arreglo[$i]["id"] =  $i;

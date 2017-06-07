@@ -16,18 +16,6 @@ jQuery(document).ready(function($) {
             });
             return false;
     }); 
-/*
-mayo
-https://docs.google.com/spreadsheets/d/1ELcpavkeulNBRHQ4-kjPueQ4SDjbWrFrsOfddUTIooU/edit#gid=1165817805
-abril
-https://docs.google.com/spreadsheets/d/1qbvPZlhAs2GxDZJoMNGQm5g81GcEX0OU_3Fm13qOS_4/edit#gid=1165817805
-marzo
-https://docs.google.com/spreadsheets/d/1HPpDbup0KguyRubFbGQfcSYjtVsnCNDYiuClEeZkudw/edit#gid=1165817805
-febrero
-https://docs.google.com/spreadsheets/d/1US4JFXvm7f9CGFs7PBpih9nSDLncNzGJrumGo67gCY4/edit#gid=1165817805
-Enero
-https://docs.google.com/spreadsheets/d/135uE1ysrFvZ4GtAJFHomkaj96ofD6JunagQxBVZte7M/edit#gid=1165817805
-*/
     jQuery('.fecha_reporte').daterangepicker({ 
             locale: { cancelLabel: 'Cancelar',
                       applyLabel: 'Aceptar',

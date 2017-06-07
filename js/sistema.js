@@ -123,13 +123,13 @@ var graficos = function () {
             var sparkline = ev.sparklines[0],
                 region = sparkline.getCurrentRegionFields(),
                 value = region.y;
-                console.log(region);
-                console.log(region[0].offset);
+                //console.log(region);
+                //console.log(region[0].offset);
         }).bind('mouseleave', function() {
             $('.mouseoverregion').text('');
-            console.log("osmel");
+            //console.log("osmel");
         }).bind('sparklineClick', function(ev) {  //click sobre 
-            console.log("adg");
+            //console.log("adg");
             var sparkline = ev.sparklines[0],
                     region = sparkline.getCurrentRegionFields();
         });

@@ -391,21 +391,12 @@
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
             $this->db->select("c.proyecto nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
-            //$this->db->select("c.importe");         
-
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
-
-
-            
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_final) > 0 THEN DATE_FORMAT((c.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final", FALSE);
-
             $this->db->select("c.id_val, c.json_items, c.id_usuario, c.id_user_cambio");       
-
-            $this->db->select("c.contrato_firmado, c.pago_anticipado, c.factura_enviada");  
-            $this->db->select("c.privacidad");  
-
-            $this->db->from($this->db->dbprefix('registro_proyecto').' As c');
-
+            $this->db->select("c.contrato_firmado, c.pago_anticipado, c.factura_enviada");   //
+            $this->db->select("c.privacidad");    //
+            $this->db->from($this->registro_proyecto.' As c');
 
             $this->db->where('c.id_proyecto',$data['id_proyecto']);
             $this->db->where('c.id_nivel',$data['id_nivel']);
@@ -430,13 +421,10 @@
             $this->db->select("c.id, c.id_entorno, c.id_proyecto, c.id_nivel, c.profundidad");         
             $this->db->select("c.nombre, c.descripcion, c.costo, c.tiempo_disponible");         
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),'%d-%m-%Y') ELSE '' END ) AS fecha_creacion", FALSE);
-            //$this->db->select("c.importe");         
-            
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_inicial) > 0 THEN DATE_FORMAT((c.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial", FALSE);
             $this->db->select("( CASE WHEN UNIX_TIMESTAMP(c.fecha_final) > 0 THEN DATE_FORMAT((c.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final", FALSE);
-
             $this->db->select("c.id_val, c.json_items, c.id_usuario, c.id_user_cambio");         
-
+            
             $this->db->from($this->db->dbprefix('registro_nivel'.$data["profundidad"]).' As c');
 
 
