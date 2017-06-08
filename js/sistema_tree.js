@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+evento = '';
         //modulo para buscar dentro del tree    
         var to = false;
         jQuery('#buscar').keyup(function () {
@@ -154,24 +154,26 @@ jQuery(document).ready(function($) {
         })
         .on('changed.jstree', function (e, data) { //cambio de arbol
           if(data && data.selected && data.selected.length) {
+            evento = 'cambio';
+            console.log(e);
                 //niveles la raiz = proyecto = 1        
             if ($("#ambito_app").val()==2)  { //if estamos en proyectos
                 $("#nombre").val(data.node.text);
+                console.log(location.host);
+                    //var $element = $("#etiq_usuarios");
+                    //json_items =($element.val()=='');
+                    //console.log(json_items);
+                   //UPDATE  `gestion_proyecto`.`inven_registro_proyecto` SET  `json_items` =  '[]' WHERE  `inven_registro_proyecto`.`id` =95;
+                   //select * from inven_registro_proyecto where id =95;
                 
-                //var $element = $("#etiq_usuarios");
-                
-                //json_items =($element.val()=='');
-                //console.log(json_items);
-
-               
-               //UPDATE  `gestion_proyecto`.`inven_registro_proyecto` SET  `json_items` =  '[]' WHERE  `inven_registro_proyecto`.`id` =95;
-               //select * from inven_registro_proyecto where id =95;
-               
-                jQuery('form').submit(); //guardar toda la información 
+                //dibujar el lado derecho si fue quitado por X
                 jQuery(this).parent().parent().parent().removeClass( "col-sm-12 col-md-12" );
                 jQuery(this).parent().parent().parent().addClass( "col-sm-6 col-md-6" );
                 jQuery(this).parent().parent().parent().siblings().css('display','block');   
                 
+                jQuery('form').submit(); //guardar toda la información 
+
+
 
                 switch (data.node.parents.length) {  //ver cual es el nivel seleccionado?
                     case 1:    
@@ -192,7 +194,7 @@ jQuery(document).ready(function($) {
                                 $("#id_nivel").val(data.node.id);
                                 $("#profundidad").val(data.node.parents.length);
                                 //cuadrante 2
-                                texto= '<div class="portlet light bordered">';
+                                texto= '<div class="portlet light bordered">'; 
                                     texto+='<div class="portlet-title">';
                                         texto+='<div class="caption">';
                                             texto+='<i class="icon-equalizer font-dark hide"></i>';
@@ -247,7 +249,7 @@ jQuery(document).ready(function($) {
                                         texto+='</div> ';
                                     texto+='</div>  ';
                                 texto+='</div>';   
-                                texto+='<em>'+datum.suma.total+'</em>';
+                                texto+='<em>'+datum.suma.total+'</em>'; 
                                 $("#cuadrante2").html(texto);    
                                 texto='';
                                 $("#cuadrante3").html(texto);    
@@ -312,8 +314,8 @@ jQuery(document).ready(function($) {
 
                                     //alert('');
 
-                            
-
+                                    evento ='';
+                                  //console.log("aaa:"+evento);  
 
 
                                 //elt.tagsinput('focus');      
@@ -339,13 +341,70 @@ jQuery(document).ready(function($) {
 elt = $('.objeto_como_tags > > input');
 
 
+//////////////////////////////////////////////////////////
+///////////////////////////PROYECTO////////////////////////
+//////////////////////////////////////////////////////////
+/////////////////////////Guarda un nuevo proyecto
+    jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {
+            var $element = $("#etiq_usuarios");
+           
+            var val = $element.val();
+                 id_val = (JSON.stringify(val));
+                 console.log($element.val());
+            json_items =($element.val()=='') ? '[]' : (JSON.stringify($element.tagsinput('items')));
+            var arreglo = elt.val().split(",");
+            var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
+            var id_user_seleccion =  arreglo[span.index()];
+
+            if ($element.val()=='')  { //sino hay nombre o no hay activo pues que no haga nada
+            //if ( ($element.val()=='') || (span.index()<=0)) { //sino hay nombre o no hay activo pues que no haga nada    
+                return false;     
+            }
+             console.log(id_val);
+             console.log(json_items);
+             console.log(arreglo);
+             console.log(span.index());
+             console.log(id_user_seleccion);  //
+
+            jQuery(this).ajaxSubmit({
+                dataType : "json",
+                data: {
+                         id_val: id_val, 
+                     json_items: json_items,
+                      id_user_seleccion: id_user_seleccion,  
+                 },
+                success: function(data){
+                    if(data.exito != true){
+                        jQuery('#foo').css('display','none');
+                        jQuery('#messages').css('display','block');
+                        jQuery('#messages').addClass('alert-danger');
+                        jQuery('#messages').html(data);
+                        return "error";
+                    }else{
+                            $catalogo = e.target.name;
+                             if (!(e.isTrigger)) { //si fue una presion real del boton guardar
+                                window.location.href = '/'+$catalogo;   
+                             }  else {  //si fue provocado
+                             } 
+                    }
+                } 
+            });
+            return false;
+    }); 
+
 //elt.tagsinput('focus'); 
 
-/*cada vez que se agrega un elemento: 
-  1- busca los costo y lo pone, sino tiene ninguno los pone vacio
+/*
+cada vez que se agrega un elemento: 
+  1- valida
+  2- busca los costo y lo pone, sino tiene ninguno los pone vacio
 */
 jQuery('body').on('itemAdded',elt, function (e) {
-  jQuery('form').submit();//  
+  if (evento!=''){  //cuando ocurre un evento de cambio, este provoca tambien a este evento, necesito que este evento no corra
+        return true;  
+  }
+  jQuery('form').submit();//  este es para el caso en que agregue un nuevo elemento y no haya guardado el anterior, sin cambiar de nivel
+  
   $.ajax({ //actualzar los datos seleccionados  
       url: "/busqueda_costo",
       type: 'POST',
@@ -367,7 +426,8 @@ jQuery('body').on('itemAdded',elt, function (e) {
               jQuery("#fecha_inicial").val("");
               jQuery("#fecha_final").val("");
           }
-          elt.tagsinput('refresh');
+          elt.tagsinput('refresh'); //refresca para que el ultimo se ponga de color rojo
+         
       } 
   });    
 });
@@ -380,7 +440,7 @@ Cdo le da click a un nombre:
      3- busca los costo y lo pone, sino tiene ninguno los pone vacio
 */    
 jQuery('body').on('click','span.label', function (e) { 
-    jQuery('form').submit();//
+    jQuery('form').submit(); //nos referimos al user de donde viene
     jQuery('span.label').removeClass('label-danger etiqactiva');
     jQuery('span.label').removeClass('label-info');
     jQuery('span.label').addClass('label-info');
@@ -515,50 +575,7 @@ jQuery('body').on('itemRemoved',elt, function (e) {
   });   
 }); //fin del evento
 
-//////////////////////////////////////////////////////////
-///////////////////////////PROYECTO////////////////////////
-//////////////////////////////////////////////////////////
-/////////////////////////Guarda un nuevo proyecto
-    jQuery('body').on('submit','#form_nuevo_proyectos', function (e) {
-            var $element = $("#etiq_usuarios");
-            if ($element.val()=='') { //sino hay nombre pues que no haga nada
-                return false;     
-            }
-           
-            
-            var val = $element.val();
-                 id_val = (JSON.stringify(val));
-                 console.log($element.val());
-            json_items =($element.val()=='') ? '[]' : (JSON.stringify($element.tagsinput('items')));
-            var arreglo = elt.val().split(",");
-            var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
-            //console.log(arreglo[span.index()] );
-            var id_user_seleccion =  arreglo[span.index()];
-            jQuery(this).ajaxSubmit({
-                dataType : "json",
-                data: {
-                         id_val: id_val, 
-                     json_items: json_items,
-                      id_user_seleccion: id_user_seleccion,
-                 },
-                success: function(data){
-                    if(data.exito != true){
-                        jQuery('#foo').css('display','none');
-                        jQuery('#messages').css('display','block');
-                        jQuery('#messages').addClass('alert-danger');
-                        jQuery('#messages').html(data);
-                        return "error";
-                    }else{
-                            $catalogo = e.target.name;
-                             if (!(e.isTrigger)) { //si fue una presion real del boton guardar
-                                window.location.href = '/'+$catalogo;   
-                             }  else {  //si fue provocado
-                             } 
-                    }
-                } 
-            });
-            return false;
-    }); 
+
 
 
 

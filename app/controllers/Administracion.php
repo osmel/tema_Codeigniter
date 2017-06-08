@@ -12,47 +12,75 @@ class Administracion extends CI_Controller {
 	}
 
 
-  public function buscador(){
+function validacion_edicion_nivel(){
     if ($this->session->userdata('session') !== TRUE) {
       redirect('/');
     } else {
-       $data['key']=$_GET['key'];
-       $data['num']=$_GET['num'];
-	     $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
+      
+        $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+          
+        if ($this->form_validation->run() === TRUE){
+          $data['id']           = $this->input->post('id');  //catalogo_proyecto
+          $data['id_proy']       = $this->input->post('id_proy'); //registro_proyecto
+          $data['id_nivel']       = $this->input->post('id_nivel'); //registro_proyecto
+          $data['profundidad']       = $this->input->post('profundidad'); //registro_proyecto
+          $data['id_user_seleccion']           = $this->input->post('id_user_seleccion');  //usuario seleccionado
+          $data['id_registro']           = $this->input->post('id_proy');  //usuario seleccionado
+          $data['nombre']         = $this->input->post('nombre'); //nombre_proyecto o niveles
+          $data['proyecto']         = $this->input->post('proyecto'); //nombre_proyecto o niveles
+          $data['descripcion']     = $this->input->post('descripcion'); //descripcion_proyecto o niveles
+          $data['costo']              = $this->input->post('costo'); //costo_proyecto o niveles
+          $data['tiempo_disponible']  = $this->input->post('tiempo_disponible');
+          $data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
+          $data['importe']            = $this->input->post('importe');
+          $data['fecha_inicial']     = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
+          $data['fecha_final']     = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
+          $data['id_val']        = $this->input->post('id_val');  //participantes_proyectos o niveles
+          $data['json_items']      = $this->input->post('json_items'); //participantes_proyectos o niveles
 
-       echo $busqueda;
-    }  
+
+
+           $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
+           //if ( $existe !== TRUE ){
+           if ( TRUE ){
+
+              $data               = $this->security->xss_clean($data);  
+
+              if ($data['id_nivel']==1){ //root
+                     $guardar            = $this->modelo_proyecto->editar_proyecto( $data );
+              } else { //niveles desde el 2-n
+
+                  $existe            = $this->modelo_proyecto->existe_nivel( $data );
+                  if ($existe == true){ //editar
+                      $guardar1            = $this->modelo_proyecto->editar_registro_nivel( $data );
+                  } else { //agregar
+                      $guardar1            = $this->modelo_proyecto->anadir_registro_nivel( $data );
+                  }
+                      
+              }
+              
+              //if ( $guardar !== FALSE ){
+              if ( true ){  
+               // $this->session->set_userdata('creando_proyecto', "0");   //listo para crear otro proyecto
+                $dato['exito'] = true;
+              } else {
+                $dato['exito'] = '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
+              }
+
+           } else {
+              $dato['exito'] = '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
+           }  
+
+
+      } else {      
+        $dato['exito'] = validation_errors('<span class="error">','</span>');
+      }
+    }
+
+    echo json_encode($dato);
   }
-
-
-
-
-
-
-
-/*
-
-function listado_usuarios_niveles(  ){
-
-                   $data['id_proyecto']     = $this->input->post('id_cat_proy');
-                   $data['id_reg_proy']     = $this->input->post('id_reg_proy');
-                   $data['id_nivel']        = $this->input->post('id_nivel');
-          $data['profundidad']              = $this->input->post('profundidad');
-
-                   // $data['datos'] = $this->modelo_proyecto->listado_nivel($data); 
-
-          
-          
-          $usuario_json = $this->modelo_proyecto->listado_usuarios_niveles($data);
-
-          echo $usuario_json;
-
-} 
-
-*/
-
-
-
+  
+  
 function listado_niveles( ){
                    
                    $data['id_proyecto']     = $this->input->post('id_cat_proy');
@@ -92,7 +120,7 @@ function listado_niveles( ){
 
                     
                 $data['tabla'] = $this->session->userdata('creando_proyecto');   
-               $data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
+               $data['suma'] = false; //$this->modelo_proyecto->ruta_suma($data);     
 
           echo json_encode($data);
 }  
@@ -109,7 +137,21 @@ function busqueda_costo( ){
        $data['costo'] = $this->modelo_proyecto->obtener_costo($data);  
        echo json_encode($data);
 
-}  
+} 
+
+//////////
+public function buscador(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('/');
+    } else {
+       $data['key']=$_GET['key'];
+       $data['num']=$_GET['num'];
+       $busqueda = $this->modelo_proyecto->buscador_usuarios($data);
+
+       echo $busqueda;
+    }  
+  }
+
 
 function listado_fechas( ){
                      $data['id_proyecto']   = $this->input->post('id_cat_proy');
@@ -664,95 +706,7 @@ function eliminar_elem(){
 
 }  
 
-function validacion_edicion_nivel(){
-    if ($this->session->userdata('session') !== TRUE) {
-      redirect('/');
-    } else {
-      
-        $this->form_validation->set_rules('proyecto', 'proyecto', 'trim|required|min_length[1]|max_length[80]|xss_clean');
-          
-        if ($this->form_validation->run() === TRUE){
 
-
-
-          $data['id']           = $this->input->post('id');  //catalogo_proyecto
-          $data['id_proy']       = $this->input->post('id_proy'); //registro_proyecto
-          $data['id_nivel']       = $this->input->post('id_nivel'); //registro_proyecto
-          $data['profundidad']       = $this->input->post('profundidad'); //registro_proyecto
-
-          $data['id_user_seleccion']           = $this->input->post('id_user_seleccion');  //usuario seleccionado
-
-          $data['id_registro']           = $this->input->post('id_proy');  //usuario seleccionado
-
-          $data['nombre']         = $this->input->post('nombre'); //nombre_proyecto o niveles
-          $data['proyecto']         = $this->input->post('proyecto'); //nombre_proyecto o niveles
-          $data['descripcion']     = $this->input->post('descripcion'); //descripcion_proyecto o niveles
-          $data['costo']              = $this->input->post('costo'); //costo_proyecto o niveles
-          $data['tiempo_disponible']  = $this->input->post('tiempo_disponible');
-          $data['fecha_creacion']    = date("Y-m-d", strtotime($this->input->post('fecha_creacion')) );
-          $data['importe']            = $this->input->post('importe');
-          $data['fecha_inicial']     = date("Y-m-d", strtotime($this->input->post('fecha_inicial')) );
-          $data['fecha_final']     = date("Y-m-d", strtotime($this->input->post('fecha_final')) );
-          $data['id_val']        = $this->input->post('id_val');  //participantes_proyectos o niveles
-          $data['json_items']      = $this->input->post('json_items'); //participantes_proyectos o niveles
-
-
-
-           $existe            =  $this->modelo_proyecto->check_existente_proyecto( $data );
-           //if ( $existe !== TRUE ){
-           if ( TRUE ){
-
-              $data               = $this->security->xss_clean($data);  
-
-              if ($data['id_nivel']==1){ //root
-                     $guardar            = $this->modelo_proyecto->editar_proyecto( $data );
-              } else { //niveles desde el 2-n
-
-                  $existe            = $this->modelo_proyecto->existe_nivel( $data );
-                  if ($existe == true){ //editar
-                      $guardar1            = $this->modelo_proyecto->editar_registro_nivel( $data );
-                  } else { //agregar
-                      $guardar1            = $this->modelo_proyecto->anadir_registro_nivel( $data );
-                  }
-                      
-              }
-              
-              //die;
-
-              //if ( $guardar !== FALSE ){
-              if ( true ){  
-
-        /*                
-        $data['id_user_seleccion']     = $this->input->post('id_user_seleccion');
-        $data['id_registro']          = $this->input->post('id_registro'); 
-        $data['id_nivel']          = $this->input->post('id_nivel'); 
-        */
-                //$dato['costo'] = $this->modelo_proyecto->obtener_costo($data);  
-
-
-
-               // $this->session->set_userdata('creando_proyecto', "0");   //listo para crear otro proyecto
-                $dato['exito'] = true;
-              } else {
-                $dato['exito'] = '<span class="error"><b>E01</b> - El nuevo proyecto no pudo ser agregada</span>';
-
-                
-
-              }
-
-           } else {
-              $dato['exito'] = '<span class="error"><b>E01</b> - El proyecto que desea agregar ya existe. No es posible agregar dos proyectos iguales.</span>';
-           }  
-
-
-      } else {      
-        $dato['exito'] = validation_errors('<span class="error">','</span>');
-      }
-    }
-
-    echo json_encode($dato);
-  }
-  
 
 function validacion_edicion_proyecto(){
     if ($this->session->userdata('session') !== TRUE) {
