@@ -159,7 +159,7 @@ evento = '';
                 //niveles la raiz = proyecto = 1        
             if ($("#ambito_app").val()==2)  { //if estamos en proyectos
                 $("#nombre").val(data.node.text);
-                console.log(location.host);
+                //console.log(location.host);
                     //var $element = $("#etiq_usuarios");
                     //json_items =($element.val()=='');
                     //console.log(json_items);
@@ -173,7 +173,11 @@ evento = '';
                 
                 jQuery('form').submit(); //guardar toda la información 
 
-
+                 var arreglo = elt.val().split(",");
+                 //console.log(arreglo);
+                var span = elt.siblings("div.bootstrap-tagsinput").find(".etiqactiva");
+                var id_user_seleccion =  arreglo[span.index()];
+               // alert(id_user_seleccion);
 
                 switch (data.node.parents.length) {  //ver cual es el nivel seleccionado?
                     case 1:    
@@ -189,6 +193,7 @@ evento = '';
                                  profundidad: data.node.parents.length,
                                  id_cat_proy: $("input[name=id]").val(),
                                  id_reg_proy: $("#id_proy").val(),
+                                 id_user_seleccion:id_user_seleccion,
                              },
                             success: function(datum){
                                 $("#id_nivel").val(data.node.id);
@@ -249,7 +254,7 @@ evento = '';
                                         texto+='</div> ';
                                     texto+='</div>  ';
                                 texto+='</div>';   
-                                texto+='<em>'+datum.suma.total+'</em>'; 
+                                //texto+='<em>'+datum.suma.total+'</em>';  //este era para imprimir el total de costo
                                 $("#cuadrante2").html(texto);    
                                 texto='';
                                 $("#cuadrante3").html(texto);    

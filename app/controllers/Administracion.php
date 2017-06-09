@@ -87,6 +87,8 @@ function listado_niveles( ){
                    $data['id_reg_proy']     = $this->input->post('id_reg_proy');
                    $data['id_nivel']        = $this->input->post('id_nivel');
                    $data['profundidad']     = $this->input->post('profundidad');
+                   $data['id_user_seleccion']     = $this->input->post('id_user_seleccion');
+                   
 
                     if ($data['id_nivel']==1){ //root
                       $data['datos'] = $this->modelo_proyecto->listado_nivel_proyectos($data); 
@@ -120,8 +122,29 @@ function listado_niveles( ){
 
                     
                 $data['tabla'] = $this->session->userdata('creando_proyecto');   
-               $data['suma'] = false; //$this->modelo_proyecto->ruta_suma($data);     
+              //$data['suma'] = $this->modelo_proyecto->ruta_suma($data);     
+              
+              if ($data['datos']) {
 
+
+                if (json_decode($data['datos']->json_items,true)) {  //si hay usuarios asociados a este nivel
+                    if (!($data['id_user_seleccion'] )) {
+                      $data['id_user_seleccion'] = json_decode($data['datos']->json_items,true)[count(json_decode($data['datos']->json_items,true))-1]['id'];
+                    }
+                     //echo  $data['id_user_seleccion']; die;
+                    $data['suma'] = $this->modelo_proyecto->validacion_fecha($data);     //112-312    
+                } else {
+                    $data['suma'] = false;
+                }
+              } else {
+                $data['suma'] = false;
+              }  
+                
+              
+              
+
+              //print_r(  json_decode($data['datos']->json_items,true)[count(json_decode($data['datos']->json_items,true))-1]['id']  );
+              //print_r(count(json_decode($data['datos']->json_items,true)));
           echo json_encode($data);
 }  
 
@@ -153,7 +176,7 @@ public function buscador(){
   }
 
 
-function listado_fechas( ){
+function listado_fechas( ){ //esta funcion al parecer ya no se necesita
                      $data['id_proyecto']   = $this->input->post('id_cat_proy');
                    $data['id_reg_proy']     = $this->input->post('id_reg_proy');
                    $data['id_nivel']        = $this->input->post('id_nivel');

@@ -109,15 +109,194 @@
      }         
 
 
+public function validacion_fecha($data) {
+      
+      $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+      $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+          //1- "Fecha creacion": se encuentra en "registro_proyecto"
+            $cons = 'SELECT ( CASE WHEN UNIX_TIMESTAMP(c.fecha_creacion) > 0 THEN DATE_FORMAT((c.fecha_creacion),"%d-%m-%Y") ELSE "" END ) AS fecha_creacion
+              FROM  '.$this->registro_proyecto .' as c where  
+             c.id_proyecto='.$data['id_proyecto'].' AND c.id_entorno='.$this->session->userdata('entorno_activo');
+            $result = $this->db->query( $cons); 
+            $fecha_creacion = $result->row()->fecha_creacion;
+
+
+          /*
+           listado de "él nivel seleccionado" y sus "padres, abuelos, etc en orden descendente"
+             [{id_nivel: "1", nm: "App Transportes", id_tabla: "1"}, {id_nivel: "2", nm: "Diseño", id_tabla: "2"},…]
+          */
+
+          $cons = "SELECT estructura.id id_nivel, data.nm,
+                                ( SELECT  (COUNT(padre.id)) AS id_tabla
+                                FROM ".$tabla_struct."  AS nodo,
+                                        ".$tabla_struct."  AS padre
+                                WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                AND nodo.id = estructura.id
+                                GROUP BY nodo.id
+                                ORDER BY nodo.lft
+                                ) id_tabla
+           from (
+            SELECT padre.id
+            FROM ".$tabla_struct."  AS nodo,
+                    ".$tabla_struct."  AS padre
+            WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    AND nodo.id =  ".$data['id_nivel']."
+            ORDER BY padre.lft desc
+          ) estructura
+          INNER JOIN ".$tabla_data."  data ON data.id=estructura.id
+          ";
+
+           $result = $this->db->query( $cons); 
+           $padres = $result->result();
+           //return $padres;
+
+           
+            
+            /*
+               listados de "él nivel seleccionado" y "hijos", nietos, etc
+               [{id_nivel: "2", nm: "Diseño", id_tabla: "2"}, {id_nivel: "3", nm: "nuevo Nombre", id_tabla: "3"},…]
+            */
+
+            $cons = "SELECT estructura.id id_nivel, data.nm, 
+                                ( SELECT  (COUNT(padre.id)) AS id_tabla
+                                FROM ".$tabla_struct."  AS nodo,
+                                        ".$tabla_struct."  AS padre
+                                WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                AND nodo.id = estructura.id
+                                GROUP BY nodo.id
+                                ORDER BY nodo.lft
+                                ) id_tabla
+            from ( 
+            SELECT nodo.id
+            FROM ".$tabla_struct." AS nodo ,
+                 ".$tabla_struct." AS padre
+            WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                    AND padre.id = ".$data['id_nivel']."
+            ORDER BY nodo.lft ) estructura
+            INNER JOIN ".$tabla_data." data ON data.id=estructura.id
+            ";
+            $result = $this->db->query( $cons); 
+            $hijos = $result->result();
+            
+            //return $hijos;
+
+
+            ///////////-----------------------
+          $fecha_inicial = array();
+          $fecha_final= array();
+          foreach ($padres as $key => $value) {
+              if ($data['id_nivel'] != $value->id_nivel) { //excluyendo el nivel actual
+                    $cons = "SELECT  ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final
+                      FROM  ".$this->registro_costos." as n where  n.id_nivel = ".$value->id_nivel."  
+                     AND n.id_user_seleccion='".$data['id_user_seleccion']."' 
+                     AND n.id_registro=".$data['id_reg_proy']." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+                    
+                    if ($result->row()->fecha_inicial!="")
+                      $fecha_inicial[] = $result->row()->fecha_inicial;
+                    if ($result->row()->fecha_final!="")
+                      $fecha_final[] = $result->row()->fecha_final;
+              }      
+          }  
+          /* 
+            Mayor padre izquierdo  = 
+               1- Primero se toma la "mayor fecha_inicial de todos los padres", es decir la fecha_inicial(del padre) que esta más cerca al nivel seleccionado
+               2- En caso de que ningun padre tenga fecha_inicial, entonces tomaremos la "fecha_creacion"
+          */
+           $menor_padre_der = ''; 
+           if  (!($fecha_inicial)) { //sino hay ninguna fecha_inicial entonces tomará la de creacion
+                $mayor_padre_izq = $fecha_creacion; 
+           } else {
+              sort($fecha_inicial);
+                $mayor_padre_izq = $fecha_inicial[count($fecha_inicial)-1]; //  mayor de todas las fechas iniciales
+           }     
+                
+           /*
+               menor padre derecho= 
+               1- Primero se toma la "menor fecha_final de todos los padres", es decir la fecha_final(del padre) que esta más cerca al nivel seleccionado
+               2- En caso de que ningun padre tenga fecha_final, entonces tomaremos "null"
+
+           */
+
+           if  (!($fecha_final)) { //sino hay ninguna fecha_final entonces sera ''
+               // $menor_padre_der = '';
+           } else {      
+                sort($fecha_final);
+                $menor_padre_der = $fecha_final[0];  //menor de todas las fechas finales  //$fecha_final[count($fecha_final)-1]; //
+           }
+
+           //return  $mayor_padre_izq.' - '.$menor_padre_der;
+
+ 
+
+ 
+
+          
+          $fecha_hijo= array();
+
+          foreach ($hijos as $key => $value) {
+              if ($data['id_nivel'] != $value->id_nivel) { //excluyendo el nivel actual
+                    $cons = "SELECT  ( CASE WHEN UNIX_TIMESTAMP(n.fecha_inicial) > 0 THEN DATE_FORMAT((n.fecha_inicial),'%d-%m-%Y') ELSE '' END ) AS fecha_inicial,
+                                    ( CASE WHEN UNIX_TIMESTAMP(n.fecha_final) > 0 THEN DATE_FORMAT((n.fecha_final),'%d-%m-%Y') ELSE '' END ) AS fecha_final
+                      FROM  ".$this->registro_costos." as n where  n.id_nivel = ".$value->id_nivel."  
+                     AND n.id_user_seleccion='".$data['id_user_seleccion']."' 
+                     AND n.id_registro=".$data['id_reg_proy']." 
+                     AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
+                    $result = $this->db->query( $cons); 
+                    
+                    if ($result->row()->fecha_inicial!="")
+                      $fecha_hijo[] = $result->row()->fecha_inicial;
+
+                    if ($result->row()->fecha_final!="")
+                      $fecha_hijo[] = $result->row()->fecha_final;
+              }      
+                
+          }  
+
+
+          /* Mayor hijo y Menor hijo*/
+           if  (!($fecha_hijo)) { //sino hay ninguna fecha_inicial entonces tomará la de creacion
+                $mayor_hijo = ''; 
+                $menor_hijo = ''; 
+           } else {
+              sort($fecha_hijo);
+                $mayor_hijo = $fecha_hijo[count($fecha_hijo)-1]; //  mayor de todas las fechas iniciales
+                $menor_hijo = $fecha_hijo[0]; //  mayor de todas las fechas iniciales
+           }  
+
+return  $menor_hijo.' - '.$mayor_hijo;
+
+           //para fecha inicial
+          $datoss['inicial_start'] = $mayor_padre_izq;
+          $datoss['inicial_end'] = (isset($menor_hijo)) ? $menor_hijo : ( (isset($menor_padre_der)) ? $menor_padre_der : null ); //-Infinity
+
+          //para fecha final
+          $datoss['final_start'] = (isset($mayor_hijo)) ? $mayor_hijo : $mayor_padre_izq ; 
+           $datoss['final_end']=   (isset($menor_padre_der)) ? $menor_padre_der : null ; 
+ 
+
+          return  ($datoss);             
+}
 
 
 //checar si el entorno ya existe
     public function ruta_suma($data){
             
-
-            //lista de las tablas que se ven afectadas
               $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
               $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+
+            /*
+               Las tablas "pstruct y pdata", tienen los niveles que se verán afectados para el proyecto
+              Por tanto necesito una estructura como la siguiente para usarla en:
+                  [{id_nivel: "1", id_tabla: "1"}, {id_nivel: "2", id_tabla: "2"}, {id_nivel: "3", id_tabla: "3"},…]
+
+              registro_proyecto
+              lista de las tablas que se ven afectadas
+            */
+    
+
               $sql="
                     SELECT nodo.id id_nivel, (COUNT(padre.id) ) AS id_tabla
                     FROM ".$tabla_struct." AS nodo,
@@ -128,14 +307,13 @@
               ";                
              $query = $this->db->query($sql);                
              $registros = $query->result();
+             
 
           $total=0;
+        
          foreach ($registros as $key => $value) {
             if ($data['id_nivel'] != $value->id_nivel) //excluyendo el nivel actual
               if ( $value->id_tabla ==1) {
-
-
-
                   $cons = "SELECT sum(n.tiempo_disponible *
                   (SELECT u.salario
                     FROM  ".$this->registro_proyecto ." up inner join ".$this->usuarios ." u on SUBSTRING(  id_val , locate(   '\"', id_val)+1 , CASE WHEN (   locate(   ',',id_val,2)-2    > 0) THEN locate(   ',',id_val,2)-2 ELSE locate(   '\"',id_val,2)-2 END         ) = u.id
@@ -163,7 +341,10 @@
                   $result = $this->db->query( $cons); 
                   $total += $result->row()->total;
               }
-        }  
+        }
+
+        //return $cons;
+        //return $result->result();
 
 
             $cons = 'SELECT importe total FROM  '.$this->catalogo_proyectos .' as c where  
