@@ -194,10 +194,12 @@ public function validacion_fecha($data) {
                      AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
                     $result = $this->db->query( $cons); 
                     
-                    if ($result->row()->fecha_inicial!="")
-                      $fecha_inicial[] = $result->row()->fecha_inicial;
-                    if ($result->row()->fecha_final!="")
-                      $fecha_final[] = $result->row()->fecha_final;
+                    if ($result->num_rows() > 0) {
+                      if ($result->row()->fecha_inicial!="")
+                        $fecha_inicial[] = $result->row()->fecha_inicial;
+                      if ($result->row()->fecha_final!="")
+                        $fecha_final[] = $result->row()->fecha_final;
+                    }  
               }      
           }  
           /* 
@@ -227,11 +229,11 @@ public function validacion_fecha($data) {
                 $menor_padre_der = $fecha_final[0];  //menor de todas las fechas finales  //$fecha_final[count($fecha_final)-1]; //
            }
 
-           //return  $mayor_padre_izq.' - '.$menor_padre_der;
+         //  return  $mayor_padre_izq.' - '.$menor_padre_der;
 
  
 
- 
+
 
           
           $fecha_hijo= array();
@@ -246,11 +248,15 @@ public function validacion_fecha($data) {
                      AND n.id_proyecto=".$data['id_proyecto']." AND n.id_entorno=".$this->session->userdata('entorno_activo');
                     $result = $this->db->query( $cons); 
                     
-                    if ($result->row()->fecha_inicial!="")
-                      $fecha_hijo[] = $result->row()->fecha_inicial;
+                    if ($result->num_rows() > 0) {
+                        if ($result->row()->fecha_inicial!="") {
+                          $fecha_hijo[] = $result->row()->fecha_inicial;
+                        }
 
-                    if ($result->row()->fecha_final!="")
-                      $fecha_hijo[] = $result->row()->fecha_final;
+                        if ($result->row()->fecha_final!=""){
+                          $fecha_hijo[] = $result->row()->fecha_final;
+                        }
+                    }    
               }      
                 
           }  
@@ -259,14 +265,22 @@ public function validacion_fecha($data) {
           /* Mayor hijo y Menor hijo*/
            if  (!($fecha_hijo)) { //sino hay ninguna fecha_inicial entonces tomará la de creacion
                 $mayor_hijo = ''; 
-                $menor_hijo = ''; 
+             //   $menor_hijo = ''; 
            } else {
               sort($fecha_hijo);
                 $mayor_hijo = $fecha_hijo[count($fecha_hijo)-1]; //  mayor de todas las fechas iniciales
                 $menor_hijo = $fecha_hijo[0]; //  mayor de todas las fechas iniciales
            }  
 
-return  $menor_hijo.' - '.$mayor_hijo;
+//return  $menor_hijo.' - '.$mayor_hijo;
+
+
+ /*
+c2656b07-f48c-11e6-b097-7071bce181c3  angel
+dd60b583-1885-11e7-a4da-46dd36118324  deni
+27e4ad13-f22f-11e6-8df6-7071bce181c3  luis
+
+*/           
 
            //para fecha inicial
           $datoss['inicial_start'] = $mayor_padre_izq;

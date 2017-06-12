@@ -418,6 +418,8 @@ jQuery('body').on('itemAdded',elt, function (e) {
           id_user_seleccion: e.item.id, //id_user_seleccion, 
           id_registro: jQuery("#id_proy").val(),
           id_nivel: jQuery("#id_nivel").val(),
+
+          id_cat_proy: $("input[name=id]").val(),   
        },
       success: function(data){
           if  (data.costo != false ) {
@@ -425,6 +427,7 @@ jQuery('body').on('itemAdded',elt, function (e) {
               jQuery("#tiempo_disponible").val(data.costo.tiempo_disponible);
               jQuery("#fecha_inicial").val(data.costo.fecha_inicial);
               jQuery("#fecha_final").val(data.costo.fecha_final);
+
           } else {
               jQuery("#costo").val("");
               jQuery("#tiempo_disponible").val("");
@@ -432,6 +435,13 @@ jQuery('body').on('itemAdded',elt, function (e) {
               jQuery("#fecha_final").val("");
           }
           elt.tagsinput('refresh'); //refresca para que el ultimo se ponga de color rojo
+
+
+        jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
+        jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
+        jQuery('#fecha_final').datepicker('setStartDate', data.suma.final_start );  // a partir de -3 días 
+        jQuery('#fecha_final').datepicker('setEndDate',  ((data.suma.final_end != null ) ?  data.suma.final_end : "+10000d")  );
+        
          
       } 
   });    
@@ -460,6 +470,9 @@ jQuery('body').on('click','span.label', function (e) {
                     id_user_seleccion: arreglo[indice], 
                     id_registro: jQuery("#id_proy").val(),
                     id_nivel: jQuery("#id_nivel").val(),
+
+                    id_cat_proy: $("input[name=id]").val(),   
+
                  },
                 success: function(data){
                     if  (data.costo != false ) {
@@ -467,12 +480,20 @@ jQuery('body').on('click','span.label', function (e) {
                         jQuery("#tiempo_disponible").val(data.costo.tiempo_disponible);
                         jQuery("#fecha_inicial").val(data.costo.fecha_inicial);
                         jQuery("#fecha_final").val(data.costo.fecha_final);
+
                     } else {
                         jQuery("#costo").val("");
                         jQuery("#tiempo_disponible").val("");
                         jQuery("#fecha_inicial").val("");
                         jQuery("#fecha_final").val("");
                     }
+
+                    jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
+                    jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
+                    jQuery('#fecha_final').datepicker('setStartDate', data.suma.final_start );  // a partir de -3 días 
+                    jQuery('#fecha_final').datepicker('setEndDate',  ((data.suma.final_end != null ) ?  data.suma.final_end : "+10000d")  );
+
+
                 } 
             });
 });
@@ -561,6 +582,8 @@ jQuery('body').on('itemRemoved',elt, function (e) {
                   id_user_seleccion: id_user_seleccion, 
                   id_registro: jQuery("#id_proy").val(),
                   id_nivel: jQuery("#id_nivel").val(),
+
+                  id_cat_proy: $("input[name=id]").val(),   
                },
               success: function(data){
                   if  (data.costo != false ) {
@@ -574,6 +597,12 @@ jQuery('body').on('itemRemoved',elt, function (e) {
                       jQuery("#fecha_inicial").val("");
                       jQuery("#fecha_final").val("");
                   }
+
+                jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
+                jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
+                jQuery('#fecha_final').datepicker('setStartDate', data.suma.final_start );  // a partir de -3 días 
+                jQuery('#fecha_final').datepicker('setEndDate',  ((data.suma.final_end != null ) ?  data.suma.final_end : "+10000d")  );
+                  
               } 
           });
       }
