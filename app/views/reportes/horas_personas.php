@@ -30,16 +30,6 @@
 									<?php //$this->load->view( 'navegacion' ); ?>
 
 
-
-
-
-
-
-
-
-
-
-
 		<!-- Aqui comienza filtro	-->
 		<div class="row">      
 			<div class="col-md-12 form-horizontal" id="tab_filtro">      
@@ -51,10 +41,9 @@
 								<label id="label_proveedor" for="descripcion" class="col-sm-12 col-md-12">Rango de fecha</label>
 								<div class="input-prepend input-group  form-group" style="padding-left:15px !important;padding-right:15px !important;">
 		                       		<span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input id="foco" type="text" name="permisos" tipo="general"  class="form-control col-sm-12 col-md-12 fecha_reporte ttip" title="Seleccione un rango de fechas para filtrar los resultados." value="" format = "DD-MM-YYYY"/> 
+									<input id="foco" type="text" name="permisos" tipo="horas_personas" class="form-control col-sm-12 col-md-12 fecha_reporte ttip" title="Seleccione un rango de fechas para filtrar los resultados." value="" format = "DD-MM-YYYY"/> 
 								</div>	
 		                </div>
-
 
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-3">
 							<div class="form-group">
@@ -73,7 +62,6 @@
 							</div>
 						</div>	
 
-
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
 							<div class="form-group">
 								<label for="estructura" class="col-sm-12 col-md-12">Niveles</label>
@@ -87,11 +75,6 @@
 								</div>
 							</div>
 						</div>	
-
-
-
-
-
 
 						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
 							<div class="form-group">
@@ -127,7 +110,7 @@
 							<div class="table-responsive">
 
 								<section>
-									<table id="tabla_rep_general" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+									<table id="tabla_rep_horas_personas" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 										<thead>
 											<tr>
 												
@@ -143,25 +126,6 @@
 		</div>    
 
 <!-- Hasta aqui el filtro	-->
-
-
-
-
-		
-		
-			
-
-
-
-
-
-
-
-
-
-
-
-
 
 		                	</div>
 		                </div>

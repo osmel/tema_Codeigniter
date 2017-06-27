@@ -52,12 +52,64 @@ class Reportes extends CI_Controller {
 
 
 
+
+ public function procesando_rep_horas_personas(){
+         $data=$_POST;
+          echo ($this->modelo_reporte->procesando_rep_horas_personas($data));    
+ } 
+
   
-//***********************areas **********************************//
+public function procesando_rep_horas_personas_detalle(){
+         $data=$_POST;
+         echo ($this->modelo_reporte->procesando_rep_horas_personas_detalle($data));    
+
+ } 
+
+ public function horas_personas(){
+    
+        $id_perfil=$this->session->userdata('id_perfil');
+         $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        if($this->session->userdata('session') === TRUE ){
+                        
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+                  
+                      switch ($id_perfil) {    
+                        case 1:                 
+                            $this->load->view( 'reportes/horas_personas',$data);
+                          break;
+                        case 2: //
+                        case 3: //
+                        case 4: //
+                         if  ( (in_array(5, $coleccion_id_operaciones)) )  { 
+                                $this->load->view( 'reportes/horas_personas',$data);
+                              }   
+                          break;
+                      
+                        default:  
+                          redirect('/');
+                          break;
+                      }
+
+            }
+            else{ 
+              redirect('/');
+            }   
+            
+    }   
+
+  
+//***********************General **********************************//
  public function procesando_rep_general(){
          $data=$_POST;
           echo ($this->modelo_reporte->procesando_rep_general($data));    
-
  } 
 
  
@@ -115,16 +167,7 @@ public function procesando_rep_general_detalle(){
             
     }   
 
-
-
-
-
-
-
-
-
-
-
+ 
 /////////////////validaciones/////////////////////////////////////////	
 
 
@@ -196,4 +239,3 @@ public function procesando_rep_general_detalle(){
 	}		
 
 }
-

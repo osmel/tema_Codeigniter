@@ -1,4 +1,235 @@
 jQuery(document).ready(function($) {
+
+
+
+
+var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
+        "pagingType": "full_numbers",
+        "processing": true,
+        "serverSide": true,
+         "ordering": false,
+        "ajax": {
+                    "url" : "procesando_rep_horas_personas",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                    }
+         },   
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+        "infoCallback": function( settings, start, end, max, total, pre ) {
+             var api = this.api(), data;
+                  var intVal = function ( i ) {
+                      return typeof i === 'string' ?
+                          i.replace(/[\$,]/g, '')*1 :
+                          typeof i === 'number' ?
+                              i : 0;
+                  };
+
+              //las fechas y horas ("QUE SE MUESTRAN U OCULTAN")   
+              for (var i = 9; i <= (intVal(settings.json.intervalo)+10); i++) {
+                      api.column(i).visible(true);      
+                  }        
+              for (var i = (intVal(settings.json.intervalo)+10); i <= 40; i++) {
+                      api.column(i).visible(false);      
+                  }    
+              return pre
+        },
+        "columnDefs": [ 
+                      {
+                        "render": function ( data, type, row ) {    
+                          var color=(data==0) ? "red;font-weight:bold;" : ((data==8) ? "black;" : ((data<8) ? "blue;font-weight:200;" : "green;font-weight:200;") );
+                          return '<span style="color:'+color+';">'+data+'</span>';
+                        },
+                          "targets": [9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]                       
+                      },
+                      { 
+                        "className":      'details-control detalle_horas_personas',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
+                      { 
+                        "render": function ( data, type, row ) {    
+                          var color= "black";
+                          return '<span style="color:'+color+';">'+row[4]+'</span>';
+                        },
+                        "targets": [1] 
+                      },
+                      { 
+                        "render": function ( data, type, row ) {
+                                return '('+row[5]+')' ;
+                      },
+                        "targets": [2] 
+                      },     
+                      {
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                      }
+        ],
+        "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
+            var d = new Date();
+            var n = d.getMonth()+1;
+            var arreglo = ['','Usuarios', 'Proyectos Asociados','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+            var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+            var   fecha_inicial = fecha[0];
+            var   fecha_final = fecha[1];
+             if (fecha[0].length !=0) {
+                     var fi = fecha[0]; //"28-02-2017 0:00";
+                     var fo = fecha[1]; //"02-03-2017 0:00";
+                     var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
+                     for (i = 0; i < dateArray.length; i ++ ) {
+                          arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
+                      }    
+             }
+            var encabezado ='';
+            if (aData.length !=0) {
+                for (var i=0; i<=arreglo.length-(31-aData[0][8]); i++) { //cant_colum
+                         encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
+                }
+                    nHead.innerHTML='<tr role="row">'+encabezado+'</tr>'
+            }    
+        },       
+  });  
+
+
+
+
+
+
+
+
+jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas', function () {
+        var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
+        var row = jQuery('#tabla_rep_horas_personas').DataTable().row( tr );
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            //si la fila esta "cerrada" entonces "abrirla"
+            var d= row.data();
+            var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                //console.log(d);
+                //return false;
+                 /*
+
+                                    0=>$row->id_nivel,
+                                      1=>$row->id_entorno,
+                                      2=>$row->id_proyecto,
+                                      3=>$row->profundidad,
+                                      4=>($row->nombre!=null) ? ($row->nombre.' '.$row->apellidos) : ' No tiene nombre',
+                                      5=>"",// count(json_decode($row->json_items,true) ),
+                                      6=>$row->id,
+                                      7=>$row->salario,
+                                      8=>$intervalo_dia->format('%a'),
+                                    );
+                 */
+                 
+                 $.ajax({
+                        url: "/procesando_rep_horas_personas_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            fecha_inicial : fecha[0],
+                            fecha_final : fecha[1],
+                            id_proyecto: d[2],
+                            id_profundidad: d[3],
+                            id_proy: d[6], //id_nivel
+                            id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
+                            id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+                         },
+                        success: function(datos){
+                            /*
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
+                                if (datos.data) {
+                                     var d = new Date();
+                                     var n = d.getMonth()+1;
+                                     var arreglo = ['','', '','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+                                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                                     var   fecha_inicial = fecha[0];
+                                     var   fecha_final = fecha[1];
+                                     if (fecha[0].length !=0) {
+                                             var fi = fecha[0]; //"28-02-2017 0:00";
+                                             var fo = fecha[1]; //"02-03-2017 0:00";
+                                              var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
+                                              for (i = 0; i < dateArray.length; i ++ ) {
+                                                   arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
+                                              }    
+                                     }
+                                    var encabezado ='';
+                                    for (var i=0; i<=arreglo.length-(31-datos.intervalo); i++) { //cant_colum
+                                          if (i<2) {  //quitar border 
+                                              encabezado +='<th class="text-center cursora" style="border:0px;" width="22%">'+arreglo[i]+'</th>';
+                                          } else {
+                                            encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
+                                          }
+                                    }
+                                    $cad+='<tr style="color:#2ab4c0;" role="row">'+encabezado+'</tr>';
+                                      $.each(datos.data, function( i, value ) {
+                                          if (value[5]!=null){
+                                              $cad +='<tr>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[5]+' '+value[6]+'</span></td>';
+                                                      for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
+                                                               $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
+                                                      }
+                                              $cad +='</tr>';  
+                                          }
+                                     });   
+                                }
+                            $cad+='</table>';  
+                            if (datos.data[0][5]!="") {
+                                  row.child( $cad ).show();
+                                  tr.addClass('shown');
+                            }      
+
+                            */
+
+                        }
+                  });
+        }
+} );
+
+
+
+
+
+
+
+
+
+
+
 /////////////////////////Submit nuevo proyecto
     jQuery('body').on('submit','#form_catalogos', function (e) {
             jQuery(this).ajaxSubmit({
@@ -44,8 +275,20 @@ jQuery(document).ready(function($) {
             separator: ' / ',
     });
     jQuery('.fecha_reporte').on('apply.daterangepicker', function(ev, picker) {
+
         comienzo=true; 
-        var oTable =jQuery('#tabla_rep_general').dataTable();
+        switch (jQuery(this).attr('tipo')) {  //ver cual es el nivel seleccionado?
+              case "general":         
+                  var oTable =jQuery('#tabla_rep_general').dataTable();
+              break;
+              case "horas_personas":         
+                  var oTable =jQuery('#tabla_rep_horas_personas').dataTable();
+              break;
+               default:
+                      break;
+        }            
+
+        
        oTable._fnAjaxUpdate();
     });
 jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', function(e) {
@@ -58,10 +301,19 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', func
         cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia);
         //cuando cambie uno que refresh tabla
         var hash_url = window.location.pathname;
-        if  ( (hash_url=="/general") )   {  
-           var oTable =jQuery('#tabla_rep_general').dataTable();
-           oTable._fnAjaxUpdate();
-        }   
+        //if  ( (hash_url=="/general") )   {  
+
+        switch (hash_url) {  //ver cual es el nivel seleccionado?
+              case "/general":                   
+                  var oTable =jQuery('#tabla_rep_general').dataTable();
+              break;
+              case "/horas_personas":                   
+                  var oTable =jQuery('#tabla_rep_horas_personas').dataTable();
+              break;                  
+              default:
+                 break;
+        }            
+        oTable._fnAjaxUpdate(); 
 });
 function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia) {
         var url = 'cargar_dependencia_totales'; 
@@ -93,6 +345,12 @@ function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id
                 }
             }); 
     }
+
+
+
+
+
+
 var tabla =  jQuery('#tabla_rep_general').dataTable( {
         "pagingType": "full_numbers",
         "processing": true,
@@ -208,7 +466,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
 
 
 var hash_url = window.location.pathname;
-if  ( (hash_url=="/general"))   {  
+if  ( (hash_url=="/general") || (hash_url=="/horas_personas") )   {  
     jQuery("#id_proyecto").trigger('change');
 }  
 
@@ -284,6 +542,8 @@ jQuery('#tabla_rep_general tbody').on('click', 'td.details-control', function ()
                   });
         }
     } );
+
+
    Date.prototype.addDays = function(days) {
        var dat = new Date(this.valueOf())
        dat.setDate(dat.getDate() + days);

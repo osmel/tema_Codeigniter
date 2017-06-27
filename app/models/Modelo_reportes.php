@@ -47,6 +47,141 @@
 
 
 
+    public function procesando_rep_horas_personas($data) {
+
+      
+        $cant_filtrada = array();
+        $cant_filtrada = self::total_rep_general($data);
+        $total_registros =0;
+        foreach ($cant_filtrada as $llave => $valor) {
+             $total_registros +=$valor;
+        }
+        $cadena = addslashes($data['search']['value']);
+        $inicio = $data['start'];
+        $largo = $data['length'];
+        $id_session = $this->session->userdata('id');      
+        $id_perfil=$this->session->userdata('id_perfil');
+
+
+        //fecha
+          if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
+                $data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
+                $data['fecha_final'] = date('d-m-Y', strtotime('today') );  //dia de hoy
+          }
+          $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
+          $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+          $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
+          if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
+          if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
+          if ($data['fecha_inicial'] > $data['fecha_final']) return createDateRangeArray($data['fecha_final'], $data['fecha_inicial']);
+          do { //rango de fecha analizar futuro
+              $arreglo_fechas[] = date('d-m-Y', $data['fecha_inicial']);
+              $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
+          } while($data['fecha_inicial'] <= $data['fecha_final']);
+        //fin dato de fecha  
+
+
+        $filtro="(u.activo=1)";        
+        if  ($data['id_usuario']!="-1"){
+            $filtro.= (($filtro!="") ? " and " : "") . " (h.id_usuario = '".$data['id_usuario']."') ";  
+        }
+        if  ($data['id_proyecto']!="-1"){
+          $filtro.= (($filtro!="") ? " and " : "") . " (h.id_proyecto = '".$data["id_proyecto"]."') ";
+        } 
+        if  ($data['id_area']!="-1"){
+           $filtro.= (($filtro!="") ? " and " : "") . " (u.id_cliente = ".$data['id_area'].") ";
+        }
+        if  ($data['id_profundidad']!="-1"){
+           $filtro.= (($filtro!="") ? " and " : "") . " (h.profundidad = ".$data['id_profundidad'].") ";
+        }
+        $filtro= (($filtro!="") ? " where " : "") . $filtro;
+
+        
+
+        $sql=" SELECT 
+                SQL_CALC_FOUND_ROWS(u.id),
+                u.id,
+                u.nombre,
+                u.apellidos,
+                u.salario,
+                AES_DECRYPT(u.email,'{$this->key_hash}') AS email,
+                h.id_nivel, h.id_entorno, h.id_proyecto, h.profundidad
+              ";
+                foreach ($arreglo_fechas as $key1 => $value1) {
+                    $sql .=" ,SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                }                
+            $sql .="  FROM ".$this->usuarios." u
+                left join ".$this->registro_user_proy." h  on u.id = h.id_usuario 
+                ".$cond_fecha.
+                $filtro.
+                "group by u.id
+                order by AES_DECRYPT(u.email,'{$this->key_hash}')
+                LIMIT ".$inicio.",".$largo; 
+
+
+
+
+              $result = $this->db->query( $sql); 
+
+              if ( $result->num_rows() > 0 ) {
+                      foreach ($result->result() as $key2 => $row) {
+                               $dato[]= array(
+                                      0=>$row->id_nivel,
+                                      1=>$row->id_entorno,
+                                      2=>$row->id_proyecto,
+                                      3=>$row->profundidad,
+                                      4=>($row->nombre!=null) ? ($row->nombre.' '.$row->apellidos) : ' No tiene nombre',
+                                      5=>"",// count(json_decode($row->json_items,true) ),
+                                      6=>$row->id,
+                                      7=>$row->salario,
+                                      8=>$intervalo_dia->format('%a'),
+                                    );
+
+                                for ($i=0; $i <=31 ; $i++) { //iniciar en cero las fechas
+                                    $dato[count($dato)-1][9+$i] = 0;
+                                }
+
+                                foreach ($arreglo_fechas as $key1 => $value1) { //sumatoria por fecha
+                                  $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
+                                }   
+                      }
+            }
+
+        
+
+
+
+           if ( isset($dato) ) {
+                      $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                      $found_rows = $cantidad_consulta->row(); 
+                      $registros_filtrados =  ( (int) $found_rows->cantidad);
+                  return json_encode ( array(
+                    "draw"            => intval( $data['draw'] ),
+                    "recordsTotal"    => $registros_filtrados, 
+                    "recordsFiltered" => $registros_filtrados, 
+                             "intervalo"=>$intervalo_dia->format('%a'),
+                    "data"            =>  $dato 
+                  ));
+          } else {
+              $output = array(
+                "draw" =>  intval( $data['draw'] ),
+                "recordsTotal" => 0,
+                "recordsFiltered" =>0,
+                "intervalo"=>$intervalo_dia->format('%a'),
+                "aaData" => array()
+              );
+              $array[]="";
+              return json_encode($output);
+          }
+          $result->free_result();  
+
+
+
+
+  }       
+
+
+
 public function listado_proyectos_dependiente($data){
 
        $id_entorno = $this->session->userdata('entorno_activo');

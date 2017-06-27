@@ -335,13 +335,22 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                             <span class="badge"><i class="fa fa-print"></i></span>
                                             
                                         </a>
-                                    </li>                                    
+                                    </li>          
 
-                                    
+
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>horas_personas" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">horas personas</span>
+
+
+                                            
+                                            <span class="badge"><i class="fa fa-print"></i></span>
+                                            
+                                        </a>
+                                    </li>                           
                                     
                             <?php } ?>   
-
-
 
                                 <!-- encabezado Entornos -->     
                             <?php //if ($id_perfil==1) { ?>    

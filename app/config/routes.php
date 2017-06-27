@@ -82,11 +82,15 @@ $route['facebook']							= 'nucleo/facebook';
 $route['general']							= 'Reportes/listado_general';
 $route['procesando_rep_general']			= 'Reportes/procesando_rep_general';
 $route['cargar_dependencia_reportes']		= 'Reportes/cargar_dependencia_reportes';
-
-
-
-
 $route['procesando_rep_general_detalle']			= 'Reportes/procesando_rep_general_detalle';
+
+$route['horas_personas']						= 'Reportes/horas_personas';
+$route['procesando_rep_horas_personas']			= 'Reportes/procesando_rep_horas_personas';
+$route['procesando_rep_horas_personas_detalle']	= 'Reportes/procesando_rep_horas_personas_detalle';
+
+
+
+
 
 
 
