@@ -61,6 +61,7 @@ class Reportes extends CI_Controller {
   
 public function procesando_rep_horas_personas_detalle(){
          $data=$_POST;
+         //echo json_encode($data);
          echo ($this->modelo_reporte->procesando_rep_horas_personas_detalle($data));    
 
  } 

@@ -128,6 +128,7 @@ var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
 
 
 jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas', function () {
+
         var tr = $(this).closest('tr');
         var td = $(this).closest('tr > td');
         var row = jQuery('#tabla_rep_horas_personas').DataTable().row( tr );
@@ -138,22 +139,6 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
             //si la fila esta "cerrada" entonces "abrirla"
             var d= row.data();
             var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                //console.log(d);
-                //return false;
-                 /*
-
-                                    0=>$row->id_nivel,
-                                      1=>$row->id_entorno,
-                                      2=>$row->id_proyecto,
-                                      3=>$row->profundidad,
-                                      4=>($row->nombre!=null) ? ($row->nombre.' '.$row->apellidos) : ' No tiene nombre',
-                                      5=>"",// count(json_decode($row->json_items,true) ),
-                                      6=>$row->id,
-                                      7=>$row->salario,
-                                      8=>$intervalo_dia->format('%a'),
-                                    );
-                 */
-                 
                  $.ajax({
                         url: "/procesando_rep_horas_personas_detalle",
                         type: 'POST',
@@ -161,14 +146,15 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                         data: {
                             fecha_inicial : fecha[0],
                             fecha_final : fecha[1],
-                            id_proyecto: d[2],
-                            id_profundidad: d[3],
-                            id_proy: d[6], //id_nivel
-                            id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
+                            id_proyecto: (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0,
+                            id_profundidad: (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : 0,
                             id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+                            id_usuario : d[6], //(jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
+                            //id_proy: d[6], //id_nivel
+                            
                          },
                         success: function(datos){
-                            /*
+                            
                             $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
                                 if (datos.data) {
                                      var d = new Date();
@@ -199,7 +185,7 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                                               $cad +='<tr>';
                                                      $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
                                                      $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
-                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[5]+' '+value[6]+'</span></td>';
+                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[4]+'</span></td>';
                                                       for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
                                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
                                                       }
@@ -213,7 +199,7 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                                   tr.addClass('shown');
                             }      
 
-                            */
+                            
 
                         }
                   });
