@@ -354,7 +354,16 @@
                 h.id_nivel, h.id_entorno, h.id_proyecto, h.profundidad
               ";
                 foreach ($arreglo_fechas as $key1 => $value1) {
-                    $sql .=" ,SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                  if  (date ( "w",strtotime($value1) ) ==6) {
+                     $sql .=", 'Sab' AS 'a".strtotime($value1)."'";
+                  } else if  (date ( "w",strtotime($value1) ) ==0) {
+                     $sql .=", 'Dom' AS 'a".strtotime($value1)."'";
+                  } else {
+                      $sql .=" ,SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                  }
+
+
+                    
                 }                
             $sql .="  FROM ".$this->usuarios." u
                 left join ".$this->registro_user_proy." h  on u.id = h.id_usuario 
@@ -365,9 +374,10 @@
                 LIMIT ".$inicio.",".$largo; 
 
 
-
+                //date ( "w",1498694400 );  //0 (para domingo) hasta 6 (para sábado)
 
               $result = $this->db->query( $sql); 
+              //return json_encode($result->result());
 
               if ( $result->num_rows() > 0 ) {
                       foreach ($result->result() as $key2 => $row) {

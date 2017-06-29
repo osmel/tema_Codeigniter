@@ -65,7 +65,13 @@ var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
         "columnDefs": [ 
                       {
                         "render": function ( data, type, row ) {    
-                          var color=(data==0) ? "red;font-weight:bold;" : ((data==8) ? "black;" : ((data<8) ? "blue;font-weight:200;" : "green;font-weight:200;") );
+                          var color;
+                          if (data=="Sab" || data=="Dom" ) {
+                            color="#b3a003;font-weight:bold;text-decoration:line-through;";
+                          } else {
+                            color=(data==0) ? "red;font-weight:bold;" : ((data==8) ? "black;" : ((data<8) ? "blue;font-weight:200;" : "green;font-weight:200;") );
+                          }  
+
                           return '<span style="color:'+color+';">'+data+'</span>';
                         },
                           "targets": [9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]                       
