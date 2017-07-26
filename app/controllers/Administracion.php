@@ -12,7 +12,7 @@ class Administracion extends CI_Controller {
   }
 
 
-function validacion_edicion_nivel(){
+function validacion_edicion_nivel() {
     if ($this->session->userdata('session') !== TRUE) {
       redirect('/');
     } else {
@@ -156,14 +156,11 @@ function listado_niveles( ){
                   $data['suma'] = $this->modelo_proyecto->validacion_fecha($data);
                   // $data['suma'] = false;
               }
-              
-                            
-              
-              
 
               //print_r(  json_decode($data['datos']->json_items,true)[count(json_decode($data['datos']->json_items,true))-1]['id']  );
               //print_r(count(json_decode($data['datos']->json_items,true)));
-          echo json_encode($data);
+              
+            echo json_encode($data);
 }  
 
 

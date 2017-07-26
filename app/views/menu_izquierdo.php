@@ -296,7 +296,9 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                 
                                 <!-- http://keenthemes.com/preview/metronic/theme/admin_4/ui_icons.html-->
 
-                                <?php if ($id_perfil==1) { ?>
+                                
+                                 <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(6, $coleccion_id_operaciones)) ) { ?> 
+                                     
                                     <li class="nav-item  ">
                                         <a href="<?php echo base_url(); ?>nuevo_usuario" class="nav-link nav-toggle">
                                                 <i class="fa fa-user-plus" ></i>

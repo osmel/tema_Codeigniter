@@ -185,7 +185,7 @@ evento = '';
                     case 3:
                     case 4:
                         $.ajax({
-                           url: "/listado_niveles",
+                           url: "/listado_niveles", 
                            type: 'POST',
                            dataType: "json",
                            data: {

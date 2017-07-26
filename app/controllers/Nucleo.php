@@ -283,7 +283,7 @@ function dashboard() {
             case 2:
             case 3:
             case 4:
-                 if  (in_array(3, $coleccion_id_operaciones))  { 
+                 if  (in_array(6, $coleccion_id_operaciones))  { 
                     $this->load->view( 'usuarios/crud/nuevo_usuario', $data );   
                  }   
               break;

@@ -55,7 +55,13 @@
               $data['fecha_final'] = date('d-m-Y', strtotime('today') );  //dia de hoy
         }
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
-        $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+        //$cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+          $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
+          $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
+          $cond_fecha = "AND (h.fecha BETWEEN '".$data['fecha_ini']."' AND '".$data['fecha_fin']."')";
+
+
           $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
           if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
           if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
@@ -309,13 +315,21 @@
         $id_perfil=$this->session->userdata('id_perfil');
 
 
-        //fecha
+        //sino hay fecha desde el 1er dia del mes actual hasta el día actual
           if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
                 $data['fecha_inicial'] = date('d-m-Y',strtotime("first day of this month"));   //1er dia del mes
                 $data['fecha_final'] = date('d-m-Y', strtotime('today') );  //dia de hoy
           }
+          //cantidad de día que hay en el rango  
           $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
-          $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+          $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
+          $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
+
+
+
+          $cond_fecha = "AND (h.fecha BETWEEN '".$data['fecha_ini']."' AND '".$data['fecha_fin']."')";
+
           $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
           if (is_string($data['fecha_inicial']) === true) $data['fecha_inicial'] = strtotime($data['fecha_inicial']);
           if (is_string($data['fecha_final']) === true ) $data['fecha_final'] = strtotime($data['fecha_final']);
@@ -324,6 +338,7 @@
               $arreglo_fechas[] = date('d-m-Y', $data['fecha_inicial']);
               $data['fecha_inicial'] = strtotime("+ 1 day", $data['fecha_inicial']);
           } while($data['fecha_inicial'] <= $data['fecha_final']);
+          
         //fin dato de fecha  
 
 
@@ -935,7 +950,13 @@ public function listado_todas_areas($data){
 
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
 
-        $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+        //$cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+          $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
+          $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
+
+          $cond_fecha = "AND (h.fecha BETWEEN '".$data['fecha_ini']."' AND '".$data['fecha_fin']."')";
+
 
 
           $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
@@ -1233,7 +1254,13 @@ public function total_rep_general($data) {
 
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
 
-        $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+        //$cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+          $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
+          $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
+
+          $cond_fecha = "AND (h.fecha BETWEEN '".$data['fecha_ini']."' AND '".$data['fecha_fin']."')";
+
 
 
           $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"
@@ -1429,7 +1456,13 @@ $sql=" select
 
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
 
-        $cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+        //$cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
+
+          $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
+          $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
+
+          $cond_fecha = "AND (h.fecha BETWEEN '".$data['fecha_ini']."' AND '".$data['fecha_fin']."')";
+
 
 
           $arreglo_fechas = array();  //"arreglo de fechas" entre un "rango de fechas"

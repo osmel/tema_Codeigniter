@@ -51,6 +51,44 @@
 		}
 
 
+        public function actualizar_costo_proyecto( $data ){
+
+          $id_session = $this->session->userdata('id');
+          
+          $this->db->set( 'id_user_cambio',  $id_session );
+          $this->db->set( 'proyecto', $data['proyecto'] );  
+          $this->db->set( 'importe', $data['importe'] );  
+
+          $this->db->set( 'tabla', $this->session->userdata('creando_proyecto') );
+
+          $profundidad = self::profundidad($this->session->userdata('creando_proyecto'));
+          $ruta = self::ruta($this->session->userdata('creando_proyecto'));
+          $this->db->set( 'profundidad', $profundidad );  
+          $this->db->set( 'ruta', $ruta );  
+          $this->db->set( 'id_entorno', $this->session->userdata('entorno_activo') );
+
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_proyectos );
+            
+            
+              
+          $data['id_entorno'] = $this->session->userdata('entorno_activo');
+          self::editar_registro_proyecto( $data );
+          self::editar_costo_proyecto( $data );
+          
+              
+
+           if ($this->db->affected_rows() > 0){
+                    $data['fila_insertada'] = $data['id'];
+                    $data['operacion'] = 'm';
+                    self::bitacora_proyecto($data);   
+
+                    return TRUE;
+                } else {
+                    return TRUE;
+                }
+                $result->free_result();
+        }    
 
  public function obtener_costo($data){
               
@@ -1558,6 +1596,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
             //$this->db->select("");         
             $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad,r.id_nivel");     
+            $this->db->select("c.importe");         
             /*
             $this->db->select("r.costo, r.tiempo_disponible,c.importe");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
@@ -1834,6 +1873,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
+$this->key_hash    = $_SERVER['HASH_ENCRYPT'];
 
           $this->db->set( 'id_val', $data['id_val'] );  
           $this->db->set( 'json_items', $data['json_items'] );  
