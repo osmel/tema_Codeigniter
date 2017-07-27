@@ -146,7 +146,9 @@
 																			<input value="<?php echo  set_value('importe',$nomb_nom); ?>"  restriccion="decimal" type="text" class="form-control ttip" title="Números y puntos decimales."  id="importe" name="importe" placeholder="0.00">
 																		</fieldset>	
 
+
 					                                            </div>
+					                                            <div class="col-md-12"> Presupuesto Disponible: <span class="presupuesto_disponible"></span>	</div>
 					                                            
 
 

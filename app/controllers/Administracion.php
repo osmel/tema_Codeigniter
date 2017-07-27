@@ -88,6 +88,10 @@ function listado_niveles( ){
                    $data['id_nivel']        = $this->input->post('id_nivel');
                    $data['profundidad']     = $this->input->post('profundidad');
                    $data['id_user_seleccion']     = $this->input->post('id_user_seleccion');
+
+                   $data['importe']     = $this->input->post('importe');
+                   //actualizando el costo
+                   $this->modelo_proyecto->actualizar_costo_proyecto($data); 
                    
 
                     if ($data['id_nivel']==1){ //root
@@ -159,12 +163,31 @@ function listado_niveles( ){
 
               //print_r(  json_decode($data['datos']->json_items,true)[count(json_decode($data['datos']->json_items,true))-1]['id']  );
               //print_r(count(json_decode($data['datos']->json_items,true)));
+
+             //esto es para saber cuantas horas ya fueron asignadas, sin tener en cuenta al usuario q estamos
+             //analizando. porq este usuario puede variar sus horas de asignacion 
+             //$data['personas_asignadas'] = $this->modelo_proyecto->personas_asignadas($data);
+             $data['total_asignado'] = $this->modelo_proyecto->total_asignado($data);
+             $data['usuario_salario'] = $this->modelo_proyecto->get_usuarios_costos($data);
+             //estas serán las horas q ya fueron consumidas en el proyecto, por todos los usuarios
+             //que estan asociados a ese proyecto
+             //$data['horas_consumidas'] = $this->modelo_proyecto->horas_consumidas($data);
+
+              
               
             echo json_encode($data);
 }  
 
 
 
+
+
+  function get_usuarios_costos(){  
+    print_r("expression");
+        print_r($this->modelo_proyecto->get_usuarios_costos() );
+        die;
+
+  }      
 
 function busqueda_costo( ){
 
@@ -179,6 +202,16 @@ function busqueda_costo( ){
 
        $data['costo'] = $this->modelo_proyecto->obtener_costo($data);  
        $data['suma'] = $this->modelo_proyecto->validacion_fecha($data);
+        
+       //esto es para saber cuantas horas ya fueron asignadas, sin tener en cuenta al usuario q estamos
+       //analizando. porq este usuario puede variar sus horas de asignacion 
+       //$data['personas_asignadas'] = $this->modelo_proyecto->personas_asignadas($data);
+       $data['total_asignado'] = $this->modelo_proyecto->total_asignado($data);
+       $data['usuario_salario'] = $this->modelo_proyecto->get_usuarios_costos($data);
+       //estas serán las horas q ya fueron consumidas en el proyecto, por todos los usuarios
+       //que estan asociados a ese proyecto
+       //$data['horas_consumidas'] = $this->modelo_proyecto->horas_consumidas($data);
+
        echo json_encode($data);
 
 } 
@@ -484,6 +517,10 @@ public function crear_tabla_proyecto($nombre) {
     }
 
   
+
+
+
+
   function validar_nuevo_proyecto(){
     if ($this->session->userdata('session') !== TRUE) {
       redirect('/');

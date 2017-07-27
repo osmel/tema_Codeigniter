@@ -42,8 +42,107 @@
               $this->registro_nivel6                         = $this->db->dbprefix('registro_nivel6');
 
               $this->catalogo_areas                         = $this->db->dbprefix('catalogo_empresas');
+              $this->registro_costos                         = $this->db->dbprefix('registro_costos');
 
 		}
+
+    public function balance_ganancia_perdida($data) {
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+ 
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+            
+            //$this->db->select('c.id_user_seleccion' );
+            $this->db->select('p.id' );
+            $this->db->select('p.proyecto, p.importe' );
+            $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as presupuesto', FALSE );
+
+            
+            $this->db->from($this->catalogo_proyectos.' as p');
+
+            $this->db->join($this->registro_costos.' As c', 'p.id = c.id_proyecto and  c.id_entorno=  p.id_entorno','LEFT');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+
+
+          
+            $where='(           
+                                
+                                 (p.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('p.id'); 
+            $result = $this->db->get();             
+            $consulta = $this->db->last_query();
+
+
+
+             
+            //$query = $this->db->query($result);
+            return $this->db->last_query();
+
+
+
+    SELECT  up.id_proyecto, sum(up.horas) as hora_asignado, 
+      (((u.salario+3333.3333333333)/20)/8) as salario_gasto, 
+      (((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as presupuesto 
+    FROM inven_registro_user_proy as up 
+    JOIN inven_usuarios As u ON u.id = up.id_usuario 
+    WHERE ( (up.id_entorno= 1) ) 
+    GROUP BY up.id_proyecto
+
+
+
+    
+     
+
+
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();        
+
+    }  
+
+
+   public function coger_configuracion( $data ){
+                
+              $this->db->select("c.id, c.configuracion,c.activo,c.valor,c.precio");         
+              $this->db->from($this->configuraciones.' As c');
+              $this->db->where('c.id',$data['id']);
+              $result = $this->db->get(  );
+                  if ($result->num_rows() > 0)
+                      return $result->row();
+                  else 
+                      return FALSE;
+                  $result->free_result();
+       }     
 
      public function procesando_rep_horas_personas_detalle($data) {
 

@@ -14,6 +14,61 @@ class Reportes extends CI_Controller {
     
 	}
 
+  public function balance_ganancia_perdida(){
+    
+        $id_perfil=$this->session->userdata('id_perfil');
+         $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        if($this->session->userdata('session') === TRUE ){
+                        
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+                        
+
+                      $data['id_proyecto']=120;
+                      print_r($this->modelo_proyecto->personas_asignadas($data));
+
+                      echo '<br/><br/><br/><br/>';
+                      print_r($this->modelo_reporte->balance_ganancia_perdida($data));    
+                      die;
+                      
+
+                      switch ($id_perfil) {    
+                        case 1:                 
+                            $this->load->view( 'reportes/balance_ganancia_perdida',$data);
+                          break;
+                        case 2: //
+                        case 3: //
+                        case 4: //
+                         if  ( (in_array(5, $coleccion_id_operaciones)) )  { 
+                                $this->load->view( 'reportes/balance_ganancia_perdida',$data);
+                              }   
+                          break;
+                      
+                        default:  
+                          redirect('/');
+                          break;
+                      }
+
+            }
+            else{ 
+              redirect('/');
+            }   
+            
+    }   
+
+
+
+ public function procesando_balance_ganancia_perdida(){
+         $data=$_POST;
+          echo ($this->modelo_reporte->balance_ganancia_perdida($data));    
+ }   
 
 
  function cargar_dependencia_reportes(){

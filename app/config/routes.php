@@ -88,6 +88,8 @@ $route['horas_personas']						= 'Reportes/horas_personas';
 $route['procesando_rep_horas_personas']			= 'Reportes/procesando_rep_horas_personas';
 $route['procesando_rep_horas_personas_detalle']	= 'Reportes/procesando_rep_horas_personas_detalle';
 
+$route['balance_ganancia_perdida']				= 'Reportes/balance_ganancia_perdida';
+
 
 
 

@@ -352,6 +352,20 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
                                         </a>
                                     </li>                           
                                     
+                                    <li class="nav-item  ">
+                                        <a href="<?php echo base_url(); ?>balance_ganancia_perdida" class="nav-link nav-toggle">
+                                            <i class="fa fa-archive"></i>
+                                            <span class="title">Balance ganancia perdida</span>
+
+
+                                            
+                                            <span class="badge"><i class="fa fa-print"></i></span>
+                                            
+                                        </a>
+                                    </li>                           
+                                    
+                                    
+
                             <?php } ?>   
 
                                 <!-- encabezado Entornos -->     
