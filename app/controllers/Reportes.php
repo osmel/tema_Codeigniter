@@ -31,12 +31,6 @@ class Reportes extends CI_Controller {
                       $data['areas'] = $this->modelo_catalogo->listado_areas();    
                         
 
-                      $data['id_proyecto']=120;
-                      print_r($this->modelo_proyecto->personas_asignadas($data));
-
-                      echo '<br/><br/><br/><br/>';
-                      print_r($this->modelo_reporte->balance_ganancia_perdida($data));    
-                      die;
                       
 
                       switch ($id_perfil) {    
@@ -68,6 +62,16 @@ class Reportes extends CI_Controller {
  public function procesando_balance_ganancia_perdida(){
          $data=$_POST;
           echo ($this->modelo_reporte->balance_ganancia_perdida($data));    
+
+
+                     // $data['id_proyecto']=120;
+                     // print_r($this->modelo_proyecto->personas_asignadas($data));
+
+                      echo '<br/><br/><br/><br/>';
+                      print_r($this->modelo_reporte->balance_ganancia_perdida($data));    
+                      die;
+
+          
  }   
 
 

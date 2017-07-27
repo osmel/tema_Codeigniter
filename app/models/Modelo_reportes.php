@@ -95,32 +95,43 @@
             $this->db->where($where);  
             $this->db->group_by('p.id'); 
             $result = $this->db->get();             
-            $consulta = $this->db->last_query();
+            $consulta1 = $this->db->last_query();
 
 
 
              
             //$query = $this->db->query($result);
-            return $this->db->last_query();
+            //return $this->db->last_query();
+
+
+            $this->db->select('up.id_proyecto, sum(up.horas) as hora_asignado');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8) as salario_gasto');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as utilizado', FALSE );
+
+            
+            $this->db->from($this->registro_user_proy.' as up');
+            $this->db->join($this->usuarios.' As u', 'u.id = up.id_usuario');
+
+            $where='(           
+                                
+                                 (up.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('up.id_proyecto'); 
+            $result = $this->db->get();             
+            $consulta2 = $this->db->last_query();
 
 
 
-    SELECT  up.id_proyecto, sum(up.horas) as hora_asignado, 
-      (((u.salario+3333.3333333333)/20)/8) as salario_gasto, 
-      (((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as presupuesto 
-    FROM inven_registro_user_proy as up 
-    JOIN inven_usuarios As u ON u.id = up.id_usuario 
-    WHERE ( (up.id_entorno= 1) ) 
-    GROUP BY up.id_proyecto
+            $sql = ' select c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,
+                    c1.importe-c2.utilizado as ganancia_perdida
+            from ('.$consulta1.') c1
+            JOIN  ('.$consulta2.') as c2 ON c2.id_proyecto = c1.id';
+
+            $result = $this->db->query( $sql); 
 
 
-
-    
-     
-
-
-
-            $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
                    return $result->result();
                 } else {
