@@ -2,6 +2,115 @@ jQuery(document).ready(function($) {
 
 
 
+jQuery('#tabla_rep_balance_ganancia_perdida').dataTable( {
+           "pagingType": "full_numbers",
+          
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+
+                      {                         
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [0] 
+                      },
+                      {                         
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [1] 
+                      },
+
+
+                      {                         
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [2] 
+                      },
+                      {                         
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },
+
+                      {                         
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+          "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
+
+            var balance = ['Proyecto','Costo', 'Presupuesto','Utilizadas', 'Ganancia/Perdida'];
+            var arreglo = balance;
+            for (var i=0; i<=arreglo.length-1; i++) { //cant_colum
+                  
+                  nHead.getElementsByTagName('th')[i].innerHTML = arreglo[i]; 
+                }
+          },         
+  });  
+
+/*
+ 0=>$row->id,
+                                    1=>$row->proyecto,
+                                    2=>$row->importe,
+                                    3=>$row->hora_asignado,
+                                    4=>$row->salario_gasto,
+                                    5=>$row->presupuesto,
+                                    6=>$row->utilizado,
+                                    7=>$row->ganancia_perdida,
+                                      */
+
+
 
 var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
         "pagingType": "full_numbers",

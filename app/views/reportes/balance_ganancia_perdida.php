@@ -129,11 +129,10 @@
 								<section>
 									<table id="tabla_rep_balance_ganancia_perdida" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 										<thead>
-											<tr>
-												
-												
-											</tr>
+										
 										</thead>
+
+										
 									</table>
 								</section>
 							</div>

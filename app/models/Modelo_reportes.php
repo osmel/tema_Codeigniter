@@ -131,9 +131,39 @@
 
             $result = $this->db->query( $sql); 
 
-
+                $dato = array();
                 if ($result->num_rows() > 0){
-                   return $result->result();
+                      foreach ($result->result() as $row) {
+                               $dato[]= array(
+                                    0=>$row->id,
+                                    1=>$row->proyecto,
+                                    2=>$row->importe,
+                                    3=>$row->hora_asignado,
+                                    4=>$row->salario_gasto,
+                                    5=>$row->presupuesto,
+                                    6=>$row->utilizado,
+                                    7=>$row->ganancia_perdida,
+                                      
+                                    );
+                      }
+
+                    //c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,
+                    //c1.importe-c2.utilizado as ganancia_perdida                      
+                      if ( isset($dato) ) {
+
+
+                            return  json_encode ( array(
+                              "draw"            => intval( $data['draw'] ),
+                              "recordsTotal"    => 31, //$total_registros, //intval( self::total_cat_entornos() ), 
+                              "recordsFiltered" => 31, //$total_registros,  //$registros_filtrados, 
+                                       //"intervalo"=>$intervalo_dia->format('%a'),
+                              "data"            =>  $dato 
+                            ));
+                    
+                      } else { 
+                            return FALSE;
+                      }  
+                   
                 } else {
                    return FALSE;
                 }                    

@@ -90,6 +90,9 @@ $route['procesando_rep_horas_personas_detalle']	= 'Reportes/procesando_rep_horas
 
 $route['balance_ganancia_perdida']				= 'Reportes/balance_ganancia_perdida';
 
+$route['procesando_balance_ganancia_perdida']				= 'Reportes/procesando_balance_ganancia_perdida';
+
+
 
 
 

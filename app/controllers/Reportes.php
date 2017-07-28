@@ -66,12 +66,11 @@ class Reportes extends CI_Controller {
 
                      // $data['id_proyecto']=120;
                      // print_r($this->modelo_proyecto->personas_asignadas($data));
-
+                /*
                       echo '<br/><br/><br/><br/>';
                       print_r($this->modelo_reporte->balance_ganancia_perdida($data));    
-                      die;
-
-          
+                      die; 
+                */
  }   
 
 
