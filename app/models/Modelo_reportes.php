@@ -47,7 +47,48 @@
 		}
 
     public function balance_ganancia_perdida($data) {
+
+            $cadena = addslashes($data['search']['value']);
+            $inicio = $data['start'];
+            $largo = $data['length'];
+
+           $columa_order = $data['order'][0]['column'];
+                  $order = $data['order'][0]['dir'];
+  
             $id_entorno = $this->session->userdata('entorno_activo');
+
+
+             switch ($columa_order) {
+                   case '0':
+                        $columna = 'c1.proyecto';
+                     break;
+                   case '1':
+                        $columna = 'c1.fecha_creacion';
+                     break;
+                   case '2':
+                        $columna = 'c1.importe';
+                     break;
+                   
+                   case '3':
+                        $columna = 'c1.presupuesto';
+                     break;
+                   case '4':
+                        $columna = 'ganancia_proyeccion';
+                     break;
+                   case '5':
+                        $columna = 'c2.utilizado';
+                     break;
+                   case '6':
+                        $columna = 'ganancia_perdida';
+                     break;
+
+                   default:
+                        $columna = 'c1.proyecto';
+                     break;
+                 }    
+
+
+       
 
  
              $dias = 20;
@@ -71,23 +112,19 @@
                //gasto por persona
                $gastos_unitario =  $gastos_admin/$cant;  //3333.333
 
-            
-            //$this->db->select('c.id_user_seleccion' );
             $this->db->select('p.id' );
             $this->db->select('p.proyecto, p.importe' );
             $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
             $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
             $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as presupuesto', FALSE );
 
-            
+            $this->db->select("DATE_FORMAT((p.fecha_mac),'%d-%m-%Y') as fecha_creacion",false);            
             $this->db->from($this->catalogo_proyectos.' as p');
 
             $this->db->join($this->registro_costos.' As c', 'p.id = c.id_proyecto and  c.id_entorno=  p.id_entorno','LEFT');
             $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
 
-
-          
-            $where='(           
+             $where='(           
                                 
                                  (p.id_entorno= '.$id_entorno.')
                       )';
@@ -96,13 +133,6 @@
             $this->db->group_by('p.id'); 
             $result = $this->db->get();             
             $consulta1 = $this->db->last_query();
-
-
-
-             
-            //$query = $this->db->query($result);
-            //return $this->db->last_query();
-
 
             $this->db->select('up.id_proyecto, sum(up.horas) as hora_asignado');
             $this->db->select('(((u.salario+3333.3333333333)/20)/8) as salario_gasto');
@@ -123,11 +153,33 @@
             $consulta2 = $this->db->last_query();
 
 
+ 
 
-            $sql = ' select c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,
+
+          $where = ' where (
+
+                      (
+                             ( c1.proyecto LIKE  "%'.$cadena.'%" ) 
+                          OR (c1.fecha_creacion LIKE  "%'.$cadena.'%")
+                          
+                          OR (c1.importe LIKE  "%'.$cadena.'%")
+                          OR (c1.presupuesto LIKE  "%'.$cadena.'%")
+                          OR (c2.utilizado LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c2.utilizado) LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c1.presupuesto) LIKE  "%'.$cadena.'%")
+
+                        
+                       )
+            ) ';  
+            $orden=' order by '.$columna.' '.$order;
+
+            $sql = ' SELECT SQL_CALC_FOUND_ROWS(c1.id), c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,c1.fecha_creacion,
+                    c1.importe-c1.presupuesto as ganancia_proyeccion,
                     c1.importe-c2.utilizado as ganancia_perdida
             from ('.$consulta1.') c1
-            JOIN  ('.$consulta2.') as c2 ON c2.id_proyecto = c1.id';
+            JOIN  ('.$consulta2.') as c2 ON c2.id_proyecto = c1.id '.
+            $where.$orden.'  
+            LIMIT '.$inicio.','.$largo;
 
             $result = $this->db->query( $sql); 
 
@@ -138,8 +190,8 @@
                                     0=>$row->id,
                                     1=>$row->proyecto,
                                     2=>$row->importe,
-                                    3=>$row->hora_asignado,
-                                    4=>$row->salario_gasto,
+                                    3=>$row->fecha_creacion,
+                                    4=>$row->ganancia_proyeccion,
                                     5=>$row->presupuesto,
                                     6=>$row->utilizado,
                                     7=>$row->ganancia_perdida,
@@ -151,11 +203,15 @@
                     //c1.importe-c2.utilizado as ganancia_perdida                      
                       if ( isset($dato) ) {
 
+                           $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                          $found_rows = $cantidad_consulta->row(); 
+                          $registros_filtrados =  ( (int) $found_rows->cantidad);
+
 
                             return  json_encode ( array(
                               "draw"            => intval( $data['draw'] ),
-                              "recordsTotal"    => 31, //$total_registros, //intval( self::total_cat_entornos() ), 
-                              "recordsFiltered" => 31, //$total_registros,  //$registros_filtrados, 
+                              "recordsTotal"    =>$registros_filtrados,
+                              "recordsFiltered" =>$registros_filtrados,
                                        //"intervalo"=>$intervalo_dia->format('%a'),
                               "data"            =>  $dato 
                             ));
@@ -171,6 +227,496 @@
 
     }  
 
+
+
+    public function balance_area_ganancia_perdida($data) {
+
+            $cadena = addslashes($data['search']['value']);
+            $inicio = $data['start'];
+            $largo = $data['length'];
+
+           $columa_order = $data['order'][0]['column'];
+                  $order = $data['order'][0]['dir'];
+  
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+
+             switch ($columa_order) {
+                   case '1':
+                        $columna = 'c1.proyecto';
+                     break;
+                   case '2':
+                        $columna = 'c1.fecha_creacion';
+                     break;
+                   case '3':
+                        $columna = 'c1.importe';
+                     break;
+                   
+                   case '4':
+                        $columna = 'c1.presupuesto';
+                     break;
+                   case '5':
+                        $columna = 'ganancia_proyeccion';
+                     break;
+                   case '6':
+                        $columna = 'c2.utilizado';
+                     break;
+                   case '7':
+                        $columna = 'ganancia_perdida';
+                     break;
+
+                   default:
+                        $columna = 'c1.proyecto';
+                     break;
+                 }    
+
+
+       
+
+ 
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+            $this->db->select('p.id' );
+            $this->db->select('p.proyecto, p.importe' );
+            $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as presupuesto', FALSE );
+
+            $this->db->select("DATE_FORMAT((p.fecha_mac),'%d-%m-%Y') as fecha_creacion",false);            
+            $this->db->from($this->catalogo_proyectos.' as p');
+
+            $this->db->join($this->registro_costos.' As c', 'p.id = c.id_proyecto and  c.id_entorno=  p.id_entorno','LEFT');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+
+             $where='(           
+                                
+                                 (p.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('p.id'); 
+            $result = $this->db->get();             
+            $consulta1 = $this->db->last_query();
+
+            $this->db->select('up.id_proyecto, sum(up.horas) as hora_asignado');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8) as salario_gasto');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as utilizado', FALSE );
+
+            
+            $this->db->from($this->registro_user_proy.' as up');
+            $this->db->join($this->usuarios.' As u', 'u.id = up.id_usuario');
+
+            $where='(           
+                                
+                                 (up.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('up.id_proyecto'); 
+            $result = $this->db->get();             
+            $consulta2 = $this->db->last_query();
+
+
+ 
+
+
+          $where = ' where (
+
+                      (
+                             ( c1.proyecto LIKE  "%'.$cadena.'%" ) 
+                          OR (c1.fecha_creacion LIKE  "%'.$cadena.'%")
+                          
+                          OR (c1.importe LIKE  "%'.$cadena.'%")
+                          OR (c1.presupuesto LIKE  "%'.$cadena.'%")
+                          OR (c2.utilizado LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c2.utilizado) LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c1.presupuesto) LIKE  "%'.$cadena.'%")
+
+                        
+                       )
+            ) ';  
+            $orden=' order by '.$columna.' '.$order;
+
+            $sql = ' SELECT SQL_CALC_FOUND_ROWS(c1.id), c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,c1.fecha_creacion,
+                    c1.importe-c1.presupuesto as ganancia_proyeccion,
+                    c1.importe-c2.utilizado as ganancia_perdida
+            from ('.$consulta1.') c1
+            JOIN  ('.$consulta2.') as c2 ON c2.id_proyecto = c1.id '.
+            $where.$orden.'  
+            LIMIT '.$inicio.','.$largo;
+
+            $result = $this->db->query( $sql); 
+
+                $dato = array();
+                if ($result->num_rows() > 0){
+                      foreach ($result->result() as $row) {
+                               $dato[]= array(
+                                    0=>$row->id,
+                                    1=>$row->proyecto,
+                                    2=>$row->importe,
+                                    3=>$row->fecha_creacion,
+                                    4=>$row->ganancia_proyeccion,
+                                    5=>$row->presupuesto,
+                                    6=>$row->utilizado,
+                                    7=>$row->ganancia_perdida,
+                                      
+                                    );
+                      }
+
+                    //c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,
+                    //c1.importe-c2.utilizado as ganancia_perdida                      
+                      if ( isset($dato) ) {
+
+                           $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                          $found_rows = $cantidad_consulta->row(); 
+                          $registros_filtrados =  ( (int) $found_rows->cantidad);
+
+
+                            return  json_encode ( array(
+                              "draw"            => intval( $data['draw'] ),
+                              "recordsTotal"    =>$registros_filtrados,
+                              "recordsFiltered" =>$registros_filtrados,
+                                       //"intervalo"=>$intervalo_dia->format('%a'),
+                              "data"            =>  $dato 
+                            ));
+                    
+                      } else { 
+                            return FALSE;
+                      }  
+                   
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();        
+
+    }      
+
+
+    public function procesando_balance_area_ganancia_perdida_detalle($data) {
+
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+            /*
+           $cadena = addslashes($data['search']['value']);
+            $inicio = $data['start'];
+            $largo = $data['length'];
+
+           $columa_order = $data['order'][0]['column'];
+                  $order = $data['order'][0]['dir'];
+  
+            
+
+
+             switch ($columa_order) {
+                   case '1':
+                        $columna = 'c1.proyecto';
+                     break;
+                   case '2':
+                        $columna = 'c1.fecha_creacion';
+                     break;
+                   case '3':
+                        $columna = 'c1.importe';
+                     break;
+                   
+                   case '4':
+                        $columna = 'c1.presupuesto';
+                     break;
+                   case '5':
+                        $columna = 'ganancia_proyeccion';
+                     break;
+                   case '6':
+                        $columna = 'c2.utilizado';
+                     break;
+                   case '7':
+                        $columna = 'ganancia_perdida';
+                     break;
+
+                   default:
+                        $columna = 'c1.proyecto';
+                     break;
+                 }    
+                  */  
+
+       
+
+ 
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+            $this->db->select('p.id, u.id_cliente,pr.area');
+            $this->db->select('p.proyecto, p.importe' );
+            $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as presupuesto', FALSE );
+
+            $this->db->select("DATE_FORMAT((p.fecha_mac),'%d-%m-%Y') as fecha_creacion",false);            
+            $this->db->from($this->catalogo_proyectos.' as p');
+
+            $this->db->join($this->registro_costos.' As c', 'p.id = c.id_proyecto and  c.id_entorno=  p.id_entorno','LEFT');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+            $this->db->join($this->proveedores.' As pr', 'pr.id = u.id_cliente');
+            
+
+             $where='(           
+                                
+                                 (p.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('p.id, u.id_cliente'); 
+            $result = $this->db->get();             
+            $consulta1 = $this->db->last_query();  
+
+
+        ////////////////////////////
+            $this->db->select('up.id_proyecto, sum(up.horas) as hora_asignado,u.id_cliente');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8) as salario_gasto');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as utilizado', FALSE );
+
+            
+            $this->db->from($this->registro_user_proy.' as up');
+            $this->db->join($this->usuarios.' As u', 'u.id = up.id_usuario');
+            
+
+            $where='(           
+                                
+                                 (up.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('up.id_proyecto,u.id_cliente'); 
+            $result = $this->db->get();             
+            $consulta2 = $this->db->last_query();
+
+        //////////////////////////////////////
+        
+        //falta unir las 2 consultas para hacer el detalle            
+
+
+
+
+            return    $consulta1;     
+
+    }
+
+
+    public function balance_usuario_ganancia_perdida($data) {
+
+            $cadena = addslashes($data['search']['value']);
+            $inicio = $data['start'];
+            $largo = $data['length'];
+
+           $columa_order = $data['order'][0]['column'];
+                  $order = $data['order'][0]['dir'];
+  
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+              
+             switch ($columa_order) {
+                   case '1':
+                        $columna = 'c1.proyecto';
+                     break;
+                   case '2':
+                        $columna = 'c1.fecha_creacion';
+                     break;
+                   case '3':
+                        $columna = 'c1.importe';
+                     break;
+                   
+                   case '4':
+                        $columna = 'c1.presupuesto';
+                     break;
+                   case '5':
+                        $columna = 'ganancia_proyeccion';
+                     break;
+                   case '6':
+                        $columna = 'c2.utilizado';
+                     break;
+                   case '7':
+                        $columna = 'ganancia_perdida';
+                     break;
+
+                   default:
+                        $columna = 'c1.proyecto';
+                     break;
+                 }    
+
+
+       
+
+ 
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+            $this->db->select('p.id' );
+            $this->db->select('p.proyecto, p.importe' );
+            $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
+            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as presupuesto', FALSE );
+
+            $this->db->select("DATE_FORMAT((p.fecha_mac),'%d-%m-%Y') as fecha_creacion",false);            
+            $this->db->from($this->catalogo_proyectos.' as p');
+
+            $this->db->join($this->registro_costos.' As c', 'p.id = c.id_proyecto and  c.id_entorno=  p.id_entorno','LEFT');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+
+             $where='(           
+                                
+                                 (p.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('p.id'); 
+            $result = $this->db->get();             
+            $consulta1 = $this->db->last_query();
+
+            $this->db->select('up.id_proyecto, sum(up.horas) as hora_asignado');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8) as salario_gasto');
+            $this->db->select('(((u.salario+3333.3333333333)/20)/8)*sum(up.horas) as utilizado', FALSE );
+
+            
+            $this->db->from($this->registro_user_proy.' as up');
+            $this->db->join($this->usuarios.' As u', 'u.id = up.id_usuario');
+
+            $where='(           
+                                
+                                 (up.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('up.id_proyecto'); 
+            $result = $this->db->get();             
+            $consulta2 = $this->db->last_query();
+
+
+ 
+
+
+          $where = ' where (
+
+                      (
+                             ( c1.proyecto LIKE  "%'.$cadena.'%" ) 
+                          OR (c1.fecha_creacion LIKE  "%'.$cadena.'%")
+                          
+                          OR (c1.importe LIKE  "%'.$cadena.'%")
+                          OR (c1.presupuesto LIKE  "%'.$cadena.'%")
+                          OR (c2.utilizado LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c2.utilizado) LIKE  "%'.$cadena.'%")
+                          OR ((c1.importe-c1.presupuesto) LIKE  "%'.$cadena.'%")
+
+                        
+                       )
+            ) ';  
+            $orden=' order by '.$columna.' '.$order;
+
+            $sql = ' SELECT SQL_CALC_FOUND_ROWS(c1.id), c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,c1.fecha_creacion,
+                    c1.importe-c1.presupuesto as ganancia_proyeccion,
+                    c1.importe-c2.utilizado as ganancia_perdida
+            from ('.$consulta1.') c1
+            JOIN  ('.$consulta2.') as c2 ON c2.id_proyecto = c1.id '.
+            $where.$orden.'  
+            LIMIT '.$inicio.','.$largo;
+
+            $result = $this->db->query( $sql); 
+
+                $dato = array();
+                if ($result->num_rows() > 0){
+                      foreach ($result->result() as $row) {
+                               $dato[]= array(
+                                    0=>$row->id,
+                                    1=>$row->proyecto,
+                                    2=>$row->importe,
+                                    3=>$row->fecha_creacion,
+                                    4=>$row->ganancia_proyeccion,
+                                    5=>$row->presupuesto,
+                                    6=>$row->utilizado,
+                                    7=>$row->ganancia_perdida,
+                                      
+                                    );
+                      }
+
+                    //c1.id, c1.proyecto, c1.importe,c1.hora_asignado, c1.salario_gasto, c1.presupuesto, c2.utilizado,
+                    //c1.importe-c2.utilizado as ganancia_perdida                      
+                      if ( isset($dato) ) {
+
+                           $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                          $found_rows = $cantidad_consulta->row(); 
+                          $registros_filtrados =  ( (int) $found_rows->cantidad);
+
+
+                            return  json_encode ( array(
+                              "draw"            => intval( $data['draw'] ),
+                              "recordsTotal"    =>$registros_filtrados,
+                              "recordsFiltered" =>$registros_filtrados,
+                                       //"intervalo"=>$intervalo_dia->format('%a'),
+                              "data"            =>  $dato 
+                            ));
+                    
+                      } else { 
+                            return FALSE;
+                      }  
+                   
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();        
+
+    }        
 
    public function coger_configuracion( $data ){
                 

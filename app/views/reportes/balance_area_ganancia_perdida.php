@@ -7,6 +7,7 @@
 	}
 	tr.shown td.details-control {
 	    background: url('../img/details_close.png') no-repeat center center;
+	     cursor: pointer;
 	}
 
 </style>
@@ -44,19 +45,66 @@
 		<div class="row">      
 			<div class="col-md-12 form-horizontal" id="tab_filtro">      
 						
+						<h4>Filtros</h4>	
+						<hr style="padding: 0px; margin: 15px;"/>					
+
 						
+
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-3">
+							<div class="form-group">
+								<label for="proyecto" class="col-sm-12 col-md-12">Proyecto</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_proyecto" id="id_proyecto" class="form-control ttip" title="Seleccione la proyecto a consultar."
+									 dependencia="">
+
+											<option value="-1">Todos</option>
+											<?php if ( $datos['proyectos']) { ?>
+											<?php foreach ( $datos['proyectos'] as $proyecto ){ ?>
+													<option value="<?php echo $proyecto->id; ?>"><?php echo $proyecto->proyecto; ?></option>
+											<?php } } ?>
+									</select>
+								</div>
+							</div>
+						</div>	
+
+
+						
+
+
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							<div class="form-group">
+								<label for="area" class="col-sm-12 col-md-12">Área</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_area" id="id_area" class="form-control ttip" title="Seleccione la area a consultar."
+									dependencia="">
+											<option value="-1">Todos</option>
+											
+									</select>
+								</div>
+							</div>
+						</div>	
+
+
+
+												
+			
+
+						<br>
 						<div class="col-md-12">
 							<div class="table-responsive">
 
 								<section>
-									<table id="tabla_rep_balance_ganancia_perdida" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+									<table id="tabla_rep_balance_area_ganancia_perdida" class="display table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 										<thead>
 											<tr>
+												<th rowspan="2" width="6%" class="text-center">Detalle</th>
 								                <th rowspan="2" width="20%" class="text-center">Proyecto</th>
 								                <th rowspan="2" width="8%" class="text-center">Fecha</th>
 								                <th rowspan="2" width="6%" class="text-center">Capital</th>
-								                <th colspan="2" width="33%" class="text-center">Proyecciones</th>
-								                <th colspan="2" width="33%" class="text-center">Reales</th>
+								                <th colspan="2" width="30%" class="text-center">Proyecciones</th>
+								                <th colspan="2" width="30%" class="text-center">Reales</th>
 								            </tr>									
 											<tr>
 												<th class="text-center"><strong>Costo</strong></th>

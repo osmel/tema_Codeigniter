@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 
 
 
-jQuery('#tabla_rep_balance_ganancia_perdida').dataTable( {
+jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
            "pagingType": "full_numbers",
           
           "processing": true,
@@ -48,39 +48,48 @@ jQuery('#tabla_rep_balance_ganancia_perdida').dataTable( {
         },
      
         "columnDefs": [ 
-
-                      {                         
+                      { //proyecto                        
                         "render": function ( data, type, row ) {
                                 return row[1] ;
                         },
                         "targets": [0] 
                       },
-                      {                         
+                      { //fecha
                         "render": function ( data, type, row ) {
-                                 return number_format(row[2], 2, '.', ',') ;
+                                return row[3] ;
                         },
                         "targets": [1] 
                       },
-
-
-                      {                         
+                      { // capital               
                         "render": function ( data, type, row ) {
-                                 return number_format(row[5], 2, '.', ',') ;
+                                 return number_format(row[2], 2, '.', ',') ;
                         },
                         "targets": [2] 
                       },
-                      {                         
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },
+                      { //reales costo                        
                         "render": function ( data, type, row ) {
                                  return number_format(row[6], 2, '.', ',') ;
                         },
-                        "targets": [3] 
+                        "targets": [5] 
                       },
 
-                      {                         
+                      { //reales ganancia                          
                         "render": function ( data, type, row ) {
                                  return number_format(row[7], 2, '.', ',') ;
                         },
-                        "targets": [4] 
+                        "targets": [6] 
                       },
                     /*
                       { 
@@ -88,27 +97,323 @@ jQuery('#tabla_rep_balance_ganancia_perdida').dataTable( {
                             "targets": [3,4,5,6,7,8]
                        }     */                              
          ],
+         /*
           "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
 
-            var balance = ['Proyecto','Costo', 'Presupuesto','Utilizadas', 'Ganancia/Perdida'];
+            var balance = ['Proyecto','fecha', 'Capital','P.costo','P.ganancia', 'R.costo','R.ganancia'];
             var arreglo = balance;
             for (var i=0; i<=arreglo.length-1; i++) { //cant_colum
                   
                   nHead.getElementsByTagName('th')[i].innerHTML = arreglo[i]; 
                 }
           },         
+          */
   });  
 
-/*
- 0=>$row->id,
-                                    1=>$row->proyecto,
-                                    2=>$row->importe,
-                                    3=>$row->hora_asignado,
-                                    4=>$row->salario_gasto,
-                                    5=>$row->presupuesto,
-                                    6=>$row->utilizado,
-                                    7=>$row->ganancia_perdida,
-                                      */
+jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
+           "pagingType": "full_numbers",
+          "orderClasses": false, // para quitarle las clases que lleva el orenamiento  "sorting_1"
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_area_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+
+                       { 
+                        "className":      'details-control detalle_balance_area',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
+
+                      { //proyecto                        
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [1] 
+                      },
+                      { //fecha
+                        "render": function ( data, type, row ) {
+                                return row[3] ;
+                        },
+                        "targets": [2] 
+                      },
+                      { // capital               
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [5] 
+                      },
+                      { //reales costo                        
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [6] 
+                      },
+
+                      { //reales ganancia                          
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [7] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+         
+  });  
+
+
+
+
+jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle_balance_area', function () {
+
+        var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
+        var row = jQuery('#tabla_rep_balance_area_ganancia_perdida').DataTable().row( tr );
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+
+
+            //si la fila esta "cerrada" entonces "abrirla"
+            var d= row.data();
+            
+
+                 $.ajax({
+                        url: "/procesando_balance_area_ganancia_perdida_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            
+                            id_proyecto: (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0,
+                            id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+                         },
+                        success: function(datos){
+                          console.log(datos);
+
+                          /*
+                            
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
+                                if (datos.data) {
+                                     var d = new Date();
+                                     var n = d.getMonth()+1;
+                                     var arreglo = ['','', '','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
+                                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                                     var   fecha_inicial = fecha[0];
+                                     var   fecha_final = fecha[1];
+                                     if (fecha[0].length !=0) {
+                                             var fi = fecha[0]; //"28-02-2017 0:00";
+                                             var fo = fecha[1]; //"02-03-2017 0:00";
+                                              var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
+                                              for (i = 0; i < dateArray.length; i ++ ) {
+                                                   arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
+                                              }    
+                                     }
+                                    var encabezado ='';
+                                    for (var i=0; i<=arreglo.length-(31-datos.intervalo); i++) { //cant_colum
+                                          if (i<2) {  //quitar border 
+                                              encabezado +='<th class="text-center cursora" style="border:0px;" width="22%">'+arreglo[i]+'</th>';
+                                          } else {
+                                            encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
+                                          }
+                                    }
+                                    $cad+='<tr style="color:#2ab4c0;" role="row">'+encabezado+'</tr>';
+                                      $.each(datos.data, function( i, value ) {
+                                          if (value[5]!=null){
+                                              $cad +='<tr>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
+                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[4]+'</span></td>';
+                                                      for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
+                                                               $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
+                                                      }
+                                              $cad +='</tr>';  
+                                          }
+                                     });   
+                                }
+                            $cad+='</table>';  
+                            if (datos.data[0][5]!="") {
+                                  row.child( $cad ).show();
+                                  tr.addClass('shown');
+                            }      
+
+                            
+                        */
+                        } //fin del success
+                  });
+
+        } //fin del else
+} );
+
+
+
+jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
+           "pagingType": "full_numbers",
+          "orderClasses": false, // para quitarle las clases que lleva el orenamiento  "sorting_1"
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_usuario_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+
+                       { 
+                        "className":      'details-control',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
+
+                      { //proyecto                        
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [1] 
+                      },
+                      { //fecha
+                        "render": function ( data, type, row ) {
+                                return row[3] ;
+                        },
+                        "targets": [2] 
+                      },
+                      { // capital               
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [5] 
+                      },
+                      { //reales costo                        
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [6] 
+                      },
+
+                      { //reales ganancia                          
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [7] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+         
+  });  
+
+
+/////////////////
 
 
 
@@ -392,6 +697,7 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
         
        oTable._fnAjaxUpdate();
     });
+
 jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', function(e) {
         var campo = jQuery(this).attr("name");   
         var id_proyecto = jQuery('#id_proyecto').val();
@@ -416,6 +722,7 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', func
         }            
         oTable._fnAjaxUpdate(); 
 });
+
 function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia) {
         var url = 'cargar_dependencia_totales'; 
         jQuery.ajax({
