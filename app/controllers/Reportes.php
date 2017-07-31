@@ -14,7 +14,176 @@ class Reportes extends CI_Controller {
     
 	}
 
+  public function balance_ganancia_perdida(){
+    
+        $id_perfil=$this->session->userdata('id_perfil');
+         $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
 
+        if($this->session->userdata('session') === TRUE ){
+                        
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+                        
+
+                      
+
+                      switch ($id_perfil) {    
+                        case 1:                 
+                            $this->load->view( 'reportes/balance_ganancia_perdida',$data);
+                          break;
+                        case 2: //
+                        case 3: //
+                        case 4: //
+                         if  ( (in_array(5, $coleccion_id_operaciones)) )  { 
+                                $this->load->view( 'reportes/balance_ganancia_perdida',$data);
+                              }   
+                          break;
+                      
+                        default:  
+                          redirect('/');
+                          break;
+                      }
+
+            }
+            else{ 
+              redirect('/');
+            }   
+            
+    }   
+
+
+
+ public function procesando_balance_ganancia_perdida(){
+         $data=$_POST;
+          echo ($this->modelo_reporte->balance_ganancia_perdida($data));    
+
+ }   
+
+
+  public function balance_area_ganancia_perdida(){
+    
+        $id_perfil=$this->session->userdata('id_perfil');
+         $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        if($this->session->userdata('session') === TRUE ){
+                        
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+                        
+
+                      
+
+                      switch ($id_perfil) {    
+                        case 1:                 
+                            $this->load->view( 'reportes/balance_area_ganancia_perdida',$data);
+                          break;
+                        case 2: //
+                        case 3: //
+                        case 4: //
+                         if  ( (in_array(5, $coleccion_id_operaciones)) )  { 
+                                $this->load->view( 'reportes/balance_area_ganancia_perdida',$data);
+                              }   
+                          break;
+                      
+                        default:  
+                          redirect('/');
+                          break;
+                      }
+
+            }
+            else{ 
+              redirect('/');
+            }   
+            
+    }   
+
+
+
+ public function procesando_balance_area_ganancia_perdida(){
+         $data=$_POST;
+          echo ($this->modelo_reporte->balance_area_ganancia_perdida($data));    
+
+ }   
+
+public function procesando_balance_area_ganancia_perdida_detalle(){
+         $data=$_POST;
+         //echo json_encode($data);
+         echo ($this->modelo_reporte->procesando_balance_area_ganancia_perdida_detalle($data));    
+
+ } 
+
+
+
+  public function balance_usuario_ganancia_perdida(){
+    
+        $id_perfil=$this->session->userdata('id_perfil');
+         $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        if($this->session->userdata('session') === TRUE ){
+                        
+                      $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+                      $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();    
+                      $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();    
+
+                      $data['areas'] = $this->modelo_catalogo->listado_areas();    
+                        
+
+                      
+
+                      switch ($id_perfil) {    
+                        case 1:                 
+                            $this->load->view( 'reportes/balance_usuario_ganancia_perdida',$data);
+                          break;
+                        case 2: //
+                        case 3: //
+                        case 4: //
+                         if  ( (in_array(5, $coleccion_id_operaciones)) )  { 
+                                $this->load->view( 'reportes/balance_usuario_ganancia_perdida',$data);
+                              }   
+                          break;
+                      
+                        default:  
+                          redirect('/');
+                          break;
+                      }
+
+            }
+            else{ 
+              redirect('/');
+            }   
+            
+    }   
+
+
+
+
+ public function procesando_balance_usuario_ganancia_perdida(){
+         $data=$_POST;
+          echo ($this->modelo_reporte->balance_usuario_ganancia_perdida($data));    
+
+ }   
+
+public function procesando_balance_usuario_ganancia_perdida_detalle(){
+         $data=$_POST;
+         //echo json_encode($data);
+         echo ($this->modelo_reporte->procesando_balance_usuario_ganancia_perdida_detalle($data));    
+
+ } 
 
  function cargar_dependencia_reportes(){
     

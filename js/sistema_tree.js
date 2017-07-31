@@ -185,7 +185,7 @@ evento = '';
                     case 3:
                     case 4:
                         $.ajax({
-                           url: "/listado_niveles",
+                           url: "/listado_niveles", 
                            type: 'POST',
                            dataType: "json",
                            data: {
@@ -194,6 +194,8 @@ evento = '';
                                  id_cat_proy: $("input[name=id]").val(),
                                  id_reg_proy: $("#id_proy").val(),
                                  id_user_seleccion:id_user_seleccion,
+
+                                 importe:$("#importe").val(),
                              },
                             success: function(datum){
                                 $("#id_nivel").val(data.node.id);
@@ -242,7 +244,7 @@ evento = '';
                                                      $tiempo_disponible=(datum.costo==false) ? "" : datum.costo.tiempo_disponible;
                                                 texto+='<input value="'+$tiempo_disponible+'" restriccion="decimal" type="text" class="form-control ttip" ';
                                                         texto+='title="Números y puntos decimales." id="tiempo_disponible" name="tiempo_disponible" placeholder="0.00"> ';
-                                                texto+='<em>Tiempo disponible.</em>';
+                                                texto+='<em>Tiempo disponible.</em><span class="total_asignado"></span>';
                                             texto+='</div> ';
                                             texto+='<div class="input-daterange input-group col-sm-3 col-md-3"" id="datepicker">';
                                                     $fecha_inicial= (datum.costo==false) ? "" : datum.costo.fecha_inicial;
@@ -317,13 +319,21 @@ evento = '';
                                      }   
                                 }
 
-                                    //alert('');
-
                                     evento ='';
                                   //console.log("aaa:"+evento);  
 
 
-                                //elt.tagsinput('focus');      
+                                
+                                var costo_disponible = parseInt(jQuery("#importe").val()) - datum.total_asignado[0].imp_asignado;
+                                jQuery(".presupuesto_disponible").text(number_format(costo_disponible, 2, '.', ','));
+                                
+                                if (datum.usuario_salario[0]) {
+                                    var horas_disponible = costo_disponible/datum.usuario_salario[0].sal_gasto
+                                    jQuery(".total_asignado").text(number_format(horas_disponible, 2, '.', ',')+' hrs');    
+                                }
+
+
+
                             } //fin del sucess
                         });  //fin de $.ajax
                         break;
@@ -437,6 +447,15 @@ jQuery('body').on('itemAdded',elt, function (e) {
           elt.tagsinput('refresh'); //refresca para que el ultimo se ponga de color rojo
 
 
+
+        var costo_disponible = parseInt(jQuery("#importe").val()) - data.total_asignado[0].imp_asignado;
+        jQuery(".presupuesto_disponible").text(number_format(costo_disponible, 2, '.', ','));
+        
+        if (data.usuario_salario[0]) {
+            var horas_disponible = costo_disponible/data.usuario_salario[0].sal_gasto
+            jQuery(".total_asignado").text(number_format(horas_disponible, 2, '.', ',')+' hrs');    
+        }
+
         jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
         jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
         jQuery('#fecha_final').datepicker('setStartDate', data.suma.final_start );  // a partir de -3 días 
@@ -487,6 +506,17 @@ jQuery('body').on('click','span.label', function (e) {
                         jQuery("#fecha_inicial").val("");
                         jQuery("#fecha_final").val("");
                     }
+
+
+                    var costo_disponible = parseInt(jQuery("#importe").val()) - data.total_asignado[0].imp_asignado;
+                    jQuery(".presupuesto_disponible").text(number_format(costo_disponible, 2, '.', ','));
+                    
+                    if (data.usuario_salario[0]) {
+                        var horas_disponible = costo_disponible/data.usuario_salario[0].sal_gasto
+                        jQuery(".total_asignado").text(number_format(horas_disponible, 2, '.', ',')+' hrs');    
+                    }
+
+
 
                     jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
                     jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
@@ -598,6 +628,17 @@ jQuery('body').on('itemRemoved',elt, function (e) {
                       jQuery("#fecha_final").val("");
                   }
 
+
+
+                var costo_disponible = parseInt(jQuery("#importe").val()) - data.total_asignado[0].imp_asignado;
+                jQuery(".presupuesto_disponible").text(number_format(costo_disponible, 2, '.', ','));
+                
+                if (data.usuario_salario[0]) {
+                    var horas_disponible = costo_disponible/data.usuario_salario[0].sal_gasto
+                    jQuery(".total_asignado").text(number_format(horas_disponible, 2, '.', ',')+' hrs');    
+                }
+
+
                 jQuery('#fecha_inicial').datepicker('setStartDate', data.suma.inicial_start );  // a partir de -3 días 
                 jQuery('#fecha_inicial').datepicker('setEndDate',  ((data.suma.inicial_end != null ) ?  data.suma.inicial_end : "+10000d")  );
                 jQuery('#fecha_final').datepicker('setStartDate', data.suma.final_start );  // a partir de -3 días 
@@ -612,6 +653,39 @@ jQuery('body').on('itemRemoved',elt, function (e) {
 
 
 
+
+
+
+
+///////////////////////Formatear
+          //http://phpjs.org/functions/number_format/
+function number_format(number, decimals, dec_point, thousands_sep) {
+  number = (number + '')
+    .replace(/[^0-9+\-Ee.]/g, '');
+  var n = !isFinite(+number) ? 0 : +number,
+    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+    s = '',
+    toFixedFix = function(n, prec) {
+      var k = Math.pow(10, prec);
+      return '' + (Math.round(n * k) / k)
+        .toFixed(prec);
+    };
+  // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+  s = (prec ? toFixedFix(n, prec) : '' + Math.round(n))
+    .split('.');
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+  if ((s[1] || '')
+    .length < prec) {
+    s[1] = s[1] || '';
+    s[1] += new Array(prec - s[1].length + 1)
+      .join('0');
+  }
+  return s.join(dec);
+}
 
 
 });

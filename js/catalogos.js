@@ -2,6 +2,453 @@ jQuery(document).ready(function($) {
 
 
 
+jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
+           "pagingType": "full_numbers",
+          
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+                      { //proyecto                        
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [0] 
+                      },
+                      { //fecha
+                        "render": function ( data, type, row ) {
+                                return row[3] ;
+                        },
+                        "targets": [1] 
+                      },
+                      { // capital               
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [2] 
+                      },
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },
+                      { //reales costo                        
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [5] 
+                      },
+
+                      { //reales ganancia                          
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [6] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+         /*
+          "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
+
+            var balance = ['Proyecto','fecha', 'Capital','P.costo','P.ganancia', 'R.costo','R.ganancia'];
+            var arreglo = balance;
+            for (var i=0; i<=arreglo.length-1; i++) { //cant_colum
+                  
+                  nHead.getElementsByTagName('th')[i].innerHTML = arreglo[i]; 
+                }
+          },         
+          */
+  });  
+
+jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
+           "pagingType": "full_numbers",
+          "orderClasses": false, // para quitarle las clases que lleva el orenamiento  "sorting_1"
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_area_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+
+                       { 
+                        "className":      'details-control detalle_balance_area',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
+
+                      { //proyecto                        
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [1] 
+                      },
+                      { //fecha
+                        "render": function ( data, type, row ) {
+                                return row[3] ;
+                        },
+                        "targets": [2] 
+                      },
+                      { // capital               
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [5] 
+                      },
+                      { //reales costo                        
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [6] 
+                      },
+
+                      { //reales ganancia                          
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [7] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+         
+  });  
+
+
+
+
+jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle_balance_area', function () {
+
+        var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
+        var row = jQuery('#tabla_rep_balance_area_ganancia_perdida').DataTable().row( tr );
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+
+
+            //si la fila esta "cerrada" entonces "abrirla"
+            var d= row.data();
+            //console.log(d);
+            
+
+                 $.ajax({
+                        url: "/procesando_balance_area_ganancia_perdida_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            
+                            id_proyecto: d[0], 
+                                              
+                         },
+                        success: function(datos){
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
+                                if (datos.data) {
+                                      $cad +='<tr>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Área</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                      $cad +='</tr>';  
+
+                                      $.each(datos.data, function( i, value ) {
+                                            $cad +='<tr>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                            $cad +='</tr>';  
+                                     });   
+                                }
+                            $cad+='</table>';  
+                            if (datos!=false) {
+                                  row.child( $cad ).show();
+                                  tr.addClass('shown');
+                            }      
+
+                        } //fin del success
+                  });
+
+        } //fin del else
+} );
+
+
+
+jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
+           "pagingType": "full_numbers",
+          "orderClasses": false, // para quitarle las clases que lleva el orenamiento  "sorting_1"
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+                    "url" : "procesando_balance_usuario_ganancia_perdida",
+                    "type": "POST",
+                    "data": function ( d ) {
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        //d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        /*
+                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
+                        d.fecha_inicial = fecha[0];
+                        d.fecha_final = fecha[1];
+                        
+                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
+                        
+                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        */
+                    }
+         },   
+       
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+     
+        "columnDefs": [ 
+
+                       { 
+                        "className":      'details-control detalle_balance_usuario',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": '',
+                        "targets": [0] 
+                      },
+
+                      { //proyecto                        
+                        "render": function ( data, type, row ) {
+                                return row[1] ;
+                        },
+                        "targets": [1] 
+                      },
+                      { //fecha
+                        "render": function ( data, type, row ) {
+                                return row[3] ;
+                        },
+                        "targets": [2] 
+                      },
+                      { // capital               
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[2], 2, '.', ',') ;
+                        },
+                        "targets": [3] 
+                      },
+                      { //proyeccion costo      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[5], 2, '.', ',') ;
+                        },
+                        "targets": [4] 
+                      },                      
+                      { //proyeccion ganancia      
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[4], 2, '.', ',') ;
+                        },
+                        "targets": [5] 
+                      },
+                      { //reales costo                        
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[6], 2, '.', ',') ;
+                        },
+                        "targets": [6] 
+                      },
+
+                      { //reales ganancia                          
+                        "render": function ( data, type, row ) {
+                                 return number_format(row[7], 2, '.', ',') ;
+                        },
+                        "targets": [7] 
+                      },
+                    /*
+                      { 
+                             "visible": false,
+                            "targets": [3,4,5,6,7,8]
+                       }     */                              
+         ],
+         
+  });  
+
+
+
+
+jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.detalle_balance_usuario', function () {
+
+        var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
+        var row = jQuery('#tabla_rep_balance_usuario_ganancia_perdida').DataTable().row( tr );
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+
+
+            //si la fila esta "cerrada" entonces "abrirla"
+            var d= row.data();
+            //console.log(d);
+            
+
+                 $.ajax({
+                        url: "/procesando_balance_usuario_ganancia_perdida_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            
+                            id_proyecto: d[0], 
+                                              
+                         },
+                        success: function(datos){
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
+                                if (datos.data) {
+                                      $cad +='<tr>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Usuario</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                      $cad +='</tr>';  
+
+                                      $.each(datos.data, function( i, value ) {
+                                            $cad +='<tr>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                            $cad +='</tr>';  
+                                     });   
+                                }
+                            $cad+='</table>';  
+                            if (datos!=false) {
+                                  row.child( $cad ).show();
+                                  tr.addClass('shown');
+                            }      
+
+                        } //fin del success
+                  });
+
+        } //fin del else
+} );
+
+
+
+/////////////////
+
+
 
 var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
         "pagingType": "full_numbers",
@@ -65,7 +512,13 @@ var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
         "columnDefs": [ 
                       {
                         "render": function ( data, type, row ) {    
-                          var color=(data==0) ? "red;font-weight:bold;" : ((data==8) ? "black;" : ((data<8) ? "blue;font-weight:200;" : "green;font-weight:200;") );
+                          var color;
+                          if (data=="Sab" || data=="Dom" ) {
+                            color="#bbbab3;font-weight:bold;text-decoration:line-through;";
+                          } else {
+                            color=(data==0) ? "red;font-weight:bold;" : ((data==8) ? "black;" : ((data<8) ? "blue;font-weight:200;" : "green;font-weight:200;") );
+                          }  
+
                           return '<span style="color:'+color+';">'+data+'</span>';
                         },
                           "targets": [9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]                       
@@ -277,6 +730,7 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
         
        oTable._fnAjaxUpdate();
     });
+
 jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', function(e) {
         var campo = jQuery(this).attr("name");   
         var id_proyecto = jQuery('#id_proyecto').val();
@@ -301,6 +755,7 @@ jQuery("#id_proyecto, #id_profundidad, #id_area, #id_usuario").on('change', func
         }            
         oTable._fnAjaxUpdate(); 
 });
+
 function cargarDependencia_reporte(campo,id_proyecto,id_profundidad, id_area, id_usuario,dependencia) {
         var url = 'cargar_dependencia_totales'; 
         jQuery.ajax({

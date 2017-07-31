@@ -42,15 +42,189 @@
               $this->registro_nivel6                         = $this->db->dbprefix('registro_nivel6');
 
               $this->registro_costos                         = $this->db->dbprefix('registro_costos');
-
-              
-              
-
-              
-
 		}
 
 
+ 
+
+public function total_asignado( $data){
+            $id_entorno = $this->session->userdata('entorno_activo');
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+               
+            $this->db->select('sum((((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*(c.tiempo_disponible)) as imp_asignado', FALSE );
+
+
+            $this->db->from($this->registro_costos.' as c');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+            
+
+            $where='(
+                                  (c.tiempo_disponible <> 0)
+                                AND (c.id_proyecto= '.$data["id_proyecto"].')
+                                AND (c.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            //$this->db->group_by('c.id_user_seleccion');  
+
+
+             /*$consulta1 = 'select todo.imp_asignado
+                          from ('.$consulta1.') todo';
+                          */
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();  
+             
+     }  
+
+  
+
+public function personas_asignadas( $data){
+            $id_entorno = $this->session->userdata('entorno_activo');
+
+
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+
+            //$this->db->select('c.id_user_seleccion' );
+            $this->db->select('sum(c.tiempo_disponible) as hora_asignado', FALSE );
+            //$this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as salario_gasto', FALSE );
+            //$this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as imp_asignado', FALSE );
+
+            $this->db->from($this->registro_costos.' as c');
+            $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
+            
+              
+
+            $where='(
+                                  (c.tiempo_disponible <> 0)
+                                AND (c.id_proyecto= '.$data["id_proyecto"].')
+                                AND (c.id_entorno= '.$id_entorno.')
+                      )';
+
+            $this->db->where($where);  
+            $this->db->group_by('c.id_user_seleccion');  
+
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();  
+             
+     }  
+
+
+
+       //gas
+        public function get_usuarios_costos($data){
+             $dias = 20;
+             $horas = 8;
+
+               //gasto administrativo general por mes
+               $dato['id'] = 4;
+               $gastos_admin = self::coger_configuracion($dato)->precio; 
+
+             
+               //cantidad de personas activos laborando
+               $this->db->from($this->usuarios);
+               $where = '(
+                            ( activo = 0 ) 
+                      )';   
+               $this->db->where($where); 
+               $cant = $this->db->count_all_results();   //6personas
+
+               
+
+               //gasto por persona
+               $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+                $this->db->select('id,salario');
+               $this->db->select('(((salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.') as sal_gasto', FALSE );
+               $this->db->from($this->usuarios);
+  
+              $where='(
+                                (id= "'.$data["id_user_seleccion"].'")
+                      )';
+
+            $this->db->where($where);  
+
+              
+                $result = $this->db->get(  );
+                if ($result->num_rows() > 0){
+                   return $result->result();
+                } else {
+                   return FALSE;
+                }                    
+                $result->free_result();
+
+              
+            
+        }  
+
+
+
+        public function actualizar_costo_proyecto( $data ){ 
+
+          $id_session = $this->session->userdata('id');
+            
+          $this->db->set( 'importe', $data['importe'] );  
+
+          //$this->db->where('id_nivel',$data['id_nivel']);          
+          $this->db->where('id',$data['id_proyecto']);
+          $this->db->where('profundidad',$data['profundidad']);
+          $this->db->where('id_entorno', $this->session->userdata('entorno_activo') );
+
+          $this->db->update($this->catalogo_proyectos);
+
+          return TRUE;
+            
+        }    
 
  public function obtener_costo($data){
               
@@ -1198,7 +1372,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
       public function coger_configuracion( $data ){
                 
-              $this->db->select("c.id, c.configuracion,c.activo,c.valor");         
+              $this->db->select("c.id, c.configuracion,c.activo,c.valor,c.precio");         
               $this->db->from($this->configuraciones.' As c');
               $this->db->where('c.id',$data['id']);
               $result = $this->db->get(  );
@@ -1558,6 +1732,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
 
             //$this->db->select("");         
             $this->db->select("r.id id_proy, r.id_entorno,  r.descripcion, r.privacidad,r.id_nivel");     
+            $this->db->select("c.importe");         
             /*
             $this->db->select("r.costo, r.tiempo_disponible,c.importe");         
             $this->db->select("DATE_FORMAT((r.fecha_creacion),'%d-%m-%Y') as fecha_creacion",false);
@@ -1834,6 +2009,7 @@ WHERE ( ( ( n.id_usuario =  "d86270f7-f22e-11e6-8df6-7071bce181c3" ) OR ( LOCATE
           $this->db->set( 'fecha_inicial', $data['fecha_inicial'] );  
           $this->db->set( 'fecha_final', $data['fecha_final'] );  
 
+          //$this->key_hash    = $_SERVER['HASH_ENCRYPT'];
 
           $this->db->set( 'id_val', $data['id_val'] );  
           $this->db->set( 'json_items', $data['json_items'] );  

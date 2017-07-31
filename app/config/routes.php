@@ -88,6 +88,22 @@ $route['horas_personas']						= 'Reportes/horas_personas';
 $route['procesando_rep_horas_personas']			= 'Reportes/procesando_rep_horas_personas';
 $route['procesando_rep_horas_personas_detalle']	= 'Reportes/procesando_rep_horas_personas_detalle';
 
+//balance por proyecto
+$route['balance_ganancia_perdida']				= 'Reportes/balance_ganancia_perdida';
+$route['procesando_balance_ganancia_perdida']				= 'Reportes/procesando_balance_ganancia_perdida';
+
+//balance por area
+$route['balance_area_ganancia_perdida']				= 'Reportes/balance_area_ganancia_perdida';
+$route['procesando_balance_area_ganancia_perdida']		= 'Reportes/procesando_balance_area_ganancia_perdida';
+$route['procesando_balance_area_ganancia_perdida_detalle']		= 'Reportes/procesando_balance_area_ganancia_perdida_detalle';
+
+
+
+//balance por usuario
+$route['balance_usuario_ganancia_perdida']				= 'Reportes/balance_usuario_ganancia_perdida';
+$route['procesando_balance_usuario_ganancia_perdida']		= 'Reportes/procesando_balance_usuario_ganancia_perdida';
+$route['procesando_balance_usuario_ganancia_perdida_detalle']		= 'Reportes/procesando_balance_usuario_ganancia_perdida_detalle';
+
 
 
 
