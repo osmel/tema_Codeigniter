@@ -171,12 +171,19 @@ public function procesando_balance_area_ganancia_perdida_detalle(){
 
 
 
+
  public function procesando_balance_usuario_ganancia_perdida(){
          $data=$_POST;
-          echo ($this->modelo_reporte->balance_area_ganancia_perdida($data));    
+          echo ($this->modelo_reporte->balance_usuario_ganancia_perdida($data));    
 
  }   
 
+public function procesando_balance_usuario_ganancia_perdida_detalle(){
+         $data=$_POST;
+         //echo json_encode($data);
+         echo ($this->modelo_reporte->procesando_balance_usuario_ganancia_perdida_detalle($data));    
+
+ } 
 
  function cargar_dependencia_reportes(){
     

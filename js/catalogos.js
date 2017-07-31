@@ -235,6 +235,7 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
 
             //si la fila esta "cerrada" entonces "abrirla"
             var d= row.data();
+            //console.log(d);
             
 
                  $.ajax({
@@ -243,60 +244,32 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                         dataType: "json",
                         data: {
                             
-                            id_proyecto: (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0,
-                            id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+                            id_proyecto: d[0], 
+                                              
                          },
                         success: function(datos){
-                          console.log(datos);
-
-                          /*
-                            
                             $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
                                 if (datos.data) {
-                                     var d = new Date();
-                                     var n = d.getMonth()+1;
-                                     var arreglo = ['','', '','1/'+n, '2/'+n,'3/'+n,'4/'+n,'5/'+n,'6/'+n,'7/'+n, '8/'+n,'9/'+n,'10/'+n, '11/'+n,'12/'+n,'13/'+n, '14/'+n,'15/'+n,'16/'+n, '17/'+n,'18/'+n,'19/'+n, '20/'+n,'21/'+n,'22/'+n, '23/'+n,'24/'+n,'25/'+n, '26/'+n,'27/'+n,'28/'+n,'29/'+n,'30/'+n,'31/'+n]; 
-                                     var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                                     var   fecha_inicial = fecha[0];
-                                     var   fecha_final = fecha[1];
-                                     if (fecha[0].length !=0) {
-                                             var fi = fecha[0]; //"28-02-2017 0:00";
-                                             var fo = fecha[1]; //"02-03-2017 0:00";
-                                              var dateArray =  getDates(new Date( fi.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") ), new Date( fo.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2-$1-$3") )  );    
-                                              for (i = 0; i < dateArray.length; i ++ ) {
-                                                   arreglo[i+3] = dateArray[i].getUTCDate()+'/'+ (parseInt(dateArray[i].getMonth())+1);
-                                              }    
-                                     }
-                                    var encabezado ='';
-                                    for (var i=0; i<=arreglo.length-(31-datos.intervalo); i++) { //cant_colum
-                                          if (i<2) {  //quitar border 
-                                              encabezado +='<th class="text-center cursora" style="border:0px;" width="22%">'+arreglo[i]+'</th>';
-                                          } else {
-                                            encabezado +='<th class="text-center cursora" width="22%">'+arreglo[i]+'</th>';
-                                          }
-                                    }
-                                    $cad+='<tr style="color:#2ab4c0;" role="row">'+encabezado+'</tr>';
+                                      $cad +='<tr>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Área</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                      $cad +='</tr>';  
+
                                       $.each(datos.data, function( i, value ) {
-                                          if (value[5]!=null){
-                                              $cad +='<tr>';
-                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
-                                                     $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
-                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[4]+'</span></td>';
-                                                      for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
-                                                               $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
-                                                      }
-                                              $cad +='</tr>';  
-                                          }
+                                            $cad +='<tr>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                            $cad +='</tr>';  
                                      });   
                                 }
                             $cad+='</table>';  
-                            if (datos.data[0][5]!="") {
+                            if (datos!=false) {
                                   row.child( $cad ).show();
                                   tr.addClass('shown');
                             }      
 
-                            
-                        */
                         } //fin del success
                   });
 
@@ -314,13 +287,15 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
                     "url" : "procesando_balance_usuario_ganancia_perdida",
                     "type": "POST",
                     "data": function ( d ) {
+                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        //d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
                         /*
                         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
                         d.fecha_inicial = fecha[0];
                         d.fecha_final = fecha[1];
-                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        
                         d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
-                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        
                         d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
                         */
                     }
@@ -353,7 +328,7 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
         "columnDefs": [ 
 
                        { 
-                        "className":      'details-control',
+                        "className":      'details-control detalle_balance_usuario',
                         "orderable":      false,
                         "data":           null,
                         "defaultContent": '',
@@ -411,6 +386,64 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
          ],
          
   });  
+
+
+
+
+jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.detalle_balance_usuario', function () {
+
+        var tr = $(this).closest('tr');
+        var td = $(this).closest('tr > td');
+        var row = jQuery('#tabla_rep_balance_usuario_ganancia_perdida').DataTable().row( tr );
+        if ( row.child.isShown() ) { //si la fila esta "abierta" entonces "cerrarla"
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+
+
+            //si la fila esta "cerrada" entonces "abrirla"
+            var d= row.data();
+            //console.log(d);
+            
+
+                 $.ajax({
+                        url: "/procesando_balance_usuario_ganancia_perdida_detalle",
+                        type: 'POST',
+                        dataType: "json",
+                        data: {
+                            
+                            id_proyecto: d[0], 
+                                              
+                         },
+                        success: function(datos){
+                            $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
+                                if (datos.data) {
+                                      $cad +='<tr>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Usuario</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                      $cad +='</tr>';  
+
+                                      $.each(datos.data, function( i, value ) {
+                                            $cad +='<tr>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                            $cad +='</tr>';  
+                                     });   
+                                }
+                            $cad+='</table>';  
+                            if (datos!=false) {
+                                  row.child( $cad ).show();
+                                  tr.addClass('shown');
+                            }      
+
+                        } //fin del success
+                  });
+
+        } //fin del else
+} );
+
 
 
 /////////////////

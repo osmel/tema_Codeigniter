@@ -70,7 +70,9 @@ public function total_asignado( $data){
                //gasto por persona
                $gastos_unitario =  $gastos_admin/$cant;  //3333.333
 
-            $this->db->select('(((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*sum(c.tiempo_disponible) as imp_asignado', FALSE );
+               
+            $this->db->select('sum((((u.salario+'.$gastos_unitario.')/'.$dias.')/'.$horas.')*(c.tiempo_disponible)) as imp_asignado', FALSE );
+
 
             $this->db->from($this->registro_costos.' as c');
             $this->db->join($this->usuarios.' As u', 'u.id = c.id_user_seleccion');
@@ -84,6 +86,11 @@ public function total_asignado( $data){
 
             $this->db->where($where);  
             //$this->db->group_by('c.id_user_seleccion');  
+
+
+             /*$consulta1 = 'select todo.imp_asignado
+                          from ('.$consulta1.') todo';
+                          */
 
             $result = $this->db->get(  );
                 if ($result->num_rows() > 0){
