@@ -221,6 +221,68 @@ public function procesando_balance_usuario_ganancia_perdida_detalle(){
 
 
 
+ function cargarDependencia_balance_area(){
+    
+    $data['campo']        = $this->input->post('campo');
+
+    $data['id_proyecto']        = $this->input->post('id_proyecto');
+    $data['id_area']        = $this->input->post('id_area');
+
+    $data['id_profundidad']        = "-1";
+    $data['id_usuario']           = "-1";
+    
+    
+
+    $data['campos'] = ',r.id_proyecto identificador, cp.proyecto nombre,'.$data['id_proyecto'].' activo';  
+    $data['tipo'] = 'id_proyecto';  //para group by
+    $elementos['id_proyecto_gasto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+    
+    
+    $data['campos'] = ',r.id_area identificador, ca.area nombre,'.$data['id_area'].' activo';  
+    $data['tipo'] = 'id_area';  //para group by
+    $elementos['id_area_gasto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+
+   
+    echo json_encode($elementos);
+
+  }
+
+
+
+
+
+ function cargarDependencia_balance_usuario(){
+    
+    $data['campo']        = $this->input->post('campo');
+
+    $data['id_proyecto']        = $this->input->post('id_proyecto');
+    $data['id_area']        = $this->input->post('id_area');
+
+    $data['id_profundidad']       = "-1";
+    $data['id_usuario']           = $this->input->post('id_usuario');
+    
+
+    $data['campos'] = ',r.id_proyecto identificador, cp.proyecto nombre,'.$data['id_proyecto'].' activo';  
+    $data['tipo'] = 'id_proyecto';  //para group by
+    $elementos['id_proyecto_gasto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+    
+    
+    $data['campos'] = ',r.id_area identificador, ca.area nombre,'.$data['id_area'].' activo';  
+    $data['tipo'] = 'id_area';  //para group by
+    $elementos['id_area_gasto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+
+    $data['campos'] = ',r.id_usuario identificador, r.nombre nombre,"'.$data['id_usuario'].'" activo';  
+    $data['tipo'] = 'id_usuario'; //para group by
+    $elementos['id_usuario_gasto']  = $this->modelo_reporte->listado_proyectos_dependiente($data);
+
+    
+    echo json_encode($elementos);
+
+  }
+
+
+
+
 
  public function procesando_rep_horas_personas(){
          $data=$_POST;

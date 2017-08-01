@@ -106,6 +106,11 @@ $route['procesando_balance_usuario_ganancia_perdida_detalle']		= 'Reportes/proce
 
 
 
+$route['cargarDependencia_balance_area']		= 'Reportes/cargarDependencia_balance_area';
+
+$route['cargarDependencia_balance_usuario']		= 'Reportes/cargarDependencia_balance_usuario';
+
+
 
 
 

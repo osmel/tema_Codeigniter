@@ -33,18 +33,11 @@
 
 
 
-
-
-
-
-
-
-
-
 		<!-- Aqui comienza filtro	-->
 		<div class="row">      
 			<div class="col-md-12 form-horizontal" id="tab_filtro">      
 						
+						<!--
 						<h4>Filtros</h4>	
 						<hr style="padding: 0px; margin: 15px;"/>					
 
@@ -55,7 +48,7 @@
 							<div class="form-group">
 								<label for="proyecto" class="col-sm-12 col-md-12">Proyecto</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_proyecto" id="id_proyecto" class="form-control ttip" title="Seleccione la proyecto a consultar."
+									<select name="id_proyecto_gasto" id="id_proyecto_gasto" modulo="usuario" class="form-control ttip" title="Seleccione la proyecto a consultar."
 									 dependencia="">
 
 											<option value="-1">Todos</option>
@@ -75,7 +68,7 @@
 							<div class="form-group">
 								<label for="area" class="col-sm-12 col-md-12">Área</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_area" id="id_area" class="form-control ttip" title="Seleccione la area a consultar."
+									<select name="id_area_gasto" id="id_area_gasto" modulo="usuario" class="form-control ttip" title="Seleccione la area a consultar."
 									dependencia="">
 											<option value="-1">Todos</option>
 											
@@ -90,7 +83,7 @@
 							<div class="form-group">
 								<label for="persona" class="col-sm-12 col-md-12">Usuarios</label>
 								<div class="col-sm-12 col-md-12">
-									<select name="id_usuario" id="id_usuario" class="form-control ttip" title="Seleccione la persona a consultar."
+									<select name="id_usuario_gasto" id="id_usuario_gasto" modulo="usuario" class="form-control ttip" title="Seleccione la persona a consultar."
 									dependencia="">
 											<option value="-1">Todos</option>
 											
@@ -98,7 +91,8 @@
 								</div>
 							</div>
 						</div>							
-			
+					
+						-->
 
 						<br>
 						<div class="col-md-12">
@@ -136,22 +130,6 @@
 		</div>    
 
 <!-- Hasta aqui el filtro	-->
-
-
-
-
-		
-		
-			
-
-
-
-
-
-
-
-
-
 
 
 

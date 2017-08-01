@@ -119,8 +119,8 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
                     "url" : "procesando_balance_area_ganancia_perdida",
                     "type": "POST",
                     "data": function ( d ) {
-                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
-                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
+                        d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
+                        d.id_area = (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0;    
                         /*
                         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
                         d.fecha_inicial = fecha[0];
@@ -220,6 +220,61 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
   });  
 
 
+//dependencia de balance area
+
+jQuery('#id_proyecto_gasto[modulo="area"], #id_area_gasto[modulo="area"]').on('change', function(e) {
+        var campo = jQuery(this).attr("name");   
+        var id_proyecto = jQuery('#id_proyecto_gasto').val();
+        var id_area = jQuery('#id_area_gasto').val();
+        
+        cargarDependencia_balance_area(campo,id_proyecto, id_area);
+        //cuando cambie uno que refresh tabla
+        var hash_url = window.location.pathname;
+        //if  ( (hash_url=="/general") )   {  
+
+        switch (hash_url) {  //ver cual es el nivel seleccionado?
+              case "/balance_area_ganancia_perdida":                   
+                  var oTable =jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable();
+              break;
+              default:
+                 break;
+        }            
+        oTable._fnAjaxUpdate(); 
+});
+
+function cargarDependencia_balance_area(campo,id_proyecto, id_area) {
+        var url = 'cargarDependencia_balance_area'; 
+        jQuery.ajax({
+                url : '/cargarDependencia_balance_area',
+                data:{
+                    campo:campo,
+                    id_proyecto:id_proyecto,
+                    id_area: id_area,
+                },
+                type : 'POST',
+                dataType : 'json',
+                success : function(data) {
+                        jQuery.each(data, function (dep, valor) {
+                            jQuery("#"+dep).html(''); 
+                            jQuery("#"+dep).append('<option value="-1" >Todos</option>'); 
+                                jQuery.each(valor, function (i, value) {
+                                    jQuery("#"+dep).append('<option '+ ( ((value.identificador).toString()==(value.activo).toString()) ? 'selected' : '') +' value="' + value.identificador + '" >' + value.nombre + '</option>');                                        
+                                });
+                        });
+                    return false;
+                },
+                error : function(jqXHR, status, error) {
+                },
+                complete : function(jqXHR, status) {
+                }
+            }); 
+    }
+
+
+
+
+
+
 
 
 jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle_balance_area', function () {
@@ -245,6 +300,8 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                         data: {
                             
                             id_proyecto: d[0], 
+                            //d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
+                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0,                               
                                               
                          },
                         success: function(datos){
@@ -253,7 +310,8 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                                       $cad +='<tr>';
                                           $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Área</span></td>';
                                           $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
-                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Costo Real'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Ganancia'+'</span></td>';
                                       $cad +='</tr>';  
 
                                       $.each(datos.data, function( i, value ) {
@@ -261,6 +319,7 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5]-value[6], 2, '.', ',')+'</span></td>';
                                             $cad +='</tr>';  
                                      });   
                                 }
@@ -287,7 +346,10 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
                     "url" : "procesando_balance_usuario_ganancia_perdida",
                     "type": "POST",
                     "data": function ( d ) {
-                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
+                        d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario_gasto').val()!=null) ? jQuery('#id_usuario_gasto').val() : 0;    
+                        d.id_area = (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0;    
+
                         //d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
                         /*
                         var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
@@ -389,6 +451,56 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
 
 
 
+jQuery('#id_proyecto_gasto[modulo="usuario"], #id_area_gasto[modulo="usuario"], #id_usuario_gasto[modulo="usuario"]').on('change', function(e) {
+        var campo = jQuery(this).attr("name");   
+        var id_proyecto = jQuery('#id_proyecto_gasto').val();
+        var id_area = jQuery('#id_area_gasto').val();
+        var id_usuario = jQuery('#id_usuario_gasto').val();
+        
+        cargarDependencia_balance_usuario(campo,id_proyecto, id_area, id_usuario);
+        //cuando cambie uno que refresh tabla
+        var hash_url = window.location.pathname;
+        //if  ( (hash_url=="/general") )   {  
+
+        switch (hash_url) {  //ver cual es el nivel seleccionado?
+              case "/balance_usuario_ganancia_perdida":                   
+                  var oTable =jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable();
+              break;
+              default:
+                 break;
+        }            
+        oTable._fnAjaxUpdate(); 
+});
+
+function cargarDependencia_balance_usuario(campo,id_proyecto, id_area, id_usuario) {
+        var url = 'cargarDependencia_balance_usuario'; 
+        jQuery.ajax({
+                url : '/cargarDependencia_balance_usuario',
+                data:{
+                    campo:campo,
+                    id_proyecto:id_proyecto,
+                    id_area: id_area,
+                    id_usuario:id_usuario
+                },
+                type : 'POST',
+                dataType : 'json',
+                success : function(data) {
+                        jQuery.each(data, function (dep, valor) {
+                            jQuery("#"+dep).html(''); 
+                            jQuery("#"+dep).append('<option value="-1" >Todos</option>'); 
+                                jQuery.each(valor, function (i, value) {
+                                    jQuery("#"+dep).append('<option '+ ( ((value.identificador).toString()==(value.activo).toString()) ? 'selected' : '') +' value="' + value.identificador + '" >' + value.nombre + '</option>');                                        
+                                });
+                        });
+                    return false;
+                },
+                error : function(jqXHR, status, error) {
+                },
+                complete : function(jqXHR, status) {
+                }
+            }); 
+    }
+
 
 jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.detalle_balance_usuario', function () {
 
@@ -413,6 +525,9 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
                         data: {
                             
                             id_proyecto: d[0], 
+                            id_usuario : (jQuery('#id_usuario_gasto').val()!=null) ? jQuery('#id_usuario_gasto').val() : 0,
+                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0    
+
                                               
                          },
                         success: function(datos){
@@ -421,7 +536,8 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
                                       $cad +='<tr>';
                                           $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">Usuario</span></td>';
                                           $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Proyección Costo'+'</span></td>';
-                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Real Costo'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Costo Real'+'</span></td>';
+                                          $cad +='<td class="text-center cursora" width="22%"><span style="font-weight:bold;">'+'Ganancia'+'</span></td>';
                                       $cad +='</tr>';  
 
                                       $.each(datos.data, function( i, value ) {
@@ -429,6 +545,7 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5]-value[6], 2, '.', ',')+'</span></td>';
                                             $cad +='</tr>';  
                                      });   
                                 }
