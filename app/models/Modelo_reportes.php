@@ -1004,7 +1004,7 @@
 
             $where='(           
                                 
-                                 (up.id_entorno= '.$id_entorno.') and (up.id_proyecto= '.$data['id_proyecto'].')
+                               ( u.activo = 1 ) and   (up.id_entorno= '.$id_entorno.') and (up.id_proyecto= '.$data['id_proyecto'].')
                       )';
 
               /*        
