@@ -37,7 +37,6 @@
 		<div class="row">      
 			<div class="col-md-12 form-horizontal" id="tab_filtro">      
 						
-						<!--
 						<h4>Filtros</h4>	
 						<hr style="padding: 0px; margin: 15px;"/>					
 
@@ -92,7 +91,7 @@
 							</div>
 						</div>							
 					
-						-->
+					
 
 						<br>
 						<div class="col-md-12">

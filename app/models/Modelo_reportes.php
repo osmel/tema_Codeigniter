@@ -1032,18 +1032,20 @@
         /////////uniendo ambas consultas/////////////////////////////
 
               $where="";
-             /* 
+             
               if  ($data['id_proyecto']!="-1"){
-                $where.= (($where!="") ? " and " : "") . " (todo.id = '".$data["id_proyecto"]."') ";
+                $where.= (($where!="") ? " and " : "") . " (todo.id = ".$data["id_proyecto"].") ";
               } 
+              
               if  ($data['id_area']!="-1"){
                  $where.= (($where!="") ? " and " : "") . " (todo.id_cliente = ".$data['id_area'].") ";
               }
+              
               if  ($data['id_usuario']!="-1"){
                  $where.= (($where!="") ? " and " : "") . " (todo.id_user = '".$data['id_usuario']."') ";
               }              
-              $where= (($where!="") ? "" : "") . $where;            
-              */
+              $where= (($where!="") ? " where" : "") . $where;            
+              
 
 
           $sql = ' select id, id_user, nombre,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado
