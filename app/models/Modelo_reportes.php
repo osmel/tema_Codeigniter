@@ -192,26 +192,6 @@
                 .$orden.'
                 LIMIT '.$inicio.','.$largo;
 
-                
-
-
-
-               $subtotal_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
-                 sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
-                 from ( '.$consulta1.' union '. $consulta2. ') todo '.
-                $where
-                .$orden.'
-                LIMIT '.$inicio.','.$largo;
-                $subtotal = $this->db->query( $subtotal_sql); 
-
-                //sum(importe-sum(presupuesto)) as ganancia_proyeccion, sum(importe-sum(utilizado)) as ganancia_perdida,
-               $total_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
-                 sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
-                 from ( '.$consulta1.' union '. $consulta2. ') todo '.
-                $where; 
-
-                $total = $this->db->query( $total_sql); 
-
 
                 $result = $this->db->query( $sql); 
 
@@ -221,6 +201,7 @@
 
                 $dato = array();
                 if ($result->num_rows() > 0){
+
                       foreach ($result->result() as $row) {
                                $dato[]= array(
                                     0=>$row->id,
@@ -244,6 +225,33 @@
                            $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
                           $found_rows = $cantidad_consulta->row(); 
                           $registros_filtrados =  ( (int) $found_rows->cantidad);
+
+
+                 $total_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                   sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( 
+                      select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                  $where.'  
+                  group by id '
+                  .$orden.
+                   ') todo ';
+
+                  //sum(importe-sum(presupuesto)) as ganancia_proyeccion, sum(importe-sum(utilizado)) as ganancia_perdida,
+                 $subtotal_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                   sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( 
+                    select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                  $where.'  
+                  group by id '
+                  .$orden.'
+                  LIMIT '.$inicio.','.$largo.
+                   ') todo ';
+                  
+                  $total = $this->db->query( $total_sql);  
+                  $subtotal = $this->db->query( $subtotal_sql);  
+                                         
 
 
                             return  json_encode ( array(
