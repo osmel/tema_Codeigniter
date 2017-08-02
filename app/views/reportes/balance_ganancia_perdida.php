@@ -8,9 +8,7 @@
 	tr.shown td.details-control {
 	    background: url('../img/details_close.png') no-repeat center center;
 	}
-
 </style>
-
 <?php
  	if (!isset($retorno)) {
       	$retorno ="/";
@@ -29,14 +27,61 @@
 		                	<div class="page-content">
 									<?php //$this->load->view( 'navegacion' ); ?>
 
+						<h4>Filtros</h4>	
+						<hr style="padding: 0px; margin: 15px;"/>					
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-3">
+							<div class="form-group">
+								<label for="proyecto" class="col-sm-12 col-md-12">Proyecto</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_proyecto_gasto" id="id_proyecto_gasto" modulo="general" class="form-control ttip" title="Seleccione la proyecto a consultar."
+									 dependencia="">
+											<option value="-1">Todos</option>
+											<?php if ( $datos['proyectos']) { ?>
+											<?php foreach ( $datos['proyectos'] as $proyecto ){ ?>
+													<option value="<?php echo $proyecto->id; ?>"><?php echo $proyecto->proyecto; ?></option>
+											<?php } } ?>
+									</select>
+								</div>
+							</div>
+						</div>	
+
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							<div class="form-group">
+								<label for="area" class="col-sm-12 col-md-12">Área</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_area_gasto" id="id_area_gasto" modulo="general" class="form-control ttip" title="Seleccione la area a consultar."
+									dependencia="">
+											<option value="-1">Todos</option>
+									</select>
+								</div>
+							</div>
+						</div>	
 
 
 
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							<div class="form-group">
+								<label for="persona" class="col-sm-12 col-md-12">Usuarios</label>
+								<div class="col-sm-12 col-md-12">
+									<select name="id_usuario_gasto" id="id_usuario_gasto" modulo="general" class="form-control ttip" title="Seleccione la persona a consultar."
+									dependencia="">
+											<option value="-1">Todos</option>
+									</select>
+								</div>
+							</div>
+						</div>		
 
-
-
-
-
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							
+							<div class="form-group">
+								<label for="persona" class="col-sm-12 col-md-12">Cambiar Status</label>
+								<div class="col-sm-12 col-md-12">
+									<button id="horas_pesos"  type="button" class="horas_pesos btn btn-danger btn-block ttip" title="Mostrar Horas/Pesos">Horas</button>	
+								</div>
+							</div>							
+						</div>		
 
 
 
@@ -64,8 +109,6 @@
 												
 												<th class="text-center"><strong>Costo</strong></th>
 												<th class="text-center"><strong>Ganancia</strong></th>
-												
-
 											</tr>
 										</thead>
 
@@ -73,30 +116,82 @@
 									</table>
 								</section>
 							</div>
-						</div>
+						
 
-		    </div>
-		</div>    
 
 <!-- Hasta aqui el filtro	-->
 
-
-
-
+<br/><br/>
 		
-		
-			
+				<div class="row bloque_totales">						
+					<div class="col-sm-3 col-md-1">	
+					  <b>Página</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_real" ></span>				
+					</div>	
 
 
+				</div>			
+
+				<div class="row bloque_totales">						
+					
+					<div class="col-sm-3 col-md-1">	
+					  <b>Totales</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_real" ></span>				
+					</div>	
 
 
+				</div>	
 
+			</div>
 
-
-
-
-
-
+	    </div>
+	</div>    
 
 
 		                	</div>

@@ -1,25 +1,50 @@
 jQuery(document).ready(function($) {
 
+  var horas_pesos= jQuery('.horas_pesos') ? jQuery('.horas_pesos').text() : '';
+  //alert(horas_pesos);
 
+  jQuery('body').on('click','.horas_pesos', function (e) {
+      jQuery(this).text(jQuery(this).text() == "Horas" ? "Pesos" : "Horas");
 
-jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
+      horas_pesos = jQuery(this).text();      
+      var hash_url = window.location.pathname;
+      switch (hash_url) {  
+                case "/balance_ganancia_perdida": //general
+                    var oTable =jQuery('#tabla_rep_balance_ganancia_perdida').dataTable();
+                break;
+                case "/balance_area_ganancia_perdida": //por area
+                    var oTable =jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable();
+                break;
+                case "/balance_usuario_ganancia_perdida"://por usuario
+                    var oTable =jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable();
+                break;
+                /*
+                case "/general":                   
+                    var oTable =jQuery('#tabla_rep_general').dataTable();
+                break;
+                case "/horas_personas":                   
+                    var oTable =jQuery('#tabla_rep_horas_personas').dataTable();
+                break;                  
+                */
+                default:
+                   break;
+      }            
+      oTable._fnAjaxUpdate(); 
+  });
+
+  jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
            "pagingType": "full_numbers",
-          
+          "orderClasses": false, // para quitarle las clases que lleva el orenamiento  "sorting_1"
           "processing": true,
           "serverSide": true,
           "ajax": {
                     "url" : "procesando_balance_ganancia_perdida",
                     "type": "POST",
                     "data": function ( d ) {
-                        /*
-                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                        d.fecha_inicial = fecha[0];
-                        d.fecha_final = fecha[1];
-                        d.id_proyecto = (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0;    
-                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
-                        d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
-                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
-                        */
+                        d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
+                        d.id_usuario = (jQuery('#id_usuario_gasto').val()!=null) ? jQuery('#id_usuario_gasto').val() : 0;    
+                        d.id_area = (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0;    
+                        d.horas_pesos= horas_pesos;
                     }
          },   
        
@@ -47,8 +72,70 @@ jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
             },
         },
      
+    
+
+  "infoCallback": function( settings, start, end, max, total, pre ) {
+
+ if (settings.json.subtotales) {
+        
+      jQuery('#Capital').html( 'Capital: $'+number_format(settings.json.subtotales.capital, 2, '.', ','));
+      jQuery('#presupuesto').html( 'Presupuesto: $'+number_format(settings.json.subtotales.presupuesto, 2, '.', ','));
+      jQuery('#presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.subtotales.presupuesto_hora, 2, '.', ',')+' hrs');
+      jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.presupuesto, 2, '.', ','));
+      jQuery('#utilizado').html( 'Utilizado: $'+number_format(settings.json.subtotales.utilizado, 2, '.', ','));
+      jQuery('#utilizado_hora').html( 'Utilizado: '+number_format(settings.json.subtotales.utilizado_hora, 2, '.', ',')+' hrs');
+      jQuery('#ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.utilizado, 2, '.', ','));
+
+    } else {
+      jQuery('#Capital').html( 'Capital: 0.00');
+      jQuery('#presupuesto').html( 'Presupuesto: 0.00');
+      jQuery('#presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+      jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+      jQuery('#utilizado').html( 'Utilizado: 0.00');
+      jQuery('#utilizado_hora').html( 'Utilizado: 0.00 hrs');
+      jQuery('#ganancia_real').html( 'Gan. Real: 0.00');
+    }
+
+    if (settings.json.totales) {
+        
+      jQuery('#t_Capital').html( 'Capital: $'+number_format(settings.json.totales.capital, 2, '.', ','));
+      jQuery('#t_presupuesto').html( 'Presupuesto: $'+number_format(settings.json.totales.presupuesto, 2, '.', ','));
+      jQuery('#t_presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.totales.presupuesto_hora, 2, '.', ',')+' hrs');
+      jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.totales.capital-settings.json.totales.presupuesto, 2, '.', ','));
+      jQuery('#t_utilizado').html( 'Utilizado: $'+number_format(settings.json.totales.utilizado, 2, '.', ','));
+      jQuery('#t_utilizado_hora').html( 'Utilizado: '+number_format(settings.json.totales.utilizado_hora, 2, '.', ',')+' hrs');
+      jQuery('#t_ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.totales.capital-settings.json.totales.utilizado, 2, '.', ','));
+
+    } else {
+      jQuery('#t_Capital').html( 'Capital: 0.00');
+      jQuery('#t_presupuesto').html( 'Presupuesto: 0.00');
+      jQuery('#t_presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+      jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+      jQuery('#t_utilizado').html( 'Utilizado: 0.00');
+      jQuery('#t_utilizado_hora').html( 'Utilizado: 0.00 hrs');
+      jQuery('#t_ganancia_real').html( 'Gan. Real: 0.00');
+    }
+   
+   /*
+
+            t_Capital
+            t_presupuesto
+            t_presupuesto_hora
+            t_ganancia_presupuesto
+            t_utilizado
+            t_utilizado_hora
+            t_ganancia_real
+
+
+    */
+      return pre
+  },    
+
+
+
         "columnDefs": [ 
-                      { //proyecto                        
+
+                       { //proyecto                        
                         "render": function ( data, type, row ) {
                                 return row[1] ;
                         },
@@ -62,53 +149,105 @@ jQuery('#tabla_rep_balance_ganancia_perdida').dataTable({
                       },
                       { // capital               
                         "render": function ( data, type, row ) {
-                                 return number_format(row[2], 2, '.', ',') ;
+                                 return (row[2]!=0)?'$'+number_format(row[2], 2, '.', ','):0 ;
                         },
                         "targets": [2] 
                       },
-                      { //proyeccion costo      
+                      { //proyeccion costo *     
                         "render": function ( data, type, row ) {
-                                 return number_format(row[5], 2, '.', ',') ;
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[5]!=0)? '$'+number_format(row[5], 2, '.', ','):0 ; 
+                                 } else {
+                                    return (row[8]!=0)? number_format(row[8], 2, '.', ',')+' hrs':0 ;
+                                 }
+                                 
                         },
                         "targets": [3] 
                       },                      
                       { //proyeccion ganancia      
                         "render": function ( data, type, row ) {
-                                 return number_format(row[4], 2, '.', ',') ;
+                                 return (row[4]!=0)?'$'+number_format(row[4], 2, '.', ','):0 ;
                         },
                         "targets": [4] 
                       },
-                      { //reales costo                        
+                      { //reales costo    *                    
                         "render": function ( data, type, row ) {
-                                 return number_format(row[6], 2, '.', ',') ;
+                                 
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[6]!=0)? '$'+number_format(row[6], 2, '.', ','):0 ;
+                                 } else {
+                                    return (row[9]!=0)? number_format(row[9], 2, '.', ',')+' hrs':0 ;
+                                 }
+
+
                         },
                         "targets": [5] 
                       },
 
                       { //reales ganancia                          
                         "render": function ( data, type, row ) {
-                                 return number_format(row[7], 2, '.', ',') ;
+                                 return (row[7]!=0)?'$'+number_format(row[7], 2, '.', ','):0 ;
                         },
                         "targets": [6] 
-                      },
-                    /*
-                      { 
-                             "visible": false,
-                            "targets": [3,4,5,6,7,8]
-                       }     */                              
+                      },                            
          ],
-         /*
-          "fnHeaderCallback": function( nHead, aData, iStart, iEnd, aiDisplay ) {
-
-            var balance = ['Proyecto','fecha', 'Capital','P.costo','P.ganancia', 'R.costo','R.ganancia'];
-            var arreglo = balance;
-            for (var i=0; i<=arreglo.length-1; i++) { //cant_colum
-                  
-                  nHead.getElementsByTagName('th')[i].innerHTML = arreglo[i]; 
-                }
-          },         
-          */
+         
   });  
+
+
+
+
+jQuery('#id_proyecto_gasto[modulo="general"], #id_area_gasto[modulo="general"], #id_usuario_gasto[modulo="general"]').on('change', function(e) {
+        var campo = jQuery(this).attr("name");   
+        var id_proyecto = jQuery('#id_proyecto_gasto').val();
+        var id_area = jQuery('#id_area_gasto').val();
+        var id_usuario = jQuery('#id_usuario_gasto').val();
+
+        cargarDependencia_balance_general(campo,id_proyecto, id_area, id_usuario);
+        //cuando cambie uno que refresh tabla
+        var hash_url = window.location.pathname;
+
+        switch (hash_url) {  //ver cual es el nivel seleccionado?
+              case "/balance_ganancia_perdida":                   
+                  var oTable =jQuery('#tabla_rep_balance_ganancia_perdida').dataTable();
+              break;
+              default:
+                 break;
+        }            
+        oTable._fnAjaxUpdate(); 
+});
+
+function cargarDependencia_balance_general(campo,id_proyecto, id_area, id_usuario) {
+        var url = 'cargarDependencia_balance_usuario'; 
+        jQuery.ajax({
+                url : '/cargarDependencia_balance_usuario',
+                data:{
+                    campo:campo,
+                    id_proyecto:id_proyecto,
+                    id_area: id_area,
+                    id_usuario:id_usuario
+                },
+                type : 'POST',
+                dataType : 'json',
+                success : function(data) {
+                        jQuery.each(data, function (dep, valor) {
+                            jQuery("#"+dep).html(''); 
+                            jQuery("#"+dep).append('<option value="-1" >Todos</option>'); 
+                                jQuery.each(valor, function (i, value) {
+                                    jQuery("#"+dep).append('<option '+ ( ((value.identificador).toString()==(value.activo).toString()) ? 'selected' : '') +' value="' + value.identificador + '" >' + value.nombre + '</option>');                                        
+                                });
+                        });
+                    return false;
+                },
+                error : function(jqXHR, status, error) {
+                },
+                complete : function(jqXHR, status) {
+                }
+            }); 
+    }
+
+
+
 
 jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
            "pagingType": "full_numbers",
@@ -121,15 +260,7 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
                     "data": function ( d ) {
                         d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
                         d.id_area = (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0;    
-                        /*
-                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                        d.fecha_inicial = fecha[0];
-                        d.fecha_final = fecha[1];
-                        
-                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
-                        
-                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
-                        */
+                        d.horas_pesos = horas_pesos;
                     }
          },   
        
@@ -181,40 +312,43 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
                       },
                       { // capital               
                         "render": function ( data, type, row ) {
-                                 return number_format(row[2], 2, '.', ',') ;
+                                 return (row[2]!=0)?'$'+number_format(row[2], 2, '.', ','):0 ;
                         },
                         "targets": [3] 
                       },
-                      { //proyeccion costo      
+                      { //proyeccion costo *                   
                         "render": function ( data, type, row ) {
-                                 return number_format(row[5], 2, '.', ',') ;
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[5]!=0)? '$'+number_format(row[5], 2, '.', ','):0 ;
+                                 } else {
+                                    return (row[8]!=0)? number_format(row[8], 2, '.', ',')+' hrs':0 ;
+                                 }
                         },
                         "targets": [4] 
-                      },                      
+                      },
                       { //proyeccion ganancia      
                         "render": function ( data, type, row ) {
-                                 return number_format(row[4], 2, '.', ',') ;
+                                 return (row[4]!=0)?'$'+number_format(row[4], 2, '.', ','):0 ;
                         },
                         "targets": [5] 
                       },
-                      { //reales costo                        
+
+                      { //reales costo    *                    
                         "render": function ( data, type, row ) {
-                                 return number_format(row[6], 2, '.', ',') ;
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[6]!=0)? '$'+number_format(row[6], 2, '.', ','):0 ;
+                                 } else {
+                                    return (row[9]!=0)? number_format(row[9], 2, '.', ',')+' hrs':0 ;
+                                 }
                         },
                         "targets": [6] 
                       },
-
                       { //reales ganancia                          
                         "render": function ( data, type, row ) {
-                                 return number_format(row[7], 2, '.', ',') ;
+                                 return (row[7]!=0)?'$'+number_format(row[7], 2, '.', ','):0 ;
                         },
                         "targets": [7] 
                       },
-                    /*
-                      { 
-                             "visible": false,
-                            "targets": [3,4,5,6,7,8]
-                       }     */                              
          ],
          
   });  
@@ -230,7 +364,6 @@ jQuery('#id_proyecto_gasto[modulo="area"], #id_area_gasto[modulo="area"]').on('c
         cargarDependencia_balance_area(campo,id_proyecto, id_area);
         //cuando cambie uno que refresh tabla
         var hash_url = window.location.pathname;
-        //if  ( (hash_url=="/general") )   {  
 
         switch (hash_url) {  //ver cual es el nivel seleccionado?
               case "/balance_area_ganancia_perdida":                   
@@ -272,11 +405,6 @@ function cargarDependencia_balance_area(campo,id_proyecto, id_area) {
 
 
 
-
-
-
-
-
 jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle_balance_area', function () {
 
         var tr = $(this).closest('tr');
@@ -290,8 +418,6 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
 
             //si la fila esta "cerrada" entonces "abrirla"
             var d= row.data();
-            //console.log(d);
-            
 
                  $.ajax({
                         url: "/procesando_balance_area_ganancia_perdida_detalle",
@@ -300,9 +426,8 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                         data: {
                             
                             id_proyecto: d[0], 
-                            //d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
-                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0,                               
-                                              
+                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0, 
+                            horas_pesos: horas_pesos
                          },
                         success: function(datos){
                             $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
@@ -317,9 +442,21 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida tbody').on('click', 'td.detalle
                                       $.each(datos.data, function( i, value ) {
                                             $cad +='<tr>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5]-value[6], 2, '.', ',')+'</span></td>';
+                                                if (horas_pesos=="Pesos"){
+                                                  $cad +='<td class="text-center cursora" width="22%"><span>'+((value[5]!=0)?'$'+number_format(value[5], 2, '.', ','):0)+'</span></td>';
+                                                  $cad +='<td class="text-center cursora" width="22%"><span>'+((value[6]!=0)?'$'+number_format(value[6], 2, '.', ','):0)+'</span></td>';
+                                                 } else {
+                                                    $cad +='<td class="text-center cursora" width="22%"><span>'+((value[8]!=0)? number_format(value[8], 2, '.', ',')+' hrs' :0)+'</span></td>';
+                                                    $cad +='<td class="text-center cursora" width="22%"><span>'+((value[9]!=0)? number_format(value[9], 2, '.', ',')+' hrs' :0)+'</span></td>';
+                                                 }  
+
+
+
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+((value[5]-value[6]!=0)?'$'+number_format(value[5]-value[6], 2, '.', ','):0)+'</span></td>';
+
+
+
+
                                             $cad +='</tr>';  
                                      });   
                                 }
@@ -349,17 +486,7 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
                         d.id_proyecto = (jQuery('#id_proyecto_gasto').val()!=null) ? jQuery('#id_proyecto_gasto').val() : 0;    
                         d.id_usuario = (jQuery('#id_usuario_gasto').val()!=null) ? jQuery('#id_usuario_gasto').val() : 0;    
                         d.id_area = (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0;    
-
-                        //d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
-                        /*
-                        var fecha = (jQuery('.fecha_reporte').val()).split(' / ');
-                        d.fecha_inicial = fecha[0];
-                        d.fecha_final = fecha[1];
-                        
-                        d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
-                        
-                        d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
-                        */
+                        d.horas_pesos = horas_pesos;
                     }
          },   
        
@@ -411,40 +538,43 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
                       },
                       { // capital               
                         "render": function ( data, type, row ) {
-                                 return number_format(row[2], 2, '.', ',') ;
+                                 return (row[2]!=0)?'$'+number_format(row[2], 2, '.', ','):0 ;
                         },
                         "targets": [3] 
                       },
-                      { //proyeccion costo      
+                      { //proyeccion costo *
                         "render": function ( data, type, row ) {
-                                 return number_format(row[5], 2, '.', ',') ;
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[5]!=0)?'$'+number_format(row[5], 2, '.', ','):0 ;
+                                 } else {
+                                    return (row[8]!=0)? number_format(row[8], 2, '.', ',')+' hrs':0 ;
+                                 }                          
                         },
                         "targets": [4] 
                       },                      
                       { //proyeccion ganancia      
                         "render": function ( data, type, row ) {
-                                 return number_format(row[4], 2, '.', ',') ;
+                                 return (row[4]!=0)?'$'+number_format(row[4], 2, '.', ','):0 ;
                         },
                         "targets": [5] 
                       },
-                      { //reales costo                        
+                      { //reales costo  *                       
                         "render": function ( data, type, row ) {
-                                 return number_format(row[6], 2, '.', ',') ;
+                                 if (horas_pesos=="Pesos"){
+                                    return (row[6]!=0)?'$'+number_format(row[6], 2, '.', ','):0 ;
+                                 } else {
+                                    return (row[9]!=0)? number_format(row[9], 2, '.', ',')+' hrs':0 ;
+                                 }                          
                         },
                         "targets": [6] 
                       },
 
                       { //reales ganancia                          
                         "render": function ( data, type, row ) {
-                                 return number_format(row[7], 2, '.', ',') ;
+                                 return (row[7]!=0)?'$'+number_format(row[7], 2, '.', ','):0 ;
                         },
                         "targets": [7] 
                       },
-                    /*
-                      { 
-                             "visible": false,
-                            "targets": [3,4,5,6,7,8]
-                       }     */                              
          ],
          
   });  
@@ -460,8 +590,6 @@ jQuery('#id_proyecto_gasto[modulo="usuario"], #id_area_gasto[modulo="usuario"], 
         cargarDependencia_balance_usuario(campo,id_proyecto, id_area, id_usuario);
         //cuando cambie uno que refresh tabla
         var hash_url = window.location.pathname;
-        //if  ( (hash_url=="/general") )   {  
-
         switch (hash_url) {  //ver cual es el nivel seleccionado?
               case "/balance_usuario_ganancia_perdida":                   
                   var oTable =jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable();
@@ -515,8 +643,6 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
 
             //si la fila esta "cerrada" entonces "abrirla"
             var d= row.data();
-            //console.log(d);
-            
 
                  $.ajax({
                         url: "/procesando_balance_usuario_ganancia_perdida_detalle",
@@ -526,9 +652,8 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
                             
                             id_proyecto: d[0], 
                             id_usuario : (jQuery('#id_usuario_gasto').val()!=null) ? jQuery('#id_usuario_gasto').val() : 0,
-                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0    
-
-                                              
+                            id_area : (jQuery('#id_area_gasto').val()!=null) ? jQuery('#id_area_gasto').val() : 0,
+                            horas_pesos: horas_pesos
                          },
                         success: function(datos){
                             $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';
@@ -543,9 +668,15 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida tbody').on('click', 'td.deta
                                       $.each(datos.data, function( i, value ) {
                                             $cad +='<tr>';
                                                 $cad +='<td class="text-center cursora" width="22%"><span>'+value[3]+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5], 2, '.', ',')+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[6], 2, '.', ',')+'</span></td>';
-                                                $cad +='<td class="text-center cursora" width="22%"><span>'+number_format(value[5]-value[6], 2, '.', ',')+'</span></td>';
+                                                if (horas_pesos=="Pesos"){
+                                                  $cad +='<td class="text-center cursora" width="22%"><span>'+((value[5]!=0)?'$'+number_format(value[5], 2, '.', ','):0)+'</span></td>';
+                                                  $cad +='<td class="text-center cursora" width="22%"><span>'+((value[6]!=0)?'$'+number_format(value[6], 2, '.', ','):0)+'</span></td>';
+                                                 } else {
+                                                    $cad +='<td class="text-center cursora" width="22%"><span>'+((value[8]!=0)? number_format(value[8], 2, '.', ',')+' hrs' :0)+'</span></td>';
+                                                    $cad +='<td class="text-center cursora" width="22%"><span>'+((value[9]!=0)? number_format(value[9], 2, '.', ',')+' hrs' :0)+'</span></td>';
+                                                 }  
+                                                $cad +='<td class="text-center cursora" width="22%"><span>'+((value[5]-value[6]!=0)?'$'+number_format(value[5]-value[6], 2, '.', ','):0)+'</span></td>';
+
                                             $cad +='</tr>';  
                                      });   
                                 }
@@ -692,11 +823,6 @@ var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
 
 
 
-
-
-
-
-
 jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas', function () {
 
         var tr = $(this).closest('tr');
@@ -719,8 +845,8 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                             id_proyecto: (jQuery('#id_proyecto').val()!=null) ? jQuery('#id_proyecto').val() : 0,
                             id_profundidad: (jQuery('#id_profundidad').val()!=null) ? jQuery('#id_profundidad').val() : 0,
                             id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
-                            id_usuario : d[6], //(jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
-                            //id_proy: d[6], //id_nivel
+                            id_usuario : d[6], 
+                            horas_pesos: horas_pesos
                             
                          },
                         success: function(datos){
@@ -775,14 +901,6 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                   });
         }
 } );
-
-
-
-
-
-
-
-
 
 
 
@@ -1051,6 +1169,7 @@ jQuery('#tabla_rep_general tbody').on('click', 'td.details-control', function ()
                             id_proy: d[6], //id_nivel
                             id_usuario : (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0, 
                             id_area : (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0,
+                            horas_pesos: horas_pesos
                          },
                         success: function(datos){
                             $cad='<table  class="tabla_hija display table table-striped table-bordered table-responsive dataTable"  role="grid" style="width: 100%; border:1px solid #2ab4c0;" >';

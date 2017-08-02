@@ -89,7 +89,17 @@
 									</select>
 								</div>
 							</div>
-						</div>							
+						</div>		
+
+						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
+							
+							<div class="form-group">
+								<label for="persona" class="col-sm-12 col-md-12">Cambiar Status</label>
+								<div class="col-sm-12 col-md-12">
+									<button id="horas_pesos"  type="button" class="horas_pesos btn btn-danger btn-block ttip" title="Mostrar Horas/Pesos">Horas</button>	
+								</div>
+							</div>							
+						</div>												
 					
 					
 
