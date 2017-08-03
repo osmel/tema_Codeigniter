@@ -115,19 +115,7 @@ jQuery(document).ready(function($) {
       jQuery('#t_utilizado_hora').html( 'Utilizado: 0.00 hrs');
       jQuery('#t_ganancia_real').html( 'Gan. Real: 0.00');
     }
-   
-   /*
-
-            t_Capital
-            t_presupuesto
-            t_presupuesto_hora
-            t_ganancia_presupuesto
-            t_utilizado
-            t_utilizado_hora
-            t_ganancia_real
-
-
-    */
+ 
       return pre
   },    
 
@@ -287,7 +275,50 @@ jQuery('#tabla_rep_balance_area_ganancia_perdida').dataTable({
                 "sortDescending": ": Activando para ordenar columnas descendentes"
             },
         },
-     
+             
+      "infoCallback": function( settings, start, end, max, total, pre ) {
+        if (settings.json.subtotales) {
+                
+              jQuery('#Capital').html( 'Capital: $'+number_format(settings.json.subtotales.capital, 2, '.', ','));
+              jQuery('#presupuesto').html( 'Presupuesto: $'+number_format(settings.json.subtotales.presupuesto, 2, '.', ','));
+              jQuery('#presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.subtotales.presupuesto_hora, 2, '.', ',')+' hrs');
+              jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.presupuesto, 2, '.', ','));
+              jQuery('#utilizado').html( 'Utilizado: $'+number_format(settings.json.subtotales.utilizado, 2, '.', ','));
+              jQuery('#utilizado_hora').html( 'Utilizado: '+number_format(settings.json.subtotales.utilizado_hora, 2, '.', ',')+' hrs');
+              jQuery('#ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.utilizado, 2, '.', ','));
+
+            } else {
+              jQuery('#Capital').html( 'Capital: 0.00');
+              jQuery('#presupuesto').html( 'Presupuesto: 0.00');
+              jQuery('#presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+              jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+              jQuery('#utilizado').html( 'Utilizado: 0.00');
+              jQuery('#utilizado_hora').html( 'Utilizado: 0.00 hrs');
+              jQuery('#ganancia_real').html( 'Gan. Real: 0.00');
+            }
+
+            if (settings.json.totales) {
+                
+              jQuery('#t_Capital').html( 'Capital: $'+number_format(settings.json.totales.capital, 2, '.', ','));
+              jQuery('#t_presupuesto').html( 'Presupuesto: $'+number_format(settings.json.totales.presupuesto, 2, '.', ','));
+              jQuery('#t_presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.totales.presupuesto_hora, 2, '.', ',')+' hrs');
+              jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.totales.capital-settings.json.totales.presupuesto, 2, '.', ','));
+              jQuery('#t_utilizado').html( 'Utilizado: $'+number_format(settings.json.totales.utilizado, 2, '.', ','));
+              jQuery('#t_utilizado_hora').html( 'Utilizado: '+number_format(settings.json.totales.utilizado_hora, 2, '.', ',')+' hrs');
+              jQuery('#t_ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.totales.capital-settings.json.totales.utilizado, 2, '.', ','));
+
+            } else {
+              jQuery('#t_Capital').html( 'Capital: 0.00');
+              jQuery('#t_presupuesto').html( 'Presupuesto: 0.00');
+              jQuery('#t_presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+              jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+              jQuery('#t_utilizado').html( 'Utilizado: 0.00');
+              jQuery('#t_utilizado_hora').html( 'Utilizado: 0.00 hrs');
+              jQuery('#t_ganancia_real').html( 'Gan. Real: 0.00');
+            }
+         
+              return pre
+          },       
         "columnDefs": [ 
 
                        { 
@@ -513,6 +544,50 @@ jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable({
                 "sortDescending": ": Activando para ordenar columnas descendentes"
             },
         },
+
+         "infoCallback": function( settings, start, end, max, total, pre ) {
+            if (settings.json.subtotales) {
+                    
+                  jQuery('#Capital').html( 'Capital: $'+number_format(settings.json.subtotales.capital, 2, '.', ','));
+                  jQuery('#presupuesto').html( 'Presupuesto: $'+number_format(settings.json.subtotales.presupuesto, 2, '.', ','));
+                  jQuery('#presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.subtotales.presupuesto_hora, 2, '.', ',')+' hrs');
+                  jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.presupuesto, 2, '.', ','));
+                  jQuery('#utilizado').html( 'Utilizado: $'+number_format(settings.json.subtotales.utilizado, 2, '.', ','));
+                  jQuery('#utilizado_hora').html( 'Utilizado: '+number_format(settings.json.subtotales.utilizado_hora, 2, '.', ',')+' hrs');
+                  jQuery('#ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.subtotales.capital-settings.json.subtotales.utilizado, 2, '.', ','));
+
+                } else {
+                  jQuery('#Capital').html( 'Capital: 0.00');
+                  jQuery('#presupuesto').html( 'Presupuesto: 0.00');
+                  jQuery('#presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+                  jQuery('#ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+                  jQuery('#utilizado').html( 'Utilizado: 0.00');
+                  jQuery('#utilizado_hora').html( 'Utilizado: 0.00 hrs');
+                  jQuery('#ganancia_real').html( 'Gan. Real: 0.00');
+                }
+
+                if (settings.json.totales) {
+                    
+                  jQuery('#t_Capital').html( 'Capital: $'+number_format(settings.json.totales.capital, 2, '.', ','));
+                  jQuery('#t_presupuesto').html( 'Presupuesto: $'+number_format(settings.json.totales.presupuesto, 2, '.', ','));
+                  jQuery('#t_presupuesto_hora').html( 'Presupuesto: '+number_format(settings.json.totales.presupuesto_hora, 2, '.', ',')+' hrs');
+                  jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: $'+number_format(settings.json.totales.capital-settings.json.totales.presupuesto, 2, '.', ','));
+                  jQuery('#t_utilizado').html( 'Utilizado: $'+number_format(settings.json.totales.utilizado, 2, '.', ','));
+                  jQuery('#t_utilizado_hora').html( 'Utilizado: '+number_format(settings.json.totales.utilizado_hora, 2, '.', ',')+' hrs');
+                  jQuery('#t_ganancia_real').html( 'Gan. Real: $'+number_format(settings.json.totales.capital-settings.json.totales.utilizado, 2, '.', ','));
+
+                } else {
+                  jQuery('#t_Capital').html( 'Capital: 0.00');
+                  jQuery('#t_presupuesto').html( 'Presupuesto: 0.00');
+                  jQuery('#t_presupuesto_hora').html( 'Presupuesto: 0.00 hrs');
+                  jQuery('#t_ganancia_presupuesto').html( 'Gan. presupuesto: 0.00');
+                  jQuery('#t_utilizado').html( 'Utilizado: 0.00');
+                  jQuery('#t_utilizado_hora').html( 'Utilizado: 0.00 hrs');
+                  jQuery('#t_ganancia_real').html( 'Gan. Real: 0.00');
+                }
+             
+                  return pre
+              },               
      
         "columnDefs": [ 
 
@@ -1043,6 +1118,7 @@ var tabla =  jQuery('#tabla_rep_general').dataTable( {
                         d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
                         d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
                         d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        d.horas_pesos = horas_pesos;
                     }
          },   
         "language": {  //tratamiento de lenguaje

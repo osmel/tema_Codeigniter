@@ -132,6 +132,75 @@
 							</div>
 						</div>
 
+
+				<div class="row bloque_totales">						
+					<div class="col-sm-3 col-md-1">	
+					  <b>Página</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_real" ></span>				
+					</div>	
+
+
+				</div>			
+
+				<div class="row bloque_totales">						
+					
+					<div class="col-sm-3 col-md-1">	
+					  <b>Totales</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_real" ></span>				
+					</div>	
+
+
+				</div>	
+
+			</div>
+
+
 		    </div>
 		</div>    
 

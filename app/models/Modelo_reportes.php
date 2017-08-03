@@ -482,12 +482,40 @@
                           $registros_filtrados =  ( (int) $found_rows->cantidad);
 
 
+                  $total_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                   sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( 
+                      select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                  $where.'  
+                  group by id '
+                  .$orden.
+                   ') todo ';
+
+                  //sum(importe-sum(presupuesto)) as ganancia_proyeccion, sum(importe-sum(utilizado)) as ganancia_perdida,
+                 $subtotal_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                   sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( 
+                    select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                   from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                  $where.'  
+                  group by id '
+                  .$orden.'
+                  LIMIT '.$inicio.','.$largo.
+                   ') todo ';
+                  
+                  $total = $this->db->query( $total_sql);  
+                  $subtotal = $this->db->query( $subtotal_sql); 
+
+
+
                             return  json_encode ( array(
                               "draw"            => intval( $data['draw'] ),
                               "recordsTotal"    =>$registros_filtrados,
                               "recordsFiltered" =>$registros_filtrados,
-                                       //"intervalo"=>$intervalo_dia->format('%a'),
-                              "data"            =>  $dato 
+                              "data"            =>  $dato,
+                              "totales"          =>  $total->row(),
+                              "subtotales"       =>  $subtotal->row()   
                             ));
                     
                       } else { 
@@ -838,13 +866,42 @@
                           $found_rows = $cantidad_consulta->row(); 
                           $registros_filtrados =  ( (int) $found_rows->cantidad);
 
+                          $total_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                           sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                           from ( 
+                              select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                           from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                          $where.'  
+                          group by id '
+                          .$orden.
+                           ') todo ';
+
+                          //sum(importe-sum(presupuesto)) as ganancia_proyeccion, sum(importe-sum(utilizado)) as ganancia_perdida,
+                         $subtotal_sql = ' select sum(importe) as capital, sum(presupuesto) as presupuesto, sum(utilizado) as utilizado, 
+                           sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                           from ( 
+                            select  id, id_cliente, proyecto,  importe, fecha_creacion, sum(presupuesto) presupuesto, sum(utilizado) utilizado,  importe-sum(presupuesto) as ganancia_proyeccion, importe-sum(utilizado) as ganancia_perdida, sum(presupuesto_hora) presupuesto_hora, sum(utilizado_hora) utilizado_hora
+                           from ( '.$consulta1.' union '. $consulta2. ') todo '.
+                          $where.'  
+                          group by id '
+                          .$orden.'
+                          LIMIT '.$inicio.','.$largo.
+                           ') todo ';
+                          
+                          $total = $this->db->query( $total_sql);  
+                          $subtotal = $this->db->query( $subtotal_sql); 
+
+
+
+
 
                             return  json_encode ( array(
                               "draw"            => intval( $data['draw'] ),
                               "recordsTotal"    =>$registros_filtrados,
                               "recordsFiltered" =>$registros_filtrados,
-                                       //"intervalo"=>$intervalo_dia->format('%a'),
-                              "data"            =>  $dato 
+                              "data"            =>  $dato,
+                              "totales"          =>  $total->row(),
+                              "subtotales"       =>  $subtotal->row()                             
                             ));
                     
                        } else { 
@@ -853,7 +910,9 @@
                               "draw" =>  intval( $data['draw'] ),
                               "recordsTotal" => 0,
                               "recordsFiltered" =>0,
-                              "data" => array()
+                              "data" => array(),
+                              "totales"          =>  $total->row(),
+                              "subtotales"       =>  $subtotal->row()                            
                             );
                             return json_encode($output);
 
@@ -865,7 +924,8 @@
                               "draw" =>  intval( $data['draw'] ),
                               "recordsTotal" => 0,
                               "recordsFiltered" =>0,
-                              "data" => array()
+                              "data" => array(),
+                              
                             );
                             return json_encode($output);
 

@@ -91,10 +91,9 @@
 							</div>
 						</div>		
 
-						<div id="estatus_id" class="col-xs-12 col-sm-6 col-md-2">
-							
+						<div class="col-xs-12 col-sm-6 col-md-2">
 							<div class="form-group">
-								<label for="persona" class="col-sm-12 col-md-12">Cambiar Status</label>
+								<label class="col-sm-12 col-md-12">Cambiar Status</label>
 								<div class="col-sm-12 col-md-12">
 									<button id="horas_pesos"  type="button" class="horas_pesos btn btn-danger btn-block ttip" title="Mostrar Horas/Pesos">Horas</button>	
 								</div>
@@ -134,6 +133,74 @@
 								</section>
 							</div>
 						</div>
+
+
+				<div class="row bloque_totales">						
+					<div class="col-sm-3 col-md-1">	
+					  <b>Página</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="ganancia_real" ></span>				
+					</div>	
+
+
+				</div>			
+
+				<div class="row bloque_totales">						
+					
+					<div class="col-sm-3 col-md-1">	
+					  <b>Totales</b>
+					</div>	
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_Capital"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_presupuesto_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_presupuesto" ></span>				
+					</div>	
+					
+
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado"></span>			
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_utilizado_hora" ></span>				
+					</div>	
+					<div class="col-sm-3 col-md-1">	
+						<span id="t_ganancia_real" ></span>				
+					</div>	
+
+
+				</div>	
+
+
 
 		    </div>
 		</div>    
