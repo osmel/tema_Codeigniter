@@ -35,7 +35,19 @@
 			<div class="col-md-12 form-horizontal" id="tab_filtro">      
 						
 						<h4>Filtros</h4>	
-						<hr style="padding: 0px; margin: 15px;"/>					
+						<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-2">
+							<div class="form-group">
+								<label class="col-sm-12 col-md-12">Cambiar Status</label>
+								<div class="col-sm-12 col-md-12">
+									<button id="horas_pesos"  type="button" class="horas_pesos btn btn-danger btn-block ttip" title="Mostrar Horas/Pesos">Horas</button>	
+								</div>
+							</div>							
+							<hr/>					
+						</div>												
+						</div>	
+
+						
 
 						<div id="fecha_id" class="col-xs-12 col-sm-6 col-md-3">
 								<label id="label_proveedor" for="descripcion" class="col-sm-12 col-md-12">Rango de fecha</label>

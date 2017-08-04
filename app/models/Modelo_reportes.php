@@ -1076,6 +1076,28 @@
 
      public function procesando_rep_horas_personas_detalle($data) {
 
+         $dias = 20;
+         $horas = 8;
+
+         //gasto administrativo general por mes
+         $dato_gas['id'] = 4;
+         $gastos_admin = self::coger_configuracion($dato_gas)->precio; 
+
+       
+         //cantidad de personas activos laborando
+         $this->db->from($this->usuarios);
+         $where = '(
+                      ( activo = 1 ) 
+                )';   
+         $this->db->where($where); 
+         $cant = $this->db->count_all_results();   //6personas
+
+         //gasto por persona
+         $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+         //print_r($gastos_unitario); die;
+         //////////////////
+
           $id_session = $this->session->userdata('id');      
           $id_perfil=$this->session->userdata('id_perfil');
 
@@ -1153,9 +1175,14 @@
                         id_val, json_items, 
                         id_usuario, 
                         costo, tiempo_disponible, fecha_creacion, fecha_inicial,fecha_final "; 
-                            
-                            foreach ($arreglo_fechas as $key1 => $value1) {
-                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+
+                             foreach ($arreglo_fechas as $key1 => $value1) {
+                                  
+                                  if ($data['horas_pesos']=='Horas') {
+                                    $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                                  } else {
+                                    $sql .=" ,sum((((salario+".$gastos_unitario.")/".$dias.")/".$horas.")*(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0))) AS 'a".strtotime($value1)."'";
+                                  }
                             }
 
                             
@@ -1284,11 +1311,25 @@
 
                                 foreach ($arreglo_fechas as $key1 => $value1) {
                                     
-                                    if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
-                                      $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
-                                    } else {
-                                      $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.$row->{ "a".strtotime($arreglo_fechas[$key1]) }.'</span>';
-                                    }
+
+                        if ($data['horas_pesos']=='Horas' ){
+                            if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                              $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) }.'hrs';
+                            } else {
+                            $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">0</span>';
+                            }
+
+                        } else {
+                          if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                            $dato[count($dato)-1][9+$key1] = '$'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 2, '.', ',');
+                          } else {
+                            //$dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                            $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">0</span>';
+                          }
+                        }       
+
+
+
                                 }    
                       }
 
@@ -1329,6 +1370,28 @@
 
 
     public function procesando_rep_horas_personas($data) {
+
+      $dias = 20;
+       $horas = 8;
+
+       //gasto administrativo general por mes
+       $dato_gas['id'] = 4;
+       $gastos_admin = self::coger_configuracion($dato_gas)->precio; 
+
+     
+       //cantidad de personas activos laborando
+       $this->db->from($this->usuarios);
+       $where = '(
+                    ( activo = 1 ) 
+              )';   
+       $this->db->where($where); 
+       $cant = $this->db->count_all_results();   //6personas
+
+       //gasto por persona
+       $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+       //print_r($gastos_unitario); die;
+       //////////////////      
 
       
         $cant_filtrada = array();
@@ -1397,7 +1460,7 @@
                 AES_DECRYPT(u.email,'{$this->key_hash}') AS email,
                 h.id_nivel, h.id_entorno, h.id_proyecto, h.profundidad
               ";
-                foreach ($arreglo_fechas as $key1 => $value1) {
+              /*  foreach ($arreglo_fechas as $key1 => $value1) {
                   if  (date ( "w",strtotime($value1) ) ==6) {
                      $sql .=", 'Sab' AS 'a".strtotime($value1)."'";
                   } else if  (date ( "w",strtotime($value1) ) ==0) {
@@ -1405,10 +1468,23 @@
                   } else {
                       $sql .=" ,SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
                   }
+                }  */              
+
+                foreach ($arreglo_fechas as $key1 => $value1) {
+                  if  (date ( "w",strtotime($value1) ) ==6) {
+                     $sql .=", 'Sab' AS 'a".strtotime($value1)."'";
+                  } else if  (date ( "w",strtotime($value1) ) ==0) {
+                     $sql .=", 'Dom' AS 'a".strtotime($value1)."'";
+                  } else {                      
+                      if ($data['horas_pesos']=='Horas') {
+                        $sql .=" ,SUM(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                      } else {
+                        $sql .=" ,sum((((salario+".$gastos_unitario.")/".$dias.")/".$horas.")*(IF(DATE_FORMAT((h.fecha),'%d-%m-%Y') = '".$value1."', horas, 0))) AS 'a".strtotime($value1)."'";
+                      }
+                  }    
+                }
 
 
-                    
-                }                
             $sql .="  FROM ".$this->usuarios." u
                 left join ".$this->registro_user_proy." h  on u.id = h.id_usuario 
                 ".$cond_fecha.
@@ -1441,9 +1517,31 @@
                                     $dato[count($dato)-1][9+$i] = 0;
                                 }
 
+                                /*
                                 foreach ($arreglo_fechas as $key1 => $value1) { //sumatoria por fecha
                                   $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
-                                }   
+                                }   */
+
+            foreach ($arreglo_fechas as $key1 => $value1) {
+              if ($data['horas_pesos']=='Horas' ){
+                  if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                    $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) }.'hrs';
+                  } else {
+                  $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">0</span>';
+                  }
+
+              } else {
+                if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                  $dato[count($dato)-1][9+$key1] = '$'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 2, '.', ',');
+                } else {
+                  //$dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                  $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">0</span>';
+                }
+              } 
+            }   
+
+
+
                       }
             }
 
@@ -1953,6 +2051,29 @@ public function listado_todas_areas($data){
 
     public function procesando_rep_general($data) {
 
+       $dias = 20;
+       $horas = 8;
+
+       //gasto administrativo general por mes
+       $dato_gas['id'] = 4;
+       $gastos_admin = self::coger_configuracion($dato_gas)->precio; 
+
+     
+       //cantidad de personas activos laborando
+       $this->db->from($this->usuarios);
+       $where = '(
+                    ( activo = 1 ) 
+              )';   
+       $this->db->where($where); 
+       $cant = $this->db->count_all_results();   //6personas
+
+       //gasto por persona
+       $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+       //print_r($gastos_unitario); die;
+       //////////////////
+
+
         $cant_filtrada = array();
         $cant_filtrada = self::total_rep_general($data);
 
@@ -1978,8 +2099,6 @@ public function listado_todas_areas($data){
         }
 
         $intervalo_dia = (new DateTime($data['fecha_inicial']))->diff(new DateTime($data['fecha_final']));
-
-        //$cond_fecha = " and ( DATE_FORMAT((h.fecha),'%d-%m-%Y')  >= '".$data['fecha_inicial']."' AND  DATE_FORMAT((h.fecha),'%d-%m-%Y')  <= '".$data['fecha_final']."' ) ";
 
           $data['fecha_ini']=date('Y-m-d', strtotime($data['fecha_inicial']) ); 
           $data['fecha_fin']=date('Y-m-d', strtotime($data['fecha_final']) ); 
@@ -2028,21 +2147,6 @@ public function listado_todas_areas($data){
             $filtro= (($filtro!="") ? " where " : "") . $filtro;
             
 
-            //where (r1.id_proyecto = '113') and (u.id_cliente = 1) and (r1.profundidad = 0)
-
-//$filtro=" ";
-
-              /*
-
-            $filtro="";        
-            if  ($data['id_usuario']!="0"){
-                //$filtro.= (($filtro!="") ? " and " : "") . " (id_usuario = '".$data['id_usuario']."') ";  
-              //$filtro.=  " and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."' ";  
-                //$filtro.=  " and  id_usuario = '".$data['id_usuario']."' ";  
-                // $filtro.=  " and  SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(t.id_val,2, LENGTH(t.id_val)-2 ), ',', n.n), ',', -1) = '".$data['id_usuario']."' ";
-                 //print_r($filtro); die;
-            }*/
-
 
 
 
@@ -2062,7 +2166,12 @@ public function listado_todas_areas($data){
                         costo, tiempo_disponible, fecha_creacion, fecha_inicial,fecha_final "; 
                             
                             foreach ($arreglo_fechas as $key1 => $value1) {
-                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                                  
+                                  if ($data['horas_pesos']=='Horas') {
+                                    $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                                  } else {
+                                    $sql .=" ,sum((((salario+".$gastos_unitario.")/".$dias.")/".$horas.")*(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0))) AS 'a".strtotime($value1)."'";
+                                  }
                             }
 
                             
@@ -2165,6 +2274,7 @@ public function listado_todas_areas($data){
                 ";
                 
 
+
                $result = $this->db->query( $sql); 
 
 
@@ -2182,26 +2292,34 @@ public function listado_todas_areas($data){
                                       3=>$row->profundidad,
                                       4=>($row->nombre!=null) ? ($row->nombre) : '',
                                       5=> count(json_decode($row->json_items,true) ),
-                                      //$row->cant_usuario.' N- '.$row->id_nivel.' P- '.$row->profundidad.' pr- '.$row->id_proyecto.' id- '.$row->id,
-                                      //($row->nomb!=null) ? ($row->nomb) : '',
                                       6=>$row->id,
-                                       //($row->apellidos!=null) ? ($row->apellidos) : '',
                                       7=>$row->salario,
                                       8=>$intervalo_dia->format('%a'),
                                     );
 
                                 for ($i=0; $i <=31 ; $i++) { 
-                                   //$dato[$key][9+$i] = 0;
                                     $dato[count($dato)-1][9+$i] = 0;
                                 }
 
                                 foreach ($arreglo_fechas as $key1 => $value1) {
-                                  
-                                  if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
-                                    $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
+
+
+                                  if ($data['horas_pesos']=='Horas' ){
+                                      if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                                        $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) }.'hrs';
+                                      } else {
+                                      $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                                      }
+
                                   } else {
-                                    $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.$row->{ "a".strtotime($arreglo_fechas[$key1]) }.'</span>';
-                                  }
+                                    if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                                      $dato[count($dato)-1][9+$key1] = '$'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 2, '.', ',');
+                                    } else {
+                                      $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                                    }
+                                  } 
+
+                                      
 
                                 }   
 
@@ -2209,11 +2327,7 @@ public function listado_todas_areas($data){
 
             }
 
-              //return $inicio+($result->num_rows());
-            //$inicio = $inicio+($result->num_rows()+1);
-
-
-//return $key;
+             
 
             if ($result->num_rows() <>0 ) {
                 if ( $largo-($result->num_rows())<=0 ) {  //si ya acabo de desplazarse completamente
@@ -2468,13 +2582,31 @@ $sql=" select
 
     public function procesando_rep_general_detalle($data) {
 
-    
+       $dias = 20;
+       $horas = 8;
+
+       //gasto administrativo general por mes
+       $dato_gas['id'] = 4;
+       $gastos_admin = self::coger_configuracion($dato_gas)->precio; 
+
+     
+       //cantidad de personas activos laborando
+       $this->db->from($this->usuarios);
+       $where = '(
+                    ( activo = 1 ) 
+              )';   
+       $this->db->where($where); 
+       $cant = $this->db->count_all_results();   //6personas
+
+       //gasto por persona
+       $gastos_unitario =  $gastos_admin/$cant;  //3333.333
+
+       //print_r($gastos_unitario); die;
+       //////////////////
+
 
           $id_session = $this->session->userdata('id');      
           $id_perfil=$this->session->userdata('id_perfil');
-
-      
-
 
 
         if  ( ($data['fecha_inicial'] =="") || ($data['fecha_final'] =="")) {
@@ -2566,8 +2698,14 @@ $sql=" select
                         id_usuario, 
                         costo, tiempo_disponible, fecha_creacion, fecha_inicial,fecha_final "; 
                             
+
                             foreach ($arreglo_fechas as $key1 => $value1) {
-                                  $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                                  
+                                  if ($data['horas_pesos']=='Horas') {
+                                    $sql .=" ,SUM(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0)) AS 'a".strtotime($value1)."'";
+                                  } else {
+                                    $sql .=" ,sum((((salario+".$gastos_unitario.")/".$dias.")/".$horas.")*(IF(DATE_FORMAT((fecha),'%d-%m-%Y') = '".$value1."', horas, 0))) AS 'a".strtotime($value1)."'";
+                                  }
                             }
 
                             
@@ -2712,35 +2850,29 @@ $sql=" select
 
                                 foreach ($arreglo_fechas as $key1 => $value1) {
                                     
-                                    if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
-                                      $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) };
-                                    } else {
-                                      $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.$row->{ "a".strtotime($arreglo_fechas[$key1]) }.'</span>';
-                                    }
+
+                          if ($data['horas_pesos']=='Horas' ){
+                              if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                                $dato[count($dato)-1][9+$key1] = $row->{ "a".strtotime($arreglo_fechas[$key1]) }.'hrs';
+                              } else {
+                              $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                              }
+
+                          } else {
+                            if ($row->{ "a".strtotime($arreglo_fechas[$key1]) }!=0 ){
+                              $dato[count($dato)-1][9+$key1] = '$'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 2, '.', ',');
+                            } else {
+                              $dato[count($dato)-1][9+$key1] = '<span style="color:#bfbfbf">'.number_format($row->{ "a".strtotime($arreglo_fechas[$key1]) }, 0, '.', ',').'</span>';
+                            }
+                          } 
+
+
+
                                 }    
                       }
 
             }
 
-              //return $inicio+($result->num_rows());
-            //$inicio = $inicio+($result->num_rows()+1);
-
-
-//return $key;
-            /*
-            if ($result->num_rows() <>0 ) {
-                if ( $largo-($result->num_rows())<=0 ) {  //si ya acabo de desplazarse completamente
-                        break;
-                } else {  //recortar el largo
-                    $inicio=0;
-                    $largo = $largo-($result->num_rows());    
-                }
-            } else { //si no hubo ocupado, porq ya fue cubierto la vez anterior
-                $inicio = $inicio - ( $cant_filtrada[$key]);   //$cant_filtrada = todos los registros que se tuvieron en cuenta 
-
-            }
-            */
-            
 
   }   //fin del foreach de proyectos
 

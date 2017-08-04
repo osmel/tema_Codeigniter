@@ -18,14 +18,13 @@ jQuery(document).ready(function($) {
                 case "/balance_usuario_ganancia_perdida"://por usuario
                     var oTable =jQuery('#tabla_rep_balance_usuario_ganancia_perdida').dataTable();
                 break;
-                /*
                 case "/general":                   
                     var oTable =jQuery('#tabla_rep_general').dataTable();
                 break;
                 case "/horas_personas":                   
                     var oTable =jQuery('#tabla_rep_horas_personas').dataTable();
                 break;                  
-                */
+                
                 default:
                    break;
       }            
@@ -789,6 +788,7 @@ var tabla =  jQuery('#tabla_rep_horas_personas').dataTable( {
                         d.id_profundidad = (jQuery('#id_profundidad').val()!=null) ? (jQuery('#id_profundidad').val()) : -1;    
                         d.id_area = (jQuery('#id_area').val()!=null) ? jQuery('#id_area').val() : 0;    
                         d.id_usuario = (jQuery('#id_usuario').val()!=null) ? jQuery('#id_usuario').val() : 0;    
+                        d.horas_pesos = horas_pesos;
                     }
          },   
         "language": {  //tratamiento de lenguaje
