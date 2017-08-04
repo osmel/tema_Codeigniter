@@ -958,8 +958,6 @@ ORDER BY parent.lft;
 
         $id_session = $this->session->userdata('id');
 
-
-
         foreach ($data['proyecto'] as $key => $value) {
           
               //inven_pdata_20170306082221OrAC795
@@ -967,20 +965,12 @@ ORDER BY parent.lft;
               $cons = 'SELECT nm as nombre FROM  inven_pdata_'. $value->tabla.' where  id = '.$value->id_nivel;
               $result = $this->db->query( $cons); 
 
-               $value->proyecto = $result->row()->nombre;
-
-
+              $value->proyecto = $result->row()->nombre;
               $data["id"] = $value->id_nivel;
               $data["tabla"] = $value->tabla;
               $value->ruta = self::ruta_elemento($data); 
 
-
             }
-
-            
-
-
-         
 
         }  
 

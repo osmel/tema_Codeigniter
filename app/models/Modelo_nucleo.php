@@ -23,16 +23,29 @@
             
             $this->historico_acceso = $this->db->dbprefix('historico_acceso');
 
-      
-            
-               $this->cargos                         = $this->db->dbprefix('catalogo_cargos');
+            $this->cargos                 = $this->db->dbprefix('catalogo_cargos');
 
-              $this->catalogo_entornos                         = $this->db->dbprefix('catalogo_entornos');
-              $this->catalogo_proyectos                         = $this->db->dbprefix('catalogo_proyectos');
-              $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
+            $this->catalogo_entornos      = $this->db->dbprefix('catalogo_entornos');
+            $this->catalogo_proyectos     = $this->db->dbprefix('catalogo_proyectos');
+            $this->registro_proyecto      = $this->db->dbprefix('registro_proyecto');
+
+            $this->configuraciones        = $this->db->dbprefix('catalogo_configuraciones');
 
 
 		}
+
+       public function coger_configuracion( $data ){
+                
+              $this->db->select("c.id, c.configuracion,c.activo,c.valor,c.precio");         
+              $this->db->from($this->configuraciones.' As c');
+              $this->db->where('c.id',$data['id']);
+              $result = $this->db->get(  );
+                  if ($result->num_rows() > 0)
+                      return $result->row();
+                  else 
+                      return FALSE;
+                  $result->free_result();
+       }     
 
 
 
@@ -253,6 +266,10 @@
 
         public function listado_usuarios(  ){
 
+            $dato['id'] = 5;
+            $usuario_activo = self::coger_configuracion($dato)->activo; 
+
+
             $id_perfil=$this->session->userdata('id_perfil');
             $id=$this->session->userdata('id');
             $id_area=$this->session->userdata('id_area');
@@ -279,8 +296,9 @@
                 break;
             }
 
-            //$this->db->where('u.activo', 1);   
-            
+            if ($usuario_activo!=1) {
+              $this->db->where('u.activo', 1);     
+            }
             
             $this->db->from($this->usuarios.' as u');
             $this->db->join($this->perfiles.' as p', 'u.id_perfil = p.id_perfil');

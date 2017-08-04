@@ -205,7 +205,8 @@ function dashboard() {
 
 	            	 }
 	            	 
-	            	 $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 	
+	            	 $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos(); 
+	            	 //print_r( $data['datos']['proyectos']  )	; die;
 
 		          switch ($id_perfil) {    
 		            case 1:		            

@@ -956,7 +956,12 @@ jQuery('#tabla_rep_horas_personas tbody').on('click', 'td.detalle_horas_personas
                                               $cad +='<tr>';
                                                      $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
                                                      $cad +='<td  class="text-center cursora" style="border:0px;" width="22%"></td>';
-                                                     $cad +='<td class="text-center cursora" width="22%"><span>'+value[4]+'</span></td>';
+                                                     $cad +='<td class="text-center cursora" width="22%"><span>';
+                                                     $cad +='<as class="ttip" title="'+value[41]+'">'+value[4]+'</as>'; 
+                                                     $cad +='<h6 class="help-block" style="color:#666;">'+(value[41].substr(0, value[41].indexOf("/") ))+'</h6>';
+                                                     
+
+                                                     $cad +='</span></td>';
                                                       for (var i=9; i<=9+parseInt(value[8]); i++) { //cant_colum
                                                                $cad +='<td class="text-center cursora" width="22%"><span>'+value[i]+'</span></td>';
                                                       }

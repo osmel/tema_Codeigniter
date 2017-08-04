@@ -1283,6 +1283,8 @@
                 ";   
 
 
+
+
                  $result = $this->db->query( $sql); 
 
               
@@ -1292,6 +1294,9 @@
               if ( $result->num_rows() > 0 ) {
 
                     foreach ($result->result() as $key2 => $row) {
+                               $dato_ruta["id"] = $row->id_nivel;
+                               $dato_ruta["tabla"] = $row->tabla;
+                               
                                $dato[]= array(
                                       0=>$row->id_nivel,
                                       1=>$row->id_entorno,
@@ -1302,6 +1307,11 @@
                                       6=>($row->apellidos!=null) ? ($row->apellidos) : '',
                                       7=>$row->salario,
                                       8=>$intervalo_dia->format('%a'),
+                                      41=>self::ruta_elemento($dato_ruta),
+              /*
+                 $dato_ruta["id"] = $row->id_nivel;
+              $dato_ruta["tabla"] = $row->tabla;
+              $value->ruta = self::ruta_elemento($data); */
                                     );
 
                                 for ($i=0; $i <=31 ; $i++) { 
@@ -1367,6 +1377,33 @@
 
        }     
 
+
+
+   public function ruta_elemento($data){
+            //http://www.teacupapps.com/blog/mysql/concatenar-varias-filas-en-una-con-mysql
+              $tabla_struct  = $this->db->dbprefix('pstruct_'.$data["tabla"]);
+              $tabla_data  = $this->db->dbprefix('pdata_'.$data["tabla"]);
+              $sql="
+              select GROUP_CONCAT(data.nm SEPARATOR ' / ') ruta 
+                 from(
+                    SELECT padre.id
+                    FROM ".$tabla_struct." AS nodo,
+                            ".$tabla_struct." AS padre
+                   WHERE nodo.lft BETWEEN padre.lft AND padre.rgt
+                                    AND nodo.id = ".$data['id']."
+                   ORDER BY padre.lft 
+                ) profundidad
+                INNER JOIN ".$tabla_data." data ON data.id=profundidad.id
+              ";                
+
+             $query = $this->db->query($sql);                
+
+            if ($query->num_rows() > 0)
+                return $query->row()->ruta;
+            else
+                return 'vacio';
+            $login->free_result();
+    } 
 
 
     public function procesando_rep_horas_personas($data) {
