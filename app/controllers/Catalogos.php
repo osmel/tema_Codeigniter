@@ -12,7 +12,7 @@ class Catalogos extends CI_Controller {
     $this->load->model('Modelo_catalogo', 'modelo_catalogo'); 
 	}
 
-
+ 
 
 
   public function busqueda_predictiva(){
@@ -594,6 +594,8 @@ function eliminar_cargo($id = '', $nombrecompleto=''){
   }   
 
 
+
+
 //***********************perfiles **********************************//
 
 
@@ -1144,6 +1146,546 @@ function eliminar_configuracion($id = '', $nombrecompleto=''){
 
 
 
+
+
+//***********************categ_gastos **********************************//
+
+
+  public function listado_categ_gastos(){
+  
+    $id_perfil=$this->session->userdata('id_perfil');
+
+      if($this->session->userdata('session') === TRUE ){
+              
+              $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+              $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();  
+              $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();  
+              
+      
+
+                switch ($id_perfil) {    
+                  case 1:               
+                      $this->load->view( 'catalogos/categ_gastos/categ_gastos',$data);
+                    break;
+                  
+                  case 2: //
+                  case 3: //
+                  case 4: //
+
+                      $this->load->view( 'catalogos/categ_gastos/categ_gastos',$data);
+                    break;
+                
+                  default:  
+                    redirect('/');
+                    break;
+                }
+
+          }
+          else{ 
+            redirect('/');
+          } 
+          
+  } 
+
+ public function procesando_cat_categ_gastos(){
+
+    $data=$_POST;
+    $busqueda = $this->modelo_catalogo->buscador_cat_categ_gastos($data);
+    echo $busqueda;
+  } 
+
+
+
+    // crear categ_gasto
+  function nuevo_categ_gasto(){
+  if($this->session->userdata('session') === TRUE ){
+        $id_perfil=$this->session->userdata('id_perfil');
+        $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+        $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();  
+        $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();  
+
+        $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        
+         
+       
+        switch ($id_perfil) {    
+          case 1:
+              $this->load->view( 'catalogos/categ_gastos/crud/nuevo_categ_gasto',$data);
+            break;
+          case 2:
+          case 3:
+          case 4:
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                  $this->load->view( 'catalogos/categ_gastos/crud/nuevo_categ_gasto',$data);
+                }   
+            break;
+
+
+          default:  
+            redirect('/');
+            break;
+        }
+      }
+      else{ 
+        redirect('/');
+      }
+    }
+
+
+
+    
+/////////
+
+
+
+  function validar_nuevo_categ_gasto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('/');
+    } else {
+      $this->form_validation->set_rules('nombre', 'Categoría', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          $data['nombre']   = $this->input->post('nombre');
+          //$data['lider']   = $this->input->post('lider');
+          $data['activo']   = $this->input->post('activo');
+
+         $existe            =  $this->modelo_catalogo->check_existente_categ_gasto( $data );
+         if ( $existe !== TRUE ){
+
+            $data         =   $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->anadir_categ_gasto( $data );
+            if ( $guardar !== FALSE ){
+              echo true;
+            } else {
+              echo '<span class="error"><b>E01</b> - La nueva categoría no pudo ser agregada</span>';
+            }
+          } else {
+            echo '<span class="error"><b>E01</b> - La nueva categoría que desea agregar ya existe. No es posible agregar dos categorías iguales.</span>';
+          }  
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+
+
+
+
+ // editar
+  function editar_categ_gasto( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios();  
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();   
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();   
+
+
+       $data['categ_gasto'] = $this->modelo_catalogo->coger_categ_gasto($data);
+        
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                
+                      $this->load->view( 'catalogos/categ_gastos/crud/editar_categ_gasto', $data );
+                
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                  
+                
+                      $this->load->view( 'catalogos/categ_gastos/crud/editar_categ_gasto', $data );
+                
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+
+function validacion_edicion_categ_gasto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+       $this->form_validation->set_rules('nombre', 'Categoría', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          
+          $data['id']           = $this->input->post('id'); 
+          $data['nombre']   = $this->input->post('nombre');
+          $data['activo']   = $this->input->post('activo');
+          
+
+            $data               = $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->editar_categ_gasto( $data );
+
+            if ( $guardar !== FALSE ){
+              echo true;
+
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo categ_gasto no pudo ser agregado</span>';
+            }
+
+
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+
+
+function eliminar_categ_gasto($id = '', $nombrecompleto=''){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+            $data['id']           = base64_decode($id);
+            $data['nombrecompleto']  = base64_decode($nombrecompleto);
+
+           
+      switch ($id_perfil) {    
+        case 1:
+            $this->load->view( 'catalogos/categ_gastos/crud/eliminar_categ_gasto', $data );
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                $this->load->view( 'catalogos/categ_gastos/crud/eliminar_categ_gasto', $data );
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+
+
+
+  function validar_eliminar_categ_gasto(){
+    
+    $data['id']           = $this->input->post('id');
+
+    $eliminado = $this->modelo_catalogo->eliminar_categ_gasto(  $data );
+    if ( $eliminado !== FALSE ){
+      echo TRUE;
+    } else {
+      echo '<span class="error">No se ha podido eliminar el categ_gasto</span>';
+    }
+  }   
+
+
+  //***********************gastos **********************************//
+
+
+  public function listado_gastos(){
+  
+    $id_perfil=$this->session->userdata('id_perfil');
+
+      if($this->session->userdata('session') === TRUE ){
+              
+              $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+              $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();  
+              $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();  
+              
+      
+
+                switch ($id_perfil) {    
+                  case 1:               
+                      $this->load->view( 'catalogos/gastos/gastos',$data);
+                    break;
+                  
+                  case 2: //
+                  case 3: //
+                  case 4: //
+
+                      $this->load->view( 'catalogos/gastos/gastos',$data);
+                    break;
+                
+                  default:  
+                    redirect('/');
+                    break;
+                }
+
+          }
+          else{ 
+            redirect('/');
+          } 
+          
+  } 
+
+ public function procesando_cat_gastos(){
+
+    $data=$_POST;
+    $busqueda = $this->modelo_catalogo->buscador_cat_gastos($data);
+    echo $busqueda;
+  } 
+
+
+
+    // crear gasto
+  function nuevo_gasto(){
+  if($this->session->userdata('session') === TRUE ){
+        $id_perfil=$this->session->userdata('id_perfil');
+        $data['datos']['usuarios'] = $this->modelo->listado_usuarios();   
+        $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();  
+        $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();  
+
+        $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+        if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+              $coleccion_id_operaciones = array();
+         }   
+
+        
+         
+       
+        switch ($id_perfil) {    
+          case 1:
+              $this->load->view( 'catalogos/gastos/crud/nuevo_gasto',$data);
+            break;
+          case 2:
+          case 3:
+          case 4:
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                  $this->load->view( 'catalogos/gastos/crud/nuevo_gasto',$data);
+                }   
+            break;
+
+
+          default:  
+            redirect('/');
+            break;
+        }
+      }
+      else{ 
+        redirect('/');
+      }
+    }
+
+
+
+    
+/////////
+
+
+
+  function validar_nuevo_gasto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('/');
+    } else {
+      $this->form_validation->set_rules('nombre', 'Categoría', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          $data['nombre']   = $this->input->post('nombre');
+          //$data['lider']   = $this->input->post('lider');
+          $data['activo']   = $this->input->post('activo');
+
+         $existe            =  $this->modelo_catalogo->check_existente_gasto( $data );
+         if ( $existe !== TRUE ){
+
+            $data         =   $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->anadir_gasto( $data );
+            if ( $guardar !== FALSE ){
+              echo true;
+            } else {
+              echo '<span class="error"><b>E01</b> - La nueva categoría no pudo ser agregada</span>';
+            }
+          } else {
+            echo '<span class="error"><b>E01</b> - La nueva categoría que desea agregar ya existe. No es posible agregar dos categorías iguales.</span>';
+          }  
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+
+
+
+
+ // editar
+  function editar_gasto( $id ){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+       $data['id']  = base64_decode($id); 
+       
+
+
+       $data['datos']['usuarios'] = $this->modelo->listado_usuarios();  
+       $data['datos']['entornos'] = $this->modelo_administracion->listado_entornos();   
+       $data['datos']['proyectos'] = $this->modelo_proyecto->listado_proyectos();   
+
+
+       $data['gasto'] = $this->modelo_catalogo->coger_gasto($data);
+        
+
+      switch ($id_perfil) {    
+        case 1:
+                  
+                
+                      $this->load->view( 'catalogos/gastos/crud/editar_gasto', $data );
+                
+          break;
+        case 2:
+        case 3:
+        case 4:
+               if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                  
+                
+                      $this->load->view( 'catalogos/gastos/crud/editar_gasto', $data );
+                
+             }   
+          break;
+
+
+        default:  
+          redirect('/');
+          break;
+      }
+    }
+    else{ 
+      redirect('/');
+    }
+  }
+
+
+function validacion_edicion_gasto(){
+    if ($this->session->userdata('session') !== TRUE) {
+      redirect('');
+    } else {
+       $this->form_validation->set_rules('nombre', 'Categoría', 'trim|required|min_length[1]|max_length[80]|xss_clean');
+      
+      if ($this->form_validation->run() === TRUE){
+          
+          $data['id']           = $this->input->post('id'); 
+          $data['nombre']   = $this->input->post('nombre');
+          $data['activo']   = $this->input->post('activo');
+          
+
+            $data               = $this->security->xss_clean($data);  
+            $guardar            = $this->modelo_catalogo->editar_gasto( $data );
+
+            if ( $guardar !== FALSE ){
+              echo true;
+
+            } else {
+              echo '<span class="error"><b>E01</b> - El nuevo gasto no pudo ser agregado</span>';
+            }
+
+
+
+      } else {      
+        echo validation_errors('<span class="error">','</span>');
+      }
+    }
+  }
+
+
+
+
+function eliminar_gasto($id = '', $nombrecompleto=''){
+      if($this->session->userdata('session') === TRUE ){
+      $id_perfil=$this->session->userdata('id_perfil');
+
+      $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_operaciones')); 
+      if ( (count($coleccion_id_operaciones)==0) || (!($coleccion_id_operaciones)) ) {
+            $coleccion_id_operaciones = array();
+       }   
+
+            $data['id']           = base64_decode($id);
+            $data['nombrecompleto']  = base64_decode($nombrecompleto);
+
+           
+      switch ($id_perfil) {    
+        case 1:
+            $this->load->view( 'catalogos/gastos/crud/eliminar_gasto', $data );
+
+          break;
+        case 2:
+        case 3:
+        case 4:
+              if  ( (in_array(4, $coleccion_id_operaciones)) )  { 
+                $this->load->view( 'catalogos/gastos/crud/eliminar_gasto', $data );
+             }   
+          break;
+
+
+        default:  
+          redirect('');
+          break;
+      }
+    }
+    else{ 
+      redirect('');
+    }
+  }
+
+
+
+
+
+  function validar_eliminar_gasto(){
+    
+    $data['id']           = $this->input->post('id');
+
+    $eliminado = $this->modelo_catalogo->eliminar_gasto(  $data );
+    if ( $eliminado !== FALSE ){
+      echo TRUE;
+    } else {
+      echo '<span class="error">No se ha podido eliminar el gasto</span>';
+    }
+  }   
 
 
 

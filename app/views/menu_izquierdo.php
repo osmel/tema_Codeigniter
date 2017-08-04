@@ -361,6 +361,53 @@ $coleccion_id_operaciones= json_decode($this->session->userdata('coleccion_id_op
             <?php } ?>            
 
 
+            <!-- encabezado Gastos --> 
+
+            <?php if ( ( $this->session->userdata( 'id_perfil' ) == 1  ) || (in_array(4, $coleccion_id_operaciones)) ) { ?>    
+                    <li class="heading">
+                        <h3 class="uppercase">Gastos</h3>
+                    </li>
+                    
+
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>categ_gastos" class="nav-link nav-toggle">
+                            <i class="fa fa-archive"></i>
+                            <span class="title">Categorías</span>
+                            <span class="badge"><i class="fa fa-eye"></i></span>
+                            
+                        </a>
+                    </li>                                    
+
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>gastos" class="nav-link nav-toggle">
+                            <i class="fa fa-archive"></i>
+                            <span class="title">Gastos</span>
+                            <span class="badge"><i class="fa fa-eye"></i></span>
+                            
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>registro_gasto" class="nav-link nav-toggle">
+                            <i class="fa fa-archive"></i>
+                            <span class="title">Registros</span>
+                            <span class="badge"><i class="fa fa-eye"></i></span>
+                            
+                        </a>
+                    </li>              
+
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>registro_historico_gasto" class="nav-link nav-toggle">
+                            <i class="fa fa-archive"></i>
+                            <span class="title">Histórico</span>
+                            <span class="badge"><i class="fa fa-eye"></i></span>
+                            
+                        </a>
+                    </li>
+                    
+            <?php } ?>         
+
+
             </ul>
             <!-- END SIDEBAR MENU -->
         <!-- END SIDEBAR MENU -->

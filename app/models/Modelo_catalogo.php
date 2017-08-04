@@ -37,6 +37,8 @@
               $this->registro_proyecto                         = $this->db->dbprefix('registro_proyecto');
 
 
+              $this->catalogo_categ_gastos      = $this->db->dbprefix('catalogo_categ_gasto');
+              $this->catalogo_gastos      = $this->db->dbprefix('catalogo_gastos');
               
               
 
@@ -1093,6 +1095,418 @@
         }     
 
   
+
+
+
+
+
+//////////categ_gastos/////////
+    
+      public function buscador_cat_categ_gastos($data){
+
+          $cadena = addslashes($data['search']['value']);
+          $inicio = $data['start'];
+          $largo = $data['length'];
+          
+
+          $columa_order = $data['order'][0]['column'];
+                 $order = $data['order'][0]['dir'];
+                 /*
+           if ($data['draw'] ==1) { //que se ordene por el ultimo
+                 $columa_order ='-1';
+                 $order = 'desc';
+           } */
+
+
+
+          switch ($columa_order) {
+                   case '0':
+                        $columna = 'c.nombre';
+                     break;
+                   case '1':
+                        $columna = 'c.activo'; //, tabla
+                     break;                 
+                   default:
+                        $columna = 'c.nombre';
+                     break;
+                 }                 
+
+                                      
+
+          $id_session = $this->db->escape($this->session->userdata('id'));
+
+          $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
+          
+          $this->db->select('c.id, c.nombre,  c.activo');
+
+          $this->db->from($this->catalogo_categ_gastos.' as c');
+          
+          //filtro de busqueda
+       
+          $where = '(
+
+                      (
+                        ( c.id LIKE  "%'.$cadena.'%" ) OR 
+                        ( c.nombre LIKE  "%'.$cadena.'%" )
+                        
+                       )
+            )';   
+
+
+
+  
+          $this->db->where($where);
+    
+          //ordenacion
+          $this->db->order_by($columna, $order); 
+
+          //paginacion
+          $this->db->limit($largo,$inicio); 
+
+
+          $result = $this->db->get();
+
+              if ( $result->num_rows() > 0 ) {
+
+                    $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                    $found_rows = $cantidad_consulta->row(); 
+                    $registros_filtrados =  ( (int) $found_rows->cantidad);
+
+                  $retorno= " ";  
+                  foreach ($result->result() as $row) {
+                               $dato_uso["campo"] = "nombre";
+                                  $dato_uso["id"] = $row->id;
+                               $uso = self::en_uso($dato_uso);
+                               $dato[]= array(
+                                      0=>$row->id,
+                                      1=>$row->nombre,
+                                      2=>$row->activo,
+                                      3=>$uso
+                                    );
+                      }
+
+
+
+
+                      return json_encode ( array(
+                        "draw"            => intval( $data['draw'] ),
+                        "recordsTotal"    => intval( self::total_cat_categ_gastos() ), 
+                        "recordsFiltered" =>   $registros_filtrados, 
+                        "data"            =>  $dato 
+                      ));
+                    
+              }   
+              else {
+                  //cuando este vacio la tabla que envie este
+                //http://www.datatables.net/forums/discussion/21311/empty-ajax-response-wont-render-in-datatables-1-10
+                  $output = array(
+                  "draw" =>  intval( $data['draw'] ),
+                  "recordsTotal" => 0,
+                  "recordsFiltered" =>0,
+                  "aaData" => array()
+                  );
+                  $array[]="";
+                  return json_encode($output);
+                  
+
+              }
+
+              $result->free_result();           
+
+      }  
+      
+        public function total_cat_categ_gastos(){
+           $this->db->from($this->catalogo_categ_gastos);
+           $categ_gastos = $this->db->get();            
+           return $categ_gastos->num_rows();
+        }
+
+
+
+
+ //checar si el composicion ya existe
+    public function check_existente_categ_gasto($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_categ_gastos);
+            $this->db->where('nombre',$data['nombre']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_categ_gasto( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'nombre', $data['nombre'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+            $this->db->insert($this->catalogo_categ_gastos );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_categ_gasto( $data ){
+              
+            $this->db->select("c.id, c.nombre, c.activo");         
+            $this->db->from($this->catalogo_categ_gastos.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_categ_gasto( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'nombre', $data['nombre'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_categ_gastos );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return true;
+                $result->free_result();
+        }   
+
+
+        //eliminar categ_gasto
+        public function eliminar_categ_gasto( $data ){
+            $this->db->delete( $this->catalogo_categ_gastos, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
+
+
+
+
+
+
+
+//////////gastos/////////
+    
+      public function buscador_cat_gastos($data){
+
+          $cadena = addslashes($data['search']['value']);
+          $inicio = $data['start'];
+          $largo = $data['length'];
+          
+
+          $columa_order = $data['order'][0]['column'];
+                 $order = $data['order'][0]['dir'];
+                 /*
+           if ($data['draw'] ==1) { //que se ordene por el ultimo
+                 $columa_order ='-1';
+                 $order = 'desc';
+           } */
+
+
+
+          switch ($columa_order) {
+                   case '0':
+                        $columna = 'c.nombre';
+                     break;
+                   case '1':
+                        $columna = 'c.activo'; //, tabla
+                     break;                 
+                   default:
+                        $columna = 'c.nombre';
+                     break;
+                 }                 
+
+                                      
+
+          $id_session = $this->db->escape($this->session->userdata('id'));
+
+          $this->db->select("SQL_CALC_FOUND_ROWS *", FALSE); //
+          
+          $this->db->select('c.id, c.nombre,  c.activo');
+
+          $this->db->from($this->catalogo_gastos.' as c');
+          
+          //filtro de busqueda
+       
+          $where = '(
+
+                      (
+                        ( c.id LIKE  "%'.$cadena.'%" ) OR 
+                        ( c.nombre LIKE  "%'.$cadena.'%" )
+                        
+                       )
+            )';   
+
+
+
+  
+          $this->db->where($where);
+    
+          //ordenacion
+          $this->db->order_by($columna, $order); 
+
+          //paginacion
+          $this->db->limit($largo,$inicio); 
+
+
+          $result = $this->db->get();
+
+              if ( $result->num_rows() > 0 ) {
+
+                    $cantidad_consulta = $this->db->query("SELECT FOUND_ROWS() as cantidad");
+                    $found_rows = $cantidad_consulta->row(); 
+                    $registros_filtrados =  ( (int) $found_rows->cantidad);
+
+                  $retorno= " ";  
+                  foreach ($result->result() as $row) {
+                               $dato_uso["campo"] = "nombre";
+                                  $dato_uso["id"] = $row->id;
+                               $uso = self::en_uso($dato_uso);
+                               $dato[]= array(
+                                      0=>$row->id,
+                                      1=>$row->nombre,
+                                      2=>$row->activo,
+                                      3=>$uso
+                                    );
+                      }
+
+
+
+
+                      return json_encode ( array(
+                        "draw"            => intval( $data['draw'] ),
+                        "recordsTotal"    => intval( self::total_cat_gastos() ), 
+                        "recordsFiltered" =>   $registros_filtrados, 
+                        "data"            =>  $dato 
+                      ));
+                    
+              }   
+              else {
+                  //cuando este vacio la tabla que envie este
+                //http://www.datatables.net/forums/discussion/21311/empty-ajax-response-wont-render-in-datatables-1-10
+                  $output = array(
+                  "draw" =>  intval( $data['draw'] ),
+                  "recordsTotal" => 0,
+                  "recordsFiltered" =>0,
+                  "aaData" => array()
+                  );
+                  $array[]="";
+                  return json_encode($output);
+                  
+
+              }
+
+              $result->free_result();           
+
+      }  
+      
+        public function total_cat_gastos(){
+           $this->db->from($this->catalogo_gastos);
+           $gastos = $this->db->get();            
+           return $gastos->num_rows();
+        }
+
+
+
+
+ //checar si el composicion ya existe
+    public function check_existente_gasto($data){
+            $this->db->select("id", FALSE);         
+            $this->db->from($this->catalogo_gastos);
+            $this->db->where('nombre',$data['nombre']);  
+            
+            $login = $this->db->get();
+            if ($login->num_rows() > 0)
+                return true;
+            else
+                return false;
+            $login->free_result();
+    } 
+
+
+
+      //crear
+        public function anadir_gasto( $data ){
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'nombre', $data['nombre'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+            $this->db->insert($this->catalogo_gastos );
+            if ($this->db->affected_rows() > 0){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+                $result->free_result();
+        }          
+
+
+
+//edicion
+     public function coger_gasto( $data ){
+              
+            $this->db->select("c.id, c.nombre, c.activo");         
+            $this->db->from($this->catalogo_gastos.' As c');
+            $this->db->where('c.id',$data['id']);
+            $result = $this->db->get(  );
+                if ($result->num_rows() > 0)
+                    return $result->row();
+                else 
+                    return FALSE;
+                $result->free_result();
+     }  
+
+
+//editar
+        public function editar_gasto( $data ){
+
+          $id_session = $this->session->userdata('id');
+          $this->db->set( 'id_usuario',  $id_session );
+          $this->db->set( 'nombre', $data['nombre'] );  
+          $this->db->set( 'activo', $data['activo'] );  
+
+
+          $this->db->where('id', $data['id'] );
+          $this->db->update($this->catalogo_gastos );
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
+            }  else
+                 return true;
+                $result->free_result();
+        }   
+
+
+        //eliminar gasto
+        public function eliminar_gasto( $data ){
+            $this->db->delete( $this->catalogo_gastos, array( 'id' => $data['id'] ) );
+            if ( $this->db->affected_rows() > 0 ) return TRUE;
+            else return FALSE;
+        }     
+
+
+
+
 
 } 
 

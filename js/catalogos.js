@@ -1665,7 +1665,180 @@ jQuery('#tabla_cat_configuraciones').dataTable( {
                         "targets": 4
                     },
                 ],
-    });  
+    });
+
+
+//categ_gastos
+jQuery('#tabla_cat_categ_gastos').dataTable( {
+        "pagingType": "full_numbers",
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+                    "url" : "procesando_cat_categ_gastos",
+                    "type": "POST",
+         },   
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+        "columnDefs": [
+                    {  //nombre
+                        "render": function ( data, type, row ) {
+                                return row[1]; 
+                        },
+                        "targets": [0] 
+                    },
+                    {  //activo
+                        "render": function ( data, type, row ) {
+                            var checado = ((row[2] == 1) ? "checked" : ""); 
+                            texto='<td><fieldset disabled>';
+                                texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[2]+' style="margin: 33px 33px 0px;" name="activo[]" value="1">'; 
+                            texto+=' </td>';                         
+                            return texto;                                   
+                        },
+                        "targets": [1] 
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                        texto=' <td>'; 
+                            texto+='<a href="editar_categ_gasto/'+jQuery.base64.encode(row[0])+'" type="button"'; 
+                            texto+=' class="btn btn-warning btn-sm btn-block" >';
+                                texto+=' <span class="glyphicon glyphicon-edit"></span>';
+                            texto+=' </a>';
+                        texto+=' </td>';
+                            return texto;   
+                        },
+                        "targets": 2
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            if (row[3]==0) {                           
+                                texto=' <td>';                              
+                                    texto+=' <a href="eliminar_categ_gasto/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td>';
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+                            }
+                            return texto;   
+                        },
+                        "targets": 3
+                    },
+                ],
+    });   
+
+
+
+//gastos
+jQuery('#tabla_cat_gastos').dataTable( {
+        "pagingType": "full_numbers",
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+                    "url" : "procesando_cat_gastos",
+                    "type": "POST",
+         },   
+        "language": {  //tratamiento de lenguaje
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(Mostrando _TOTAL_ de _MAX_ registros totales)",  
+            "emptyTable":     "No hay registros",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "loadingRecords": "Leyendo...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activando para ordenar columnas ascendentes",
+                "sortDescending": ": Activando para ordenar columnas descendentes"
+            },
+        },
+        "columnDefs": [
+                    {  //nombre
+                        "render": function ( data, type, row ) {
+                                return row[1]; 
+                        },
+                        "targets": [0] 
+                    },
+                    {  //activo
+                        "render": function ( data, type, row ) {
+                            var checado = ((row[2] == 1) ? "checked" : ""); 
+                            texto='<td><fieldset disabled>';
+                                texto+='<input type="checkbox" '+checado+' class="check_activo" identificador='+row[2]+' style="margin: 33px 33px 0px;" name="activo[]" value="1">'; 
+                            texto+=' </td>';                         
+                            return texto;                                   
+                        },
+                        "targets": [1] 
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                        texto=' <td>'; 
+                            texto+='<a href="editar_gasto/'+jQuery.base64.encode(row[0])+'" type="button"'; 
+                            texto+=' class="btn btn-warning btn-sm btn-block" >';
+                                texto+=' <span class="glyphicon glyphicon-edit"></span>';
+                            texto+=' </a>';
+                        texto+=' </td>';
+                            return texto;   
+                        },
+                        "targets": 2
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            if (row[3]==0) {                           
+                                texto=' <td>';                              
+                                    texto+=' <a href="eliminar_gasto/'+jQuery.base64.encode(row[0])+'/'+jQuery.base64.encode(row[1])+ '"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#modalMessage">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td>';
+                            } else {
+                                texto=' <fieldset disabled> <td>';                              
+                                    texto+=' <a href="#"'; 
+                                    texto+=' class="btn btn-danger btn-sm btn-block">';
+                                    texto+=' <span class="glyphicon glyphicon-remove"></span>';
+                                    texto+=' </a>';
+                                texto+=' </td></fieldset>'; 
+                            }
+                            return texto;   
+                        },
+                        "targets": 3
+                    },
+                ],
+    });           
 ///////////////////////Formatear 
           //http://phpjs.org/functions/number_format/
 function number_format(number, decimals, dec_point, thousands_sep) {

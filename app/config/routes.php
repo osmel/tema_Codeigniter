@@ -274,3 +274,29 @@ $route['busqueda_predictiva']    	 = 'catalogos/busqueda_predictiva';
 
 
 
+//categorías de gastos
+$route['categ_gastos']			             = 'catalogos/listado_categ_gastos';
+$route['procesando_cat_categ_gastos']        = 'catalogos/procesando_cat_categ_gastos';
+
+$route['nuevo_categ_gasto']                  = 'catalogos/nuevo_categ_gasto';
+$route['validar_nuevo_categ_gasto']          = 'catalogos/validar_nuevo_categ_gasto';
+
+$route['editar_categ_gasto/(:any)']      	 = 'catalogos/editar_categ_gasto/$1';
+$route['validacion_edicion_categ_gasto']     = 'catalogos/validacion_edicion_categ_gasto';
+
+$route['eliminar_categ_gasto/(:any)/(:any)'] = 'catalogos/eliminar_categ_gasto/$1/$2';
+$route['validar_eliminar_categ_gasto']       = 'catalogos/validar_eliminar_categ_gasto';
+
+
+//categorías de gastos
+$route['gastos']                   = 'catalogos/listado_gastos';
+$route['procesando_cat_gastos']        = 'catalogos/procesando_cat_gastos';
+
+$route['nuevo_gasto']                  = 'catalogos/nuevo_gasto';
+$route['validar_nuevo_gasto']          = 'catalogos/validar_nuevo_gasto';
+
+$route['editar_gasto/(:any)']        = 'catalogos/editar_gasto/$1';
+$route['validacion_edicion_gasto']     = 'catalogos/validacion_edicion_gasto';
+
+$route['eliminar_gasto/(:any)/(:any)'] = 'catalogos/eliminar_gasto/$1/$2';
+$route['validar_eliminar_gasto']       = 'catalogos/validar_eliminar_gasto';
